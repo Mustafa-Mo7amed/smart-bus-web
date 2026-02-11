@@ -1,12 +1,12 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { LoginComponent } from "./features/auth/login/login.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [LoginComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class App {
-  protected readonly title = signal('smart-bus-web');
+  
 }

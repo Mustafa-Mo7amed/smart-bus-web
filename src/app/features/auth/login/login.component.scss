@@ -1,0 +1,137 @@
+.container {
+    height: 100vh;
+    gap: 0;
+    grid-template-columns: 1.2fr 1fr;
+}
+
+.bus-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.login-form {
+    padding: 8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #333;
+}
+
+.title {
+    font-size: 3.6rem;
+    font-weight: 700;
+    margin-bottom: 4.8rem;
+    letter-spacing: -1px;
+    line-height: 1.2;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 2.4rem;
+}
+
+.input-group label {
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.input-group input {
+    padding: 1.4rem 1.6rem;
+    font-size: 1.6rem;
+    border: 2px solid rgb(0, 0, 255, 0.1);
+    border-radius: 9px;
+    transition: all 0.2s ease-in-out;
+    background-color: rgba(238, 238, 238, 0.471);
+}
+
+.input-group input:focus {
+    background-color: #fff;
+    border-color: rgba(0, 0, 255, 0.25);
+    box-shadow: 0 0 4px 2px rgba(0, 0, 255, 0.1);
+    outline: none;
+}
+
+.input-group input::placeholder {
+    color: #999;
+}
+
+.remember-me-forget-password-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3.2rem;
+}
+
+.remember-me-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.remember-me-wrapper input[type="checkbox"] {
+    width: 1.8rem;
+    height: 1.8rem;
+    cursor: pointer;
+    border-radius: 4px;
+    accent-color:#307fff;
+}
+
+.remember-me-wrapper label {
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+
+.forget-password {
+    font-size: 1.5rem;
+    color: #307fff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+}
+
+.forget-password:hover {
+    color: #1860fc;
+    text-decoration: underline;
+}
+
+button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+
+    font-size: 1.8rem;
+    font-weight: 700;
+
+    background: linear-gradient(135deg, #307fff 0%, #1860fc 100%);
+    color: #fff;
+
+    padding: 1.6rem 3.2rem;
+    border: none;
+    border-radius: 12px;
+
+    cursor: pointer;
+    
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 10px 1px rgba(59, 130, 246, 0.3);
+}
+
+button .right-arrow-icon {
+    width: 2.4rem;
+    height: 2.4rem;
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover .right-arrow-icon {
+    transform: translateX(4px);
+}
