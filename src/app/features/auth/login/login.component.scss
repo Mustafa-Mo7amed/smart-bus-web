@@ -4,11 +4,35 @@
     grid-template-columns: 1.2fr 1fr;
 }
 
+.bus-image-container {
+    position: relative;
+}
+
+.bus-image-container::before {
+    display: block;
+
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    
+    border-radius: 50%;
+    
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+
+.bus-image-container::before {
+    width: 80%;
+    padding-bottom: 80%;
+    background-color: #307fff;
+}
+
 .bus-image {
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: scale-down;
 }
 
 .login-form {
