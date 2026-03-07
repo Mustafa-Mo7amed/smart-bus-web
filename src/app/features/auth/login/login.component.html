@@ -3,7 +3,7 @@
     <img class="bus-image" src="login-no-background.png" alt="A microbus" />
   </div>
 
-  <form class="login-form" [formGroup]="form">
+  <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()">
     <h1 class="title">Manager Dashboard login</h1>
     <div class="input-group">
       <label for="email">Email</label>
@@ -32,7 +32,7 @@
     </div>
     <div class="remember-me-forget-password-wrapper grid--2-col">
       <div class="remember-me-wrapper">
-        <input type="checkbox" id="remember-me" />
+        <input type="checkbox" id="remember-me" formControlName="rememberMe" />
         <label for="remember-me">Remember me</label>
       </div>
       <a href="#" class="forget-password">Forgot password?</a>
