@@ -2,15 +2,33 @@
   <div class="bus-image-container">
     <img class="bus-image" src="login-no-background.png" alt="A microbus" />
   </div>
-  <form class="login-form">
+
+  <form class="login-form" [formGroup]="form">
     <h1 class="title">Manager Dashboard login</h1>
     <div class="input-group">
       <label for="email">Email</label>
-      <input type="text" id="email" placeholder="admin@minya.gov.eg" />
+      <input
+        type="text"
+        id="email"
+        placeholder="admin@minya.gov.eg"
+        formControlName="email"
+        [class.invalid-input]="isEmailInvalid"
+      />
+      @if (isEmailInvalid) {
+        <p class="control-error">Please enter a valid email.</p>
+      }
     </div>
     <div class="input-group">
       <label for="password">Password</label>
-      <input type="password" id="password" />
+      <input
+        type="password"
+        id="password"
+        formControlName="password"
+        [class.invalid-input]="isPasswordInvalid"
+      />
+      @if (isPasswordInvalid) {
+        <p class="control-error">Password must be at least 8 characters long.</p>
+      }
     </div>
     <div class="remember-me-forget-password-wrapper grid--2-col">
       <div class="remember-me-wrapper">

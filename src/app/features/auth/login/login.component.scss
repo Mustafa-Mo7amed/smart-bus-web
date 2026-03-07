@@ -15,9 +15,9 @@
     position: absolute;
     left: 50%;
     top: 50%;
-    
+
     border-radius: 50%;
-    
+
     transform: translate(-50%, -50%);
     z-index: -1;
 }
@@ -84,6 +84,15 @@
     color: #999;
 }
 
+.input-group input.invalid-input {
+    border-color: #e74c3c;
+}
+
+.input-group input.invalid-input:focus {
+    border-color: #c0392b;
+    box-shadow: 0 0 4px 2px rgba(231, 76, 60, 0.2);
+}
+
 .remember-me-forget-password-wrapper {
     display: flex;
     justify-content: space-between;
@@ -140,7 +149,7 @@ button {
     border-radius: 12px;
 
     cursor: pointer;
-    
+
     transition: all 0.3s ease-in-out;
     box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
 }

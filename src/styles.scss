@@ -35,6 +35,8 @@ Paragraph default:
 - Accents:
 - Greys:
 
+- Feedback colors: #e74c3c
+
 
 --- 05 SHADOWS:
 
@@ -54,6 +56,8 @@ Medium: 11px
 
 */
 
+/* GLOBAL STYLES */
+
 * {
   margin: 0;
   padding: 0;
@@ -72,7 +76,16 @@ body {
   color: #444;
 }
 
+/* GRID */
+
 .grid--2-col {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+}
+
+/* UTILITY CLASSES */
+
+.control-error {
+  color: #e74c3c;
+  font-size: 1.4rem;
 }
