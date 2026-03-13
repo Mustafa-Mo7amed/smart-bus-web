@@ -14,6 +14,11 @@ export interface AuthResponse {
 export interface User {
   id: number;
   email: string;
-  role: 'admin' | 'manager';
+  role: 'system-admin' | 'district-manager' | 'station-manager';
   name: string;
+}
+
+export interface RefreshTokenRequest {
+  token: string;
+  refreshToken: string;
 }
