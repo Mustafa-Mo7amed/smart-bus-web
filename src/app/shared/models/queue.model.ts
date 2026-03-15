@@ -1,4 +1,9 @@
 import { BaseEntity } from './base-entity.model';
+import { QueueItem } from './queue-item.model';
 
-// TODO: add Queue properties
-export interface Queue extends BaseEntity {}
+export interface Queue extends BaseEntity {
+  queueId: string;
+  stationId: string;
+  routeId: string;
+  items: QueueItem[];
+}
