@@ -10,5 +10,5 @@ export interface BaseEntity {
 
   deleted?: boolean;
 
-  syncStatus?: 'synced' | 'pending' | 'conflict';
+  syncStatus: 'synced' | 'pending' | 'conflict';
 }
