@@ -1,14 +1,14 @@
 export interface BaseEntity {
   id: string;
 
-  createdAt: number;
-  updatedAt: number;
+  createdAt: string;
+  updatedAt: string;
 
-  lastSyncedAt?: number;
+  lastSyncedAt?: string;
+  deletedAt?: string;
 
   version: number;
 
-  deleted?: boolean;
 
   syncStatus: 'synced' | 'pending' | 'conflict';
 }

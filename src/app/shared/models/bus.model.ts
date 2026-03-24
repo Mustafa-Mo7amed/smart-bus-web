@@ -7,7 +7,7 @@ export interface Bus extends BaseEntity {
 
   capacity: number;
 
-  qrCodeValue: string;
+  qrCode: string;
 
   status: 'in_hub' | 'on_route' | 'unavailable';
 

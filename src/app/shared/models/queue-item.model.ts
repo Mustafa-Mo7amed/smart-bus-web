@@ -6,6 +6,6 @@ export interface QueueItem extends BaseEntity {
   busId: string;
   position: number;
   status: 'waiting' | 'loading' | 'departed';
-  joinedAt: number;
-  leftAt: number;
+  joinedAt: string;
+  leftAt: string;
 }

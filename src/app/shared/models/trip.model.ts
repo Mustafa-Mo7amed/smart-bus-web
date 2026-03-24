@@ -4,7 +4,7 @@ export interface Trip extends BaseEntity {
   tripId: string;
   busId: string;
   routeId: string;
-  startTime: number;
-  endTime: number;
+  startTime: string;
+  endTime: string;
   status: 'pending' | 'ongoing' | 'ended';
 }
