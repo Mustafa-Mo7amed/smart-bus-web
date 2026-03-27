@@ -5,4 +5,37 @@ export interface Route extends BaseEntity {
   startCity: string;
   endCity: string;
   officialPrice: number;
+  distanceKM: number;
+}
+
+export interface RouteEndpoint {
+  cityName: string;
+  routeId?: string;
+}
+
+export interface RouteSummary {
+  price: number;
+  distanceKm: number;
+  numberOfMicrobusesInQueue: number;
+  numberOfMicrobusesOnTheWay: number;
+  nearestArrivalMinutes: number;
+}
+
+// TODO: update when plate number is included
+export interface MicrobusAtStation {
+  passengerCount: number;
+  model: string;
+  color: string;
+}
+
+export interface MicrobusOnTheWay {
+  estimatedArrivalMinutes: number;
+  passengerCount: number;
+  model: string;
+  color: string;
+  driverId: string;
+  driverName: string;
+  position: number;
+  status: string;
+  plateNumber: string;
 }
