@@ -7,7 +7,7 @@ import { Trip } from '../../shared/models/trip.model';
   providedIn: 'root',
 })
 export class TripRepository extends BaseRepository<Trip> {
-  constructor(appDatabase: AppDatabase) {
-    super(appDatabase.trips);
+  constructor(db: AppDatabase) {
+    super(db.trips);
   }
 }

@@ -7,7 +7,7 @@ import { Route } from '@angular/router';
   providedIn: 'root',
 })
 export class RouteRepository extends BaseRepository<Route> {
-  constructor(appDatabase: AppDatabase) {
-    super(appDatabase.routes);
+  constructor(db: AppDatabase) {
+    super(db.routes);
   }
 }

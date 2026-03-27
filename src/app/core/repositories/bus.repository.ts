@@ -7,7 +7,7 @@ import { Bus } from '../../shared/models/bus.model';
   providedIn: 'root',
 })
 export class BusRepository extends BaseRepository<Bus> {
-  constructor(appDatabase: AppDatabase) {
-    super(appDatabase.buses);
+  constructor(db: AppDatabase) {
+    super(db.buses);
   }
 }

@@ -1,7 +1,7 @@
 import { AppDatabase } from './app.database';
 
-export function applyMigrations(appDatabase: AppDatabase) {
-  appDatabase.version(1).stores({
+export function applyMigrations(db: AppDatabase) {
+  db.version(1).stores({
     buses: 'id, busId, stationId, driverId, status',
 
     drivers: 'id, driverId, phone',
