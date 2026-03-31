@@ -18,4 +18,8 @@ export function applyMigrations(db: AppDatabase) {
 
     reports: 'id, reportId, userId, tripId',
   });
+
+  db.version(2).stores({
+    syncQueue: 'id, entityId, method, url, timestamp, retries',
+  });
 }

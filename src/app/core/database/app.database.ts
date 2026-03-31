@@ -9,6 +9,7 @@ import { applyMigrations } from './migrations';
 import { Route } from '@angular/router';
 import { QueueItem } from '../../shared/models/queue-item.model';
 import { Injectable } from '@angular/core';
+import { SyncQueueItem } from '../sync/sync.service';
 
 @Injectable({ providedIn: 'root' })
 export class AppDatabase extends Dexie {
@@ -20,6 +21,8 @@ export class AppDatabase extends Dexie {
   queues!: Table<Queue>;
   queueItems!: Table<QueueItem>;
   reports!: Table<Report>;
+
+  syncQueue!: Table<SyncQueueItem>;
 
   constructor() {
     super('smart-bus-db');
