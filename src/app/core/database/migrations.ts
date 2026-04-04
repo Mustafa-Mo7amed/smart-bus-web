@@ -22,4 +22,8 @@ export function applyMigrations(db: AppDatabase) {
   db.version(2).stores({
     syncQueue: 'id, entityId, method, url, timestamp, retries',
   });
+
+  db.version(3).stores({
+    syncQueue: null,
+  });
 }
