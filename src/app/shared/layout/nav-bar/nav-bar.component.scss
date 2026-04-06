@@ -1,0 +1,90 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: #283044;
+
+  padding: 1.6rem;
+}
+
+.nav-header {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+
+  margin-bottom: 3.2rem;
+}
+
+.nav-header img {
+  display: inline-block;
+  width: 5rem;
+  height: 5rem;
+}
+
+.nav-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+
+  color: #fff;
+}
+
+.nav-title h1 {
+  font-size: 1.8rem;
+}
+
+.nav-title p {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.nav-items {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  list-style: none;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.nav-items li {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  cursor: pointer;
+
+  height: 5rem;
+
+  padding: 0 1.6rem;
+  margin-left: -1.6rem;
+  margin-right: -1.6rem;
+
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nav-items li:last-child {
+  margin-top: auto;
+}
+
+.nav-items li:hover,
+.nav-items li:active { 
+  background-color: #3F465C;
+}
+
+.nav-items li.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6rem;
+  bottom: 0.6rem;
+  width: 0.3rem;
+  background-color: #3B82F6;
+  border-radius: 0 4px 4px 0;
+}
+
+.nav-items li.active mat-icon,
+.nav-items li.active p {
+  color: #FFFFFF;
+}
