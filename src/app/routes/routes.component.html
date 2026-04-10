@@ -1,0 +1,21 @@
+<div class="container">
+  <header>
+    <h1 class="title">Active Routes</h1>
+    <button class="register-route-btn">+ Register New Route</button>
+  </header>
+
+  <ul class="route-list-nav">
+    <li routerLinkActive="active">
+      <a routerLink="./" [queryParams]="{ whichRoutes: 'all-routes' }">All Routes</a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="./" [queryParams]="{ whichRoutes: 'core-hubs' }">Core Hubs</a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="./" [queryParams]="{ whichRoutes: 'from-this-hub' }">From this Hub</a>
+    </li>
+    <li>
+      <mat-icon>filter_list</mat-icon>
+    </li>
+  </ul>
+</div>
