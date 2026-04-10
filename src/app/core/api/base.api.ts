@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 
@@ -18,8 +18,8 @@ export abstract class BaseApi {
     return path ? `${endpointBase}/${path}` : endpointBase;
   }
 
-  protected get<T>(url = '') {
-    return this.http.get<T>(this.buildUrl(url));
+  protected get<T>(url = '', params?: HttpParams) {
+    return this.http.get<T>(this.buildUrl(url), { params });
   }
 
   protected post<T>(url = '', body: any) {

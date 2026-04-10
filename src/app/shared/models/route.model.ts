@@ -4,12 +4,12 @@ export interface Route extends BaseEntity {
   routeId: string;
   startCity: string;
   endCity: string;
-  officialPrice: number;
-  distanceKM: number;
+  routeSummary: RouteSummary;
 }
 
 export interface RouteEndpoint {
-  cityName: string;
+  cityName?: string;
+  to?: string;
   routeId?: string;
 }
 

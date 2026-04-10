@@ -1,6 +1,7 @@
-$list-header: #eef0ff;
+$list-header: #dae2fd;
 $list-item-hover: #ffffff;
 $primary-bg: #f7f9fb;
+$nav-inner-borders: #c4c7c9;
 
 .container {
   padding: 1.2rem 2.4rem;
@@ -40,13 +41,17 @@ header {
   list-style: none;
   background-color: $list-header;
   height: 6rem;
+  margin-bottom: 1.6rem;
   padding: 1.2rem 2.4rem;
-  border-radius: 5px;
+  border-radius: 8px;
 
   li {
-    border-radius: 5px;
+    border-radius: 8px;
     padding: 0.8rem 1.6rem;
     transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 1.6rem;
+    color: #444749;
   }
 
   li.active {
@@ -55,6 +60,8 @@ header {
 
   li:hover {
     background-color: $list-item-hover;
+    color: #000;
+    cursor: pointer;
   }
 
   li:last-child {
@@ -64,8 +71,88 @@ header {
   a:link,
   a:active,
   a:visited {
+    
+  }
+}
+
+.routes-table-wrapper {
+  width: 100%;
+  max-height: 55vh;
+  overflow-y: auto;
+  border-radius: 0.8rem;
+  background-color: #fff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+
+  /* firefox */
+  scrollbar-width: none;
+
+  /* chrome, edge and safari */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.routes-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  tbody tr {
+    background-color: #fff;
+    border-bottom: 1px solid $nav-inner-borders;
+  }
+
+  td {
+    padding: 1.2rem 2.4rem;
     font-size: 1.6rem;
-    text-decoration: none;
+    height: 7rem;
+  }
+}
+
+thead {
+  background-color: $list-header;
+
+  th {
+    position: sticky;
+    top: 0;
+    padding: 1.2rem 2.4rem;
+    text-align: left;
+    font-variant: small-caps;
+    background-color: $list-header;
+    z-index: 1;
+  }
+
+  th:first-child {
+    border-top-left-radius: 5px;
+  }
+
+  th:last-child {
+    border-top-right-radius: 5px;
+  }
+}
+
+.table-route {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+
+  .table-route-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 4rem;
+    width: 4rem;
+    background-color: $list-header;
+    border-radius: 3px;
+  }
+
+  .route-name {
+    color: #283044;
+    font-size: 1.6rem;
+  }
+
+  .route-class {
     color: #444749;
+    font-size: 1.2rem;
   }
 }

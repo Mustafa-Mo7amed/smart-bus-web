@@ -5,17 +5,54 @@
   </header>
 
   <ul class="route-list-nav">
-    <li routerLinkActive="active">
-      <a routerLink="./" [queryParams]="{ whichRoutes: 'all-routes' }">All Routes</a>
+    <li routerLink="./" [queryParams]="{ whichRoutes: 'all-routes' }" routerLinkActive="active">
+      All Routes
     </li>
-    <li routerLinkActive="active">
-      <a routerLink="./" [queryParams]="{ whichRoutes: 'core-hubs' }">Core Hubs</a>
+    <li routerLink="./" [queryParams]="{ whichRoutes: 'core-hubs' }" routerLinkActive="active">
+      Core Hubs
     </li>
-    <li routerLinkActive="active">
-      <a routerLink="./" [queryParams]="{ whichRoutes: 'from-this-hub' }">From this Hub</a>
+    <li routerLink="./" [queryParams]="{ whichRoutes: 'from-this-hub' }" routerLinkActive="active">
+      From this Hub
     </li>
     <li>
-      <mat-icon>filter_list</mat-icon>
+      <mat-icon routerLink="./" [queryParams]="">filter_list</mat-icon>
     </li>
   </ul>
+  <div class="routes-table-wrapper">
+    <table class="routes-table">
+      <thead>
+        <tr>
+          <th>route</th>
+          <th>price</th>
+          <th>distance</th>
+          <th>active buses</th>
+          <th>nearest arrival</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (route of routes(); track route.routeId) {
+          <tr>
+            <td class="table-route">
+              <div class="table-route-icon-wrapper">
+                <mat-icon>alt_route</mat-icon>
+              </div>
+              <div>
+                <p class="route-name">{{ route.startCity }} - {{ route.endCity }}</p>
+                <p class="route-class">main route</p>
+              </div>
+            </td>
+            <td>{{ route.routeSummary.price }} LE</td>
+            <td>{{ route.routeSummary.distanceKm }} km</td>
+            <td>
+              {{
+                route.routeSummary.numberOfMicrobusesInQueue +
+                  route.routeSummary.numberOfMicrobusesOnTheWay
+              }}
+            </td>
+            <td>{{ route.routeSummary.nearestArrivalMinutes }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
