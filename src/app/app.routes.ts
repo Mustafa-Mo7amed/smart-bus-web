@@ -4,40 +4,46 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
+    redirectTo: 'routes',
   },
   {
-    path: 'auth',
-    children: [
-      {
-        path: 'login',
-      },
-      {
-        path: 'login-confirmation',
-      },
-    ],
-  },
-  {
-    path: 'dashboard',
-  },
-  {
-    path: 'buses',
-  },
-  {
-    path: 'drivers',
-  },
-  {
-    path: 'stations',
-  },
-  {
-    path: 'queues',
-  },
-  {
-    path: 'trips',
-  },
-  {
-    path: 'reports',
-  },
-  {
-    path: 'settings',
-  },
+    path: 'routes',
+    pathMatch: 'full',
+    // component: 
+  }
+  // {
+  //   path: 'auth',
+  //   children: [
+  //     {
+  //       path: 'login',
+  //     },
+  //     {
+  //       path: 'login-confirmation',
+  //     },
+  //   ],
+  // },
+  // {
+  //   path: 'dashboard',
+  // },
+  // {
+  //   path: 'buses',
+  // },
+  // {
+  //   path: 'drivers',
+  // },
+  // {
+  //   path: 'stations',
+  // },
+  // {
+  //   path: 'queues',
+  // },
+  // {
+  //   path: 'trips',
+  // },
+  // {
+  //   path: 'reports',
+  // },
+  // {
+  //   path: 'settings',
+  // },
 ];

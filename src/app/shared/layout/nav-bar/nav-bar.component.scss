@@ -1,9 +1,13 @@
+$nav-background: #283044;
+$nav-hover: #3F465C;
+$nav-inner-borders: $nav-hover;
+
 :host {
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
-  background-color: #283044;
+  background-color: $nav-background;
 
   padding: 1.6rem;
 }
@@ -66,11 +70,12 @@
 
 .nav-items li:last-child {
   margin-top: auto;
+  border-top: 1px solid $nav-inner-borders;
 }
 
 .nav-items li:hover,
 .nav-items li:active { 
-  background-color: #3F465C;
+  background-color: $nav-hover;
 }
 
 .nav-items li.active::before {

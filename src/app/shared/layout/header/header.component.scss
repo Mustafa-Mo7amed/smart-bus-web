@@ -1,5 +1,80 @@
-div {
-    height: 100vh;
-    width: 100%;
-    background-color: #fff;
+// TODO: make variables more discriptive of what they do (used this one in some unrelated spots)
+$nav-inner-borders: #c4c7c9;
+
+$input-background: #e0e3e5;
+
+:host {
+  display: flex;
+  align-items: center;
+  gap: 3.2rem;
+  flex: 1;
+  padding: 1.2rem 2.4rem;
+
+  border-bottom: 1px solid $nav-inner-borders;
+}
+
+.input-wrapper {
+  display: flex;
+  background-color: $input-background;
+  height: 4rem;
+  border-radius: 5px;
+  padding: 0.8rem 1.6rem 0.8rem 0.8rem;
+
+  &:focus-within {
+    // TODO: check how to use varibales from other files
+    outline: 2px solid #4d8eff;
+  }
+
+  .search-icon {
+    font-size: 2rem;
+    color: #747779;
+  }
+
+  // TODO: change font color in input
+  input {
+    background: transparent;
+    padding: 0.8rem 0rem;
+    border: none;
+    font-size: 1.8rem;
+    min-width: 50rem;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.notifications-icon {
+  margin-left: auto;
+  cursor: pointer;
+  color: $nav-inner-borders;
+}
+
+.help-icon {
+  cursor: pointer;
+  color: $nav-inner-borders;
+}
+
+.contact-support {
+  text-decoration: none;
+  font-size: 1.8rem;
+}
+
+.manager-profile {
+  display: flex;
+  align-items: center;
+  border-left: 2px solid $nav-inner-borders;
+  padding-left: 1.6rem;
+
+  .station-name {
+    margin-top: 0.4rem;
+    direction: rtl;
+    color: #A9ABAD;
+    font-size: 1.4rem;
+  }
+
+  .manager-avatar {
+    height: 5rem;
+    width: 5rem;
+  }
 }

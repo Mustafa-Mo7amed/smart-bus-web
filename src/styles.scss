@@ -145,12 +145,20 @@ Medium: 11px
 
 */
 
+
+/* GLOBAL VARIABLES */
+$focus: #4D8EFF;
+
 /* GLOBAL STYLES */
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+*:focus {
+  outline: 2px solid #4D8EFF;
 }
 
 html {
