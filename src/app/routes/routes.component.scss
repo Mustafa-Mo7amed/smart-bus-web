@@ -67,12 +67,6 @@ header {
   li:last-child {
     margin-left: auto;
   }
-
-  a:link,
-  a:active,
-  a:visited {
-    
-  }
 }
 
 .routes-table-wrapper {
@@ -128,6 +122,40 @@ thead {
 
   th:last-child {
     border-top-right-radius: 5px;
+  }
+}
+
+.routes-table td.spinner-cell {
+  padding: 4rem 0 !important;
+  text-align: center;
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.spinning-loader {
+  display: inline-block;
+  width: 5rem;
+  height: 5rem;
+  border: 4px solid rgba(59, 130, 246, 0.1);
+  border-left-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  color: #64748b;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 

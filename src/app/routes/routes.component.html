@@ -30,27 +30,38 @@
         </tr>
       </thead>
       <tbody>
-        @for (route of routes(); track route.routeId) {
+        @if (isLoading) {
           <tr>
-            <td class="table-route">
-              <div class="table-route-icon-wrapper">
-                <mat-icon>alt_route</mat-icon>
-              </div>
-              <div>
-                <p class="route-name">{{ route.startCity }} - {{ route.endCity }}</p>
-                <p class="route-class">main route</p>
+            <td colspan="5" class="spinner-cell">
+              <div class="spinner-container">
+                <span class="spinning-loader"></span>
+                <p class="loading-text">Fetching the best routes for you...</p>
               </div>
             </td>
-            <td>{{ route.routeSummary.price }} LE</td>
-            <td>{{ route.routeSummary.distanceKm }} km</td>
-            <td>
-              {{
-                route.routeSummary.numberOfMicrobusesInQueue +
-                  route.routeSummary.numberOfMicrobusesOnTheWay
-              }}
-            </td>
-            <td>{{ route.routeSummary.nearestArrivalMinutes }}</td>
           </tr>
+        } @else {
+          @for (route of routes(); track route.routeId) {
+            <tr>
+              <td class="table-route">
+                <div class="table-route-icon-wrapper">
+                  <mat-icon>alt_route</mat-icon>
+                </div>
+                <div>
+                  <p class="route-name">{{ route.startCity }} - {{ route.endCity }}</p>
+                  <p class="route-class">main route</p>
+                </div>
+              </td>
+              <td>{{ route.routeSummary.price }} LE</td>
+              <td>{{ route.routeSummary.distanceKm }} km</td>
+              <td>
+                {{
+                  route.routeSummary.numberOfMicrobusesInQueue +
+                    route.routeSummary.numberOfMicrobusesOnTheWay
+                }}
+              </td>
+              <td>{{ route.routeSummary.nearestArrivalMinutes }}</td>
+            </tr>
+          }
         }
       </tbody>
     </table>
