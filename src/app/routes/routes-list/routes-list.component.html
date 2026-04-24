@@ -51,9 +51,9 @@
                   <p class="route-class">main route</p>
                 </div>
               </td>
-              <td>{{ route.routeSummary.price }} LE</td>
+              <td class="price-cell">{{ route.routeSummary.price }} LE</td>
               <td>{{ route.routeSummary.distanceKm }} km</td>
-              <td>
+              <td class="active-buses-cell">
                 {{
                   route.routeSummary.numberOfMicrobusesInQueue +
                     route.routeSummary.numberOfMicrobusesOnTheWay

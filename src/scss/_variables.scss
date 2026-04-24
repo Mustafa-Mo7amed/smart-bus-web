@@ -1,0 +1,103 @@
+// ==========================================================
+// SMART BUS — Design Tokens (Single Source of Truth)
+// ==========================================================
+// Every component should `@use 'variables' as v;` and reference
+// tokens as `v.$token-name`.  No raw hex values in component SCSS.
+// ==========================================================
+
+// ----------------------------------------------------------
+// 1. BRAND COLORS
+// ----------------------------------------------------------
+$color-primary:           #2563EB;   // main brand blue
+$color-primary-dark:      #1D4ED8;   // hover / pressed state
+$color-primary-light:     #3B82F6;   // lighter accent
+$color-primary-bg:        #DAE2FD;   // very light blue for backgrounds / badges
+$color-primary-bg-subtle: #EEF0FF;   // even lighter blue tint
+
+$color-secondary:         #00C2A8;   // teal / green accent (prices, success)
+$color-secondary-dark:    #00A892;   // hover state for secondary
+
+// ----------------------------------------------------------
+// 2. NEUTRAL PALETTE
+// ----------------------------------------------------------
+$color-text-heading:      #0F172A;   // page titles, dark headings
+$color-text-body:         #283044;   // primary body text
+$color-text-muted:        #64748B;   // secondary / helper text
+$color-text-placeholder:  #8E9193;   // input placeholders, disabled
+
+$color-border:            #E0E3E5;   // table rows, dividers, card borders
+$color-border-light:      #EFF1F3;   // very subtle separators
+
+$color-bg-page:           #F8FAFC;   // main content area background
+$color-bg-surface:        #FFFFFF;   // cards, table, modals
+$color-bg-input:          #EFF1F3;   // search bar, form inputs
+
+// ----------------------------------------------------------
+// 3. SIDEBAR (NAV-BAR) TOKENS
+// ----------------------------------------------------------
+$nav-bg:                  $color-primary;
+$nav-text:                rgba(255, 255, 255, 0.7);
+$nav-text-active:         #FFFFFF;
+$nav-text-brand:          #FFFFFF;
+$nav-text-tagline:        rgba(255, 255, 255, 0.5);
+$nav-hover-bg:            rgba(255, 255, 255, 0.12);
+$nav-active-indicator:    $color-bg-surface;
+$nav-divider:             rgba(255, 255, 255, 0.15);
+
+// ----------------------------------------------------------
+// 4. HEADER TOKENS
+// ----------------------------------------------------------
+$header-border:           $color-border;
+$header-icon-color:       #94A3B8;
+$header-support-color:    $color-primary;
+
+// ----------------------------------------------------------
+// 5. TABLE TOKENS
+// ----------------------------------------------------------
+$table-header-text:       $color-text-muted;
+$table-header-bg:         $color-bg-surface;
+$table-row-border:        $color-border;
+$table-row-hover:         #F1F5F9;
+$table-price-color:       $color-secondary;
+$table-active-buses:      $color-primary;
+
+// ----------------------------------------------------------
+// 6. FEEDBACK / STATUS COLORS
+// ----------------------------------------------------------
+$color-error:             #EF4444;
+$color-warning:           #F59E0B;
+$color-success:           #10B981;
+$color-info:              $color-primary-light;
+
+// ----------------------------------------------------------
+// 7. FOCUS RING
+// ----------------------------------------------------------
+$color-focus-ring:        #4D8EFF;
+
+// ----------------------------------------------------------
+// 8. TYPOGRAPHY
+// ----------------------------------------------------------
+$font-family-primary:     'Inter', sans-serif;
+$font-family-fallback:    'Roboto', 'Helvetica Neue', sans-serif;
+
+// ----------------------------------------------------------
+// 9. BORDER RADIUS
+// ----------------------------------------------------------
+$radius-sm:   4px;
+$radius-md:   8px;
+$radius-lg:   12px;
+$radius-full: 9999px;
+
+// ----------------------------------------------------------
+// 10. SHADOWS
+// ----------------------------------------------------------
+$shadow-sm:   0 1px 3px rgba(15, 23, 42, 0.04);
+$shadow-md:   0 4px 12px rgba(15, 23, 42, 0.06);
+$shadow-lg:   0 10px 30px rgba(15, 23, 42, 0.08);
+
+// ----------------------------------------------------------
+// 11. TRANSITIONS
+// ----------------------------------------------------------
+$transition-fast:   0.15s ease;
+$transition-base:   0.25s ease;
+$transition-slow:   0.35s ease;

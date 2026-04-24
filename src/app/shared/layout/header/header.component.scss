@@ -1,7 +1,4 @@
-// TODO: make variables more discriptive of what they do (used this one in some unrelated spots)
-$nav-inner-borders: #c4c7c9;
-
-$input-background: #e0e3e5;
+@use 'variables' as v;
 
 :host {
   display: flex;
@@ -9,34 +6,40 @@ $input-background: #e0e3e5;
   gap: 3.2rem;
   flex: 1;
   padding: 1.2rem 2.4rem;
-
-  border-bottom: 1px solid $nav-inner-borders;
+  background-color: v.$color-bg-surface;
+  border-bottom: 1px solid v.$header-border;
 }
 
+// --- Search bar ---------------------------------------------
 .input-wrapper {
   display: flex;
-  background-color: $input-background;
+  align-items: center;
+  background-color: v.$color-bg-input;
   height: 4rem;
-  border-radius: 5px;
+  border-radius: v.$radius-md;
   padding: 0.8rem 1.6rem 0.8rem 0.8rem;
+  transition: box-shadow v.$transition-fast;
 
   &:focus-within {
-    // TODO: check how to use varibales from other files
-    outline: 2px solid #4d8eff;
+    outline: 2px solid v.$color-focus-ring;
   }
 
   .search-icon {
     font-size: 2rem;
-    color: #747779;
+    color: v.$color-text-placeholder;
   }
 
-  // TODO: change font color in input
   input {
     background: transparent;
-    padding: 0.8rem 0rem;
+    padding: 0.8rem 0;
     border: none;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     min-width: 50rem;
+    color: v.$color-text-body;
+
+    &::placeholder {
+      color: v.$color-text-placeholder;
+    }
 
     &:focus {
       outline: none;
@@ -44,37 +47,64 @@ $input-background: #e0e3e5;
   }
 }
 
+// --- Right-side icons ---------------------------------------
 .notifications-icon {
   margin-left: auto;
   cursor: pointer;
-  color: $nav-inner-borders;
+  color: v.$header-icon-color;
+  transition: color v.$transition-fast;
+
+  &:hover {
+    color: v.$color-text-body;
+  }
 }
 
 .help-icon {
   cursor: pointer;
-  color: $nav-inner-borders;
+  color: v.$header-icon-color;
+  transition: color v.$transition-fast;
+
+  &:hover {
+    color: v.$color-text-body;
+  }
 }
 
 .contact-support {
   text-decoration: none;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: v.$header-support-color;
+  transition: color v.$transition-fast;
+
+  &:hover {
+    color: v.$color-primary-dark;
+  }
 }
 
+// --- Manager profile ----------------------------------------
 .manager-profile {
   display: flex;
   align-items: center;
-  border-left: 2px solid $nav-inner-borders;
+  gap: 1.2rem;
+  border-left: 2px solid v.$header-border;
   padding-left: 1.6rem;
+
+  .manager-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: v.$color-text-body;
+  }
 
   .station-name {
     margin-top: 0.4rem;
-    direction: rtl;
-    color: #A9ABAD;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
+    color: v.$color-text-muted;
   }
 
   .manager-avatar {
-    height: 5rem;
-    width: 5rem;
+    height: 4rem;
+    width: 4rem;
+    border-radius: 50%;
+    border: 2px solid v.$color-primary-bg;
   }
 }
