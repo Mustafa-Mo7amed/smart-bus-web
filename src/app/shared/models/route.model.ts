@@ -21,21 +21,20 @@ export interface RouteSummary {
   nearestArrivalMinutes: number;
 }
 
-// TODO: update when plate number is included
+export interface RouteDetails extends RouteSummary {
+  startCity: string;
+  endCity: string;
+}
+
 export interface MicrobusAtStation {
+  driverId: string;
+  driverName: string;
+  position: number;
+  status: 'OnWay' | 'Waiting';
+  plateNumber: string;
   passengerCount: number;
   model: string;
   color: string;
 }
 
-export interface MicrobusOnTheWay {
-  estimatedArrivalMinutes: number;
-  passengerCount: number;
-  model: string;
-  color: string;
-  driverId: string;
-  driverName: string;
-  position: number;
-  status: string;
-  plateNumber: string;
-}
+export interface MicrobusOnTheWay extends MicrobusAtStation {}

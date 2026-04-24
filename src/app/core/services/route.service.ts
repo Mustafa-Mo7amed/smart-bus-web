@@ -1,7 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { RouteApi } from '../api/route.api';
 import { from, map, mergeMap, Observable, switchMap, toArray } from 'rxjs';
-import { Route, RouteEndpoint } from '../../shared/models/route.model';
+import {
+  MicrobusAtStation,
+  MicrobusOnTheWay,
+  Route,
+  RouteDetails,
+  RouteEndpoint,
+} from '../../shared/models/route.model';
 
 @Injectable({ providedIn: 'root' })
 export class RouteService {
@@ -26,6 +32,30 @@ export class RouteService {
         ),
       ),
       toArray(),
+    );
+  }
+
+  getRouteDetails(routeId: string): Observable<RouteDetails> {
+    return this.routeApi.getRouteDetails(routeId);
+  }
+
+  getMicrobusesAtStation(routeId: string): Observable<MicrobusAtStation[]> {
+    return this.routeApi.getMicrobusesAtStation(routeId).pipe(
+      map((buses) =>
+        [...buses].sort((a, b) => {
+          return a.position - b.position;
+        }),
+      ),
+    );
+  }
+
+  getMicrobusesOnTheWay(routeId: string): Observable<MicrobusOnTheWay[]> {
+    return this.routeApi.getMicrobusesOnTheWay(routeId).pipe(
+      map((buses) =>
+        [...buses].sort((a, b) => {
+          return a.position - b.position;
+        }),
+      ),
     );
   }
 }

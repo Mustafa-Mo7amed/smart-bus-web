@@ -9,8 +9,32 @@ export const routes: Routes = [
   },
   {
     path: 'routes',
-    pathMatch: 'prefix',
-    component: RoutesComponent,
+    loadComponent: () => import('../app/routes/routes.component').then((m) => m.RoutesComponent),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('../app/routes/routes-list/routes-list.component').then(
+            (m) => m.RoutesListComponent,
+          ),
+      },
+      {
+        path: 'details/:routeId',
+        loadComponent: () =>
+          import('../app/routes/route-details/route-details.component').then(
+            (m) => m.RouteDetailsComponent,
+          ),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('../app/routes/route-details/station-queue/station-queue.component').then(
+                (m) => m.StationQueueComponent,
+              ),
+          },
+        ],
+      },
+    ],
   },
   // {
   //   path: 'auth',
