@@ -46,3 +46,12 @@ Thumbs.db
 # backend
 /backend
 smart-bus-web.sln
+
+
+# hosting
+.firebase/
+.firebase/*
+hosting.*.cache
+
+# github
+.github/
