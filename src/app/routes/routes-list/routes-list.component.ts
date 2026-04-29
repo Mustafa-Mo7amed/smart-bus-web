@@ -23,6 +23,7 @@ export class RoutesListComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
+        console.log(this.routes);
         // TODO: replace with some pop-up cards
         console.error('Error fetching routes:', error);
         this.isLoading = false;

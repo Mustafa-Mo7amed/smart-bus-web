@@ -1,0 +1,62 @@
+<div class="queue-card">
+  <div class="queue-header">
+    <h2 class="queue-title">Station Queue</h2>
+    <span class="queue-badge">{{ stationBuses().length }} Buses</span>
+  </div>
+
+  <div class="queue-table-wrapper">
+    <table class="queue-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Driver Name</th>
+          <th>Plate Number</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (isLoading) {
+          <tr>
+            <td colspan="3" class="spinner-cell">
+              <div class="spinner-container">
+                <span class="spinning-loader"></span>
+                <p class="loading-text">Fetching queue...</p>
+              </div>
+            </td>
+          </tr>
+        } @else {
+          @for (bus of stationBuses(); track bus.driverId; let i = $index) {
+            <tr [class.boarding]="i === 0">
+              <td class="position-cell">
+                <span class="position-number" [class.boarding]="i === 0">{{ i + 1 }}</span>
+              </td>
+              <td class="driver-name-cell">
+                <p class="driver-name">{{ bus.driverName }}</p>
+              </td>
+              <td class="plate-number-cell">
+                <p class="plate-number">{{ bus.plateNumber }}</p>
+              </td>
+              <td class="actions-cell">
+                <button class="menu-btn" (click)="toggleMenu(bus.driverId)">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                @if (openMenuId === bus.driverId) {
+                  <div class="menu-dropdown">
+                    <button>View</button>
+                    <button>Remove</button>
+                  </div>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="3" class="empty-cell">
+                <p>No buses in station queue</p>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

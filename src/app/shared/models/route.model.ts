@@ -9,6 +9,7 @@ export interface Route extends BaseEntity {
 
 export interface RouteEndpoint {
   cityName?: string;
+  stationId?: string;
   to?: string;
   routeId?: string;
 }

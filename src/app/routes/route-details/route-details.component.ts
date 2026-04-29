@@ -1,12 +1,13 @@
 import { Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { RouteService } from '../../core/services/route.service';
-import { MicrobusAtStation, MicrobusOnTheWay, RouteDetails } from '../../shared/models/route.model';
+import { MicrobusOnTheWay, RouteDetails } from '../../shared/models/route.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from "@angular/router";
+import { RoadQueueComponent } from "./road-queue/road-queue.component";
 
 @Component({
   selector: 'app-route-details',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, RoadQueueComponent],
   templateUrl: './route-details.component.html',
   styleUrl: './route-details.component.scss',
 })
@@ -29,17 +30,6 @@ export class RouteDetailsComponent implements OnInit {
         },
         // TODO: replace with some pop-up cards
         error: (error) => console.log('Error fetching route details:', error),
-      });
-
-    this.routeService
-      .getMicrobusesOnTheWay(this.routeId())
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (microbuses) => {
-          this.roadBuses.set(microbuses);
-        },
-        // TODO: replace with some pop-up cards
-        error: (error) => console.log('Error fetching road microbuses:', error),
       });
   }
 }

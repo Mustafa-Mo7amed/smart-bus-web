@@ -1,1 +1,50 @@
-<p>road-queue works!</p>
+<div class="queue-card">
+  <div class="queue-header">
+    <h2 class="queue-title">Live En Route</h2>
+    <span class="queue-badge">{{ roadBuses().length }} Buses</span>
+  </div>
+
+  <div class="queue-table-wrapper">
+    <table class="queue-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Driver Name</th>
+          <th>Plate Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (isLoading) {
+          <tr>
+            <td colspan="3" class="spinner-cell">
+              <div class="spinner-container">
+                <span class="spinning-loader"></span>
+                <p class="loading-text">Fetching buses on road...</p>
+              </div>
+            </td>
+          </tr>
+        } @else {
+          @for (bus of roadBuses(); track bus.driverId; let i = $index) {
+            <tr [class.boarding]="i === 0">
+              <td class="position-cell">
+                <span class="position-number" [class.boarding]="i === 0">{{ i + 1 }}</span>
+              </td>
+              <td class="driver-name-cell">
+                <p class="driver-name">{{ bus.driverName }}</p>
+              </td>
+              <td class="plate-number-cell">
+                <p class="plate-number">{{ bus.plateNumber }}</p>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="3" class="empty-cell">
+                <p>No buses on the road</p>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,7 +1,10 @@
-<div class="route-endpoints">
-  <h1>{{ routeDetails()?.startCity }} - {{ routeDetails()?.endCity }}</h1>
-</div>
-<div class="queues-container">
-    <router-outlet />
-    <div class="road-queue"></div>
+<div class="container">
+  <div class="route-endpoints">
+    <h1>{{ routeDetails()?.startCity }} - {{ routeDetails()?.endCity }}</h1>
+    <button class="add-driver-btn" title="adds a driver to station queue">+ Add Driver</button>
+  </div>
+  <div class="queues-container">
+    <router-outlet style="display: none;" />
+    <app-road-queue [routeId]="routeId()" />
+  </div>
 </div>
