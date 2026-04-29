@@ -6,7 +6,6 @@ import {
   MicrobusOnTheWay,
   Route,
   RouteDetails,
-  RouteEndpoint,
 } from '../../shared/models/route.model';
 
 @Injectable({ providedIn: 'root' })
@@ -15,22 +14,22 @@ export class RouteService {
 
   getAllRoutes(): Observable<Route[]> {
     return this.routeApi.getAllRouteSources().pipe(
-      switchMap((soures) => from(soures)),
-      mergeMap((src) =>
-        this.routeApi.getRouteDestinations(src.cityName!).pipe(
+      switchMap((sources) => from(sources)),
+      mergeMap((src) => {
+        return this.routeApi.getRouteDestinations(src.stationId!).pipe(
           switchMap((destinations) => from(destinations)),
-          mergeMap((dest) =>
-            this.routeApi.getRouteSummary(dest.routeId!).pipe(
+          mergeMap((dest) => {
+            return this.routeApi.getRouteSummary(dest.routeId!).pipe(
               map((routeSummary) => ({
                 startCity: src.cityName || '',
                 endCity: dest.to || '',
                 routeId: dest.routeId!,
                 routeSummary,
               })),
-            ),
-          ),
-        ),
-      ),
+            );
+          }),
+        );
+      }),
       toArray(),
     );
   }

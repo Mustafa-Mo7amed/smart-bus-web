@@ -20,8 +20,8 @@ export class RouteApi extends BaseApi {
     return this.get<RouteEndpoint[]>();
   }
 
-  getRouteDestinations(from: string): Observable<RouteEndpoint[]> {
-    const params = new HttpParams().set('from', from);
+  getRouteDestinations(fromStationId: string): Observable<RouteEndpoint[]> {
+    const params = new HttpParams().set('fromStationId', fromStationId);
     return this.get<RouteEndpoint[]>('destinations', params);
   }
 
