@@ -17,7 +17,7 @@
       <tbody>
         @if (isLoading) {
           <tr>
-            <td colspan="3" class="spinner-cell">
+            <td colspan="4" class="spinner-cell">
               <div class="spinner-container">
                 <span class="spinning-loader"></span>
                 <p class="loading-text">Fetching queue...</p>
@@ -37,20 +37,24 @@
                 <p class="plate-number">{{ bus.plateNumber }}</p>
               </td>
               <td class="actions-cell">
-                <button class="menu-btn" (click)="toggleMenu(bus.driverId)">
+                <button class="menu-btn" [mat-menu-trigger-for]="menu">
                   <mat-icon>more_vert</mat-icon>
                 </button>
-                @if (openMenuId === bus.driverId) {
-                  <div class="menu-dropdown">
-                    <button>View</button>
-                    <button>Remove</button>
-                  </div>
-                }
+                <mat-menu class="menu-dropdown" #menu="matMenu" xPosition="before">
+                  <button mat-menu-item>
+                    <mat-icon>visibility</mat-icon>
+                    <span>View</span>
+                  </button>
+                  <button mat-menu-item>
+                    <mat-icon>delete</mat-icon>
+                    <span>Remove</span>
+                  </button>
+                </mat-menu>
               </td>
             </tr>
           } @empty {
             <tr>
-              <td colspan="3" class="empty-cell">
+              <td colspan="4" class="empty-cell">
                 <p>No buses in station queue</p>
               </td>
             </tr>

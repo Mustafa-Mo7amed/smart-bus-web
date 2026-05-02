@@ -1,4 +1,5 @@
 @use 'variables' as v;
+@use '@angular/material' as mat;
 
 // ==========================================================
 // GLOBAL STYLES — Smart Bus
@@ -39,3 +40,12 @@ body {
   color: v.$color-error;
   font-size: 1.4rem;
 }
+
+// --- ANGULAR MATERIAL OVERRIDES ----------------------------
+@include mat.menu-overrides((
+  container-color: #ffffff,
+  container-shape: v.$radius-md,
+  item-label-text-color: v.$color-text-body,
+  item-icon-color: v.$color-text-muted,
+  item-hover-state-layer-color: v.$color-primary-bg-subtle,
+));

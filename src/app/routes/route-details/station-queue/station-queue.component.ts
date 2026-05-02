@@ -2,11 +2,12 @@ import { Component, DestroyRef, inject, input, OnInit, signal } from '@angular/c
 import { MicrobusAtStation } from '../../../shared/models/route.model';
 import { RouteService } from '../../../core/services/route.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatIcon } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
 
 @Component({
   selector: 'app-station-queue',
-  imports: [MatIcon],
+  imports: [MatIconModule, MatMenuTrigger, MatMenu, MatMenuItem],
   templateUrl: './station-queue.component.html',
   styleUrl: './station-queue.component.scss',
 })
@@ -15,7 +16,6 @@ export class StationQueueComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   routeId = input.required<string>();
 
-  openMenuId: string | null = null;
   stationBuses = signal<MicrobusAtStation[]>([]);
   isLoading = false;
 
@@ -35,9 +35,5 @@ export class StationQueueComponent implements OnInit {
           this.isLoading = false;
         },
       });
-  }
-  
-  toggleMenu(id: string) {
-    this.openMenuId = this.openMenuId === id ? null : id;
   }
 }
