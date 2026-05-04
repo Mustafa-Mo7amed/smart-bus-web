@@ -60,6 +60,11 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        redirectTo: 'register-driver',
+        pathMatch: 'full',
+      },
+      {
+        path: 'register-driver',
         loadComponent: () =>
           import('../app/drivers/add-driver/add-driver.component').then((m) => m.AddDriverComponent),
       },

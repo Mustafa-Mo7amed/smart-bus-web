@@ -1,0 +1,134 @@
+<div class="container">
+  <!-- Form Card -->
+  <div class="form-card">
+    <div class="form-card__header">
+      <div class="form-card__icon-wrap">
+        <mat-icon>person</mat-icon>
+      </div>
+      <div>
+        <h2 class="form-card__title">Register New Driver</h2>
+        <p class="form-card__subtitle">Fill in the details to add a driver to the system</p>
+      </div>
+    </div>
+
+    @if (successMessage()) {
+      <div class="alert alert--success">
+        <mat-icon>check</mat-icon>
+        {{ successMessage() }}
+      </div>
+    }
+
+    <form class="driver-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <!-- Name -->
+      <div class="form-group" [class.form-group--error]="submitted() && form.get('name')?.invalid">
+        <label class="form-label" for="driver-name">Full Name</label>
+        <div class="input-wrapper">
+          <svg
+            class="input-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            width="18"
+            height="18"
+          >
+            <path
+              d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"
+            />
+          </svg>
+          <input
+            id="driver-name"
+            class="form-input"
+            type="text"
+            placeholder="e.g. Ahmed Hassan"
+            formControlName="name"
+          />
+        </div>
+        @if (submitted() && form.get('name')?.invalid) {
+          @if (form.get('name')?.hasError('required')) {
+            <span class="form-error">Full name is required</span>
+          } @else if (form.get('name')?.hasError('maxlength')) {
+            <span class="form-error">Full name must not exceed 100 characters</span>
+          }
+        }
+      </div>
+
+      <!-- Row: Phone + License -->
+      <div class="form-row">
+        <!-- Phone -->
+        <div class="form-group" [class.form-group--error]="submitted() && form.get('phone')?.invalid">
+          <label class="form-label" for="driver-phone">Phone Number</label>
+          <div class="input-wrapper">
+            <svg
+              class="input-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              width="18"
+              height="18"
+            >
+              <path
+                d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"
+              />
+            </svg>
+            <input
+              id="driver-phone"
+              class="form-input"
+              type="tel"
+              placeholder="e.g. 01012345678"
+              formControlName="phone"
+            />
+          </div>
+          @if (submitted() && form.get('phone')?.invalid) {
+            @if (form.get('phone')?.hasError('required')) {
+              <span class="form-error">Phone number is required</span>
+            } @else if (form.get('phone')?.hasError('invalidPhoneLength')) {
+              <span class="form-error">Phone number must be at least 10 digits</span>
+            }
+          }
+        </div>
+
+        <!-- License Number -->
+        <div
+          class="form-group"
+          [class.form-group--error]="submitted() && form.get('licenseNumber')?.invalid"
+        >
+          <label class="form-label" for="driver-license">License Number</label>
+          <div class="input-wrapper">
+            <svg
+              class="input-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              width="18"
+              height="18"
+            >
+              <path
+                d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25S13.24 11.25 12 11.25 9.75 10.24 9.75 9 10.76 6.75 12 6.75zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"
+              />
+            </svg>
+            <input
+              id="driver-license"
+              class="form-input"
+              type="text"
+              placeholder="e.g. LIC-001-EG"
+              formControlName="licenseNumber"
+            />
+          </div>
+          @if (submitted() && form.get('licenseNumber')?.invalid) {
+            @if (form.get('licenseNumber')?.hasError('required')) {
+              <span class="form-error">License number is required</span>
+            } @else if (form.get('licenseNumber')?.hasError('maxlength')) {
+              <span class="form-error">License number must not exceed 50 characters</span>
+            }
+          }
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn--secondary" (click)="onReset()">Reset</button>
+        <button type="submit" class="btn btn--primary">Register Driver</button>
+      </div>
+    </form>
+  </div>
+</div>
