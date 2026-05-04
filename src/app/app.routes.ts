@@ -36,6 +36,35 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'buses',
+    loadComponent: () => import('../app/buses/buses.component').then((m) => m.BusesComponent),
+    children: [
+      {
+        path: '',
+        redirectTo: 'register-bus',
+        pathMatch: 'full'
+        // loadComponent: () =>
+        //   import('../app/buses/add-bus/add-bus.component').then((m) => m.AddBusComponent),
+      },
+      {
+        path: 'register-bus',
+        loadComponent: () =>
+          import('../app/buses/add-bus/add-bus.component').then((m) => m.AddBusComponent),
+      },
+    ],
+  },
+  {
+    path: 'drivers',
+    loadComponent: () => import('../app/drivers/drivers.component').then((m) => m.DriversComponent),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('../app/drivers/add-driver/add-driver.component').then((m) => m.AddDriverComponent),
+      },
+    ],
+  },
   // {
   //   path: 'auth',
   //   children: [
@@ -49,12 +78,6 @@ export const routes: Routes = [
   // },
   // {
   //   path: 'dashboard',
-  // },
-  // {
-  //   path: 'buses',
-  // },
-  // {
-  //   path: 'drivers',
   // },
   // {
   //   path: 'stations',

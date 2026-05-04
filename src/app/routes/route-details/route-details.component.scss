@@ -15,24 +15,6 @@
     font-weight: 700;
     color: v.$color-text-heading;
   }
-
-  .add-driver-btn {
-    max-width: fit-content;
-    margin-left: auto;
-    border: none;
-    border-radius: v.$radius-md;
-    background-color: v.$color-primary;
-    color: v.$color-bg-surface;
-    padding: 1.4rem 2.8rem;
-    font-size: 1.6rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color v.$transition-fast;
-
-    &:hover {
-      background-color: v.$color-primary-dark;
-    }
-  }
 }
 
 .queues-container {
