@@ -1,17 +1,3 @@
-@use 'variables' as v;
-
 .container {
   padding: 2.4rem 3.2rem;
 }
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 3.2rem;
-
-  .register-bus-btn {
-    margin-left: auto;
-  }
-}
-
