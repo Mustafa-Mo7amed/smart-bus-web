@@ -9,13 +9,15 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
+import { Router } from '@angular/router';
 
 export interface Driver {
   id: string;
+  driverId: string;
   name: string;
   phone: string;
   licenseNumber: string;
-  isActive: boolean;
+  status: 'Active' | 'Inactive';
 }
 
 function phoneValidator(control: AbstractControl): ValidationErrors | null {
@@ -36,28 +38,17 @@ function phoneValidator(control: AbstractControl): ValidationErrors | null {
   styleUrl: './add-driver.component.scss',
 })
 export class AddDriverComponent implements OnInit {
-  // Dummy data simulating the DB
+  private readonly router = inject(Router);
+
+  // Local dummy data list (shared in memory for this session)
   drivers: Driver[] = [
     {
-      id: 'a1b2c3d4-0001',
+      id: '1',
+      driverId: 'DRV-1024',
       name: 'Ahmed Hassan',
       phone: '01012345678',
       licenseNumber: 'LIC-001-EG',
-      isActive: true,
-    },
-    {
-      id: 'a1b2c3d4-0002',
-      name: 'Mohamed Ali',
-      phone: '01123456789',
-      licenseNumber: 'LIC-002-EG',
-      isActive: true,
-    },
-    {
-      id: 'a1b2c3d4-0003',
-      name: 'Youssef Kamal',
-      phone: '01234567890',
-      licenseNumber: 'LIC-003-EG',
-      isActive: true,
+      status: 'Active',
     },
   ];
 
@@ -87,25 +78,37 @@ export class AddDriverComponent implements OnInit {
     }
 
     const { name, phone, licenseNumber } = this.form.value as any;
+    
+    const driverId = `DRV-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
     const newDriver: Driver = {
       id: crypto.randomUUID(),
+      driverId: driverId,
       name,
       phone,
       licenseNumber,
-      isActive: true,
+      status: 'Active',
     };
 
+    // In a real app with dummy data, we'd push to a service
     this.drivers.unshift(newDriver);
+    
     this.successMessage.set(`Driver "${newDriver.name}" registered successfully!`);
     this.form.reset();
     this.submitted.set(false);
 
-    setTimeout(() => this.successMessage.set(''), 3000);
+    setTimeout(() => {
+      this.successMessage.set('');
+      this.router.navigate(['/drivers']);
+    }, 2000);
   }
 
   onReset() {
     this.form.reset();
     this.submitted.set(false);
     this.successMessage.set('');
+  }
+
+  goBack() {
+    this.router.navigate(['/drivers']);
   }
 }
