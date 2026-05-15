@@ -70,4 +70,22 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'assignments',
+    loadComponent: () => import('../app/assignments/assignments.component').then((m) => m.AssignmentsComponent),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('../app/assignments/assignments-list/assignments-list.component').then(
+            (m) => m.AssignmentsListComponent,
+          ),
+      },
+      {
+        path: 'assign-bus',
+        loadComponent: () =>
+          import('../app/assignments/assign-bus/assign-bus.component').then((m) => m.AssignBusComponent),
+      },
+    ],
+  },
 ];

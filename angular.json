@@ -72,6 +72,9 @@
           "defaultConfiguration": "development"
         },
         "serve": {
+          "options": {
+            "allowedHosts": ["adapted-string-inventory-fixes.trycloudflare.com"]
+          },
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {

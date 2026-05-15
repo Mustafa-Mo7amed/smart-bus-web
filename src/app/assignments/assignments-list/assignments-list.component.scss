@@ -1,0 +1,228 @@
+@use 'variables' as v;
+
+// --- Page header --------------------------------------------
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3.2rem;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: v.$color-text-heading;
+}
+
+.register-driver-btn {
+  border: none;
+  border-radius: v.$radius-md;
+  background-color: v.$color-primary;
+  color: v.$color-bg-surface;
+  padding: 1.4rem 2.8rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color v.$transition-fast;
+
+  &:hover {
+    background-color: v.$color-primary-dark;
+  }
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  background-color: v.$color-bg-surface;
+  border: 1px solid v.$color-border-light;
+  border-radius: v.$radius-md;
+  padding: 1rem 1.6rem;
+  margin-bottom: 2.4rem;
+  box-shadow: v.$shadow-sm;
+
+  .search-icon {
+    color: v.$color-text-muted;
+    margin-right: 1.2rem;
+  }
+
+  .search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 1.6rem;
+    color: v.$color-text-body;
+    background: transparent;
+
+    &::placeholder {
+      color: v.$color-text-muted;
+    }
+  }
+}
+
+// --- Table wrapper ------------------------------------------
+.drivers-table-wrapper {
+  width: 100%;
+  max-height: 70vh;
+  overflow-y: auto;
+  border-radius: v.$radius-md;
+  background-color: v.$color-bg-surface;
+  box-shadow: v.$shadow-md;
+  border: 1px solid v.$color-border-light;
+
+  // Hide scrollbar
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// --- Table --------------------------------------------------
+.drivers-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  thead {
+    th {
+      position: sticky;
+      top: 0;
+      padding: 1.6rem 2.4rem;
+      text-align: left;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: v.$table-header-text;
+      background-color: v.$table-header-bg;
+      border-bottom: 1px solid v.$color-border;
+      z-index: 1;
+
+      &:first-child {
+        border-top-left-radius: v.$radius-md;
+      }
+
+      &:last-child {
+        border-top-right-radius: v.$radius-md;
+      }
+    }
+  }
+
+  tbody tr {
+    background-color: v.$color-bg-surface;
+    border-bottom: 1px solid v.$table-row-border;
+    transition: background-color v.$transition-fast;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: v.$table-row-hover;
+    }
+  }
+
+  td {
+    padding: 1.6rem 2.4rem;
+    font-size: 1.6rem;
+    height: 7.5rem;
+    color: v.$color-text-body;
+    vertical-align: middle;
+  }
+
+  .actions-cell {
+    text-align: right;
+  }
+}
+
+// --- Driver cell (name + icon) --------------------------------
+.table-driver {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+
+  .table-driver-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 4.2rem;
+    width: 4.2rem;
+    background-color: v.$color-primary-bg;
+    border-radius: v.$radius-md;
+
+    mat-icon {
+      color: v.$color-primary;
+    }
+  }
+
+  .driver-name {
+    color: v.$color-text-body;
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+
+  .driver-id {
+    color: v.$color-text-muted;
+    font-size: 1.2rem;
+    margin-top: 0.2rem;
+  }
+}
+
+// --- Icons / Buttons ----------------------------------------
+.btn-icon {
+  background: none;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 50%;
+  color: v.$color-text-muted;
+  cursor: pointer;
+  transition: all v.$transition-fast;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: v.$color-bg-input;
+    color: v.$color-text-heading;
+  }
+}
+
+// --- Loading state ------------------------------------------
+.drivers-table td.spinner-cell {
+  padding: 4rem 0 !important;
+  text-align: center;
+}
+
+.drivers-table td.no-drivers {
+  padding: 4rem 0 !important;
+  text-align: center;
+  color: v.$color-text-muted;
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.spinning-loader {
+  display: inline-block;
+  width: 5rem;
+  height: 5rem;
+  border: 4px solid v.$color-primary-bg;
+  border-left-color: v.$color-primary;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  color: v.$color-text-muted;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
