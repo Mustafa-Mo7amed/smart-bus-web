@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { LoginRequest } from '../../shared/models/auth.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 function phoneValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
@@ -21,9 +21,12 @@ function phoneValidator(control: AbstractControl): ValidationErrors | null {
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  returnUrl: string = '/';
 
   form = new FormGroup({
     phoneNumber: new FormControl('', {
@@ -36,6 +39,10 @@ export class LoginComponent {
     }),
     rememberMe: new FormControl(false, { nonNullable: true })
   });
+
+  ngOnInit() {
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+  }
 
   get isPhoneInvalid() {
     const control = this.form.controls.phoneNumber;
@@ -58,8 +65,8 @@ export class LoginComponent {
 
     this.authService.login(loginData).subscribe({
       next: (response) => {
-        console.log('Login successful:', response);
-        this.router.navigate(['/']);
+        console.log('Login successful, navigating to:', this.returnUrl);
+        this.router.navigateByUrl(this.returnUrl);
       },
       error: (err) => {
         console.error('Login failed:', err);

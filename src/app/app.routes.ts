@@ -1,9 +1,12 @@
 import { Routes } from '@angular/router';
 import { RoutesComponent } from './routes/routes.component';
+import { nonAuthGuard } from './core/guards/non-auth.guard';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: 'login',
+    canActivate: [nonAuthGuard],
     loadComponent: () => import('./auth/login/login.component').then((m) => m.LoginComponent),
   },
   {
@@ -13,6 +16,8 @@ export const routes: Routes = [
   },
   {
     path: 'routes',
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     loadComponent: () => import('../app/routes/routes.component').then((m) => m.RoutesComponent),
     children: [
       {
@@ -42,6 +47,8 @@ export const routes: Routes = [
   },
   {
     path: 'buses',
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     loadComponent: () => import('../app/buses/buses.component').then((m) => m.BusesComponent),
     children: [
       {
@@ -58,6 +65,8 @@ export const routes: Routes = [
   },
   {
     path: 'drivers',
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     loadComponent: () => import('../app/drivers/drivers.component').then((m) => m.DriversComponent),
     children: [
       {
@@ -76,6 +85,8 @@ export const routes: Routes = [
   },
   {
     path: 'assignments',
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     loadComponent: () => import('../app/assignments/assignments.component').then((m) => m.AssignmentsComponent),
     children: [
       {

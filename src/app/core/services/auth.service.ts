@@ -9,12 +9,20 @@ export class AuthService {
   
   private static readonly TOKEN_KEY = 'auth_token';
   private static readonly REFRESH_TOKEN_KEY = 'auth_refresh_token';
+  private static readonly USER_KEY = 'auth_user';
 
   private currentUserSignal = signal<AuthUser | null>(null);
   public currentUser = this.currentUserSignal.asReadonly();
 
   constructor() {
-    // Basic session recovery could go here
+    const userJson = localStorage.getItem(AuthService.USER_KEY);
+    if (userJson) {
+      try {
+        this.currentUserSignal.set(JSON.parse(userJson));
+      } catch (e) {
+        this.clearSession();
+      }
+    }
   }
 
   private isValidTokenFormat(token: string) {
@@ -24,7 +32,7 @@ export class AuthService {
   login(data: LoginRequest) {
     return this.authApi.login(data).pipe(
       tap((response) => {
-        if (response.token && response.refreshToken) {
+        if (response.token) {
           this.setSession(response);
         }
       }),
@@ -46,7 +54,7 @@ export class AuthService {
 
     return this.authApi.refresh(request).pipe(
       tap((response) => {
-        if (response.token && response.refreshToken) {
+        if (response.token) {
           this.setSession(response);
         }
       }),
@@ -55,13 +63,19 @@ export class AuthService {
 
   setSession(response: AuthResponse) {
     localStorage.setItem(AuthService.TOKEN_KEY, response.token);
-    localStorage.setItem(AuthService.REFRESH_TOKEN_KEY, response.refreshToken);
-    this.currentUserSignal.set(response.user);
+    if (response.refreshToken) {
+      localStorage.setItem(AuthService.REFRESH_TOKEN_KEY, response.refreshToken);
+    }
+    if (response.user) {
+      localStorage.setItem(AuthService.USER_KEY, JSON.stringify(response.user));
+      this.currentUserSignal.set(response.user);
+    }
   }
 
   clearSession() {
     localStorage.removeItem(AuthService.TOKEN_KEY);
     localStorage.removeItem(AuthService.REFRESH_TOKEN_KEY);
+    localStorage.removeItem(AuthService.USER_KEY);
     this.currentUserSignal.set(null);
   }
 
