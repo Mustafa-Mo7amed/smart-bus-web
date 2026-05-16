@@ -26,6 +26,7 @@ export class App {
 
   showLayout = computed(() => {
     const url = this.currentUrl();
+    if (!url) return false;
     return url !== '/login' && !url?.startsWith('/login');
   });
 }
