@@ -1,0 +1,63 @@
+<div class="container">
+  <div class="bus-image-container">
+    <img class="bus-image" src="login-no-background.png" alt="Smart Bus" />
+  </div>
+
+  <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <h1 class="title">Manager Dashboard login</h1>
+    
+    <div class="input-group">
+      <label for="phone">Phone Number</label>
+      <input
+        type="text"
+        id="phone"
+        placeholder="e.g. 01012345678"
+        formControlName="phoneNumber"
+        [class.invalid-input]="isPhoneInvalid"
+      />
+      @if (isPhoneInvalid) {
+        <p class="control-error">Please enter a valid phone number (at least 10 digits).</p>
+      }
+    </div>
+
+    <div class="input-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        placeholder="••••••••"
+        formControlName="password"
+        [class.invalid-input]="isPasswordInvalid"
+      />
+      @if (isPasswordInvalid) {
+        <p class="control-error">Password must be at least 8 characters long.</p>
+      }
+    </div>
+
+    <div class="remember-me-forget-password-wrapper">
+      <div class="remember-me-wrapper">
+        <input type="checkbox" id="remember-me" formControlName="rememberMe" />
+        <label for="remember-me">Remember me</label>
+      </div>
+      <a href="mailto:mostaamohamedd985@gmail.com" class="forget-password">Forgot password?</a>
+    </div>
+
+    <button type="submit" [disabled]="form.invalid && form.touched">
+      <span>Login to Dashboard</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="right-arrow-icon"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+        />
+      </svg>
+    </button>
+  </form>
+</div>
