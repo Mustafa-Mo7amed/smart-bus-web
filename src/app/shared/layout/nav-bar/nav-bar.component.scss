@@ -1,0 +1,95 @@
+@use 'variables' as v;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: v.$nav-bg;
+  padding: 1.6rem;
+}
+
+// --- Brand header -------------------------------------------
+.nav-header {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  margin-bottom: 3.2rem;
+
+  img {
+    display: inline-block;
+    width: 5rem;
+    height: 5rem;
+  }
+}
+
+.nav-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  color: v.$nav-text-brand;
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: v.$nav-text-tagline;
+  }
+}
+
+// --- Navigation items ---------------------------------------
+.nav-items {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  list-style: none;
+  color: v.$nav-text;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    cursor: pointer;
+    height: 5rem;
+    padding: 0 1.6rem;
+    margin-left: -1.6rem;
+    margin-right: -1.6rem;
+    border-radius: v.$radius-md;
+    margin-bottom: 0.2rem;
+    position: relative;
+    transition: all v.$transition-base;
+
+    &:last-child {
+      margin-top: auto;
+      border-top: 1px solid v.$nav-divider;
+      border-radius: 0;
+    }
+
+    &:hover,
+    &:active {
+      background-color: v.$nav-hover-bg;
+    }
+
+    &.active {
+      background-color: v.$nav-hover-bg;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.6rem;
+        bottom: 0.6rem;
+        width: 0.3rem;
+        background-color: v.$nav-active-indicator;
+        border-radius: 0 v.$radius-sm v.$radius-sm 0;
+      }
+
+      mat-icon,
+      p {
+        color: v.$nav-text-active;
+      }
+    }
+  }
+}

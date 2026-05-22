@@ -1,0 +1,53 @@
+<div class="form-card">
+  <div class="form-card__header">
+    <div class="form-card__icon-wrap">
+      <mat-icon>assignment</mat-icon>
+    </div>
+    <div>
+      <h2 class="form-card__title">Assign Bus to Driver</h2>
+      <p class="form-card__subtitle">Fill in the details to generate a bus assignment QR code</p>
+    </div>
+  </div>
+
+  <form class="driver-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <div class="form-row">
+      <div class="form-group" [class.form-group--error]="submitted() && form.get('licenseNumber')?.invalid">
+        <label class="form-label" for="license-number">License Number</label>
+        <div class="input-wrapper">
+          <input id="license-number" class="form-input" type="text" placeholder="e.g. DL-12345" formControlName="licenseNumber" />
+        </div>
+        @if (submitted() && form.get('licenseNumber')?.invalid) {
+          <span class="form-error">License Number is required</span>
+        }
+      </div>
+
+      <div class="form-group" [class.form-group--error]="submitted() && form.get('plateNumber')?.invalid">
+        <label class="form-label" for="plate-number">Plate Number</label>
+        <div class="input-wrapper">
+          <input id="plate-number" class="form-input" type="text" placeholder="e.g. ABC-123" formControlName="plateNumber" />
+        </div>
+        @if (submitted() && form.get('plateNumber')?.invalid) {
+          <span class="form-error">Plate Number is required</span>
+        }
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn--secondary" (click)="onReset()">Reset</button>
+      <button type="submit" class="btn btn--primary">Assign Bus</button>
+    </div>
+  </form>
+
+  @if (qrData()) {
+    <div class="qr-container">
+      <div class="qr-divider"></div>
+      <h3 class="qr-title">Assignment QR Code</h3>
+      <div class="qr-code-wrapper">
+        <qrcode [qrdata]="qrData()!" [width]="256" [errorCorrectionLevel]="'Q'"></qrcode>
+      </div>
+      <button class="btn btn--primary print-btn" (click)="printQR()">
+        <mat-icon>print</mat-icon> Print QR Code
+      </button>
+    </div>
+  }
+</div>

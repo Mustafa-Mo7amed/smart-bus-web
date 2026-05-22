@@ -7,7 +7,7 @@ import { Driver } from '../../shared/models/driver.model';
   providedIn: 'root',
 })
 export class DriverRepository extends BaseRepository<Driver> {
-  constructor(appDatabase: AppDatabase) {
-    super(appDatabase.drivers);
+  constructor(db: AppDatabase) {
+    super(db.drivers);
   }
 }

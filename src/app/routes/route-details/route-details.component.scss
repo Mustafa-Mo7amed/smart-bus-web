@@ -1,0 +1,24 @@
+@use 'variables' as v;
+
+.container {
+  padding: 2.4rem 3.2rem;
+}
+
+.route-endpoints {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3.2rem;
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: v.$color-text-heading;
+  }
+}
+
+.queues-container {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 1.6rem;
+}

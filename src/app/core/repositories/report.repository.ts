@@ -7,7 +7,7 @@ import { Report } from '../../shared/models/report.model';
   providedIn: 'root',
 })
 export class ReportRepository extends BaseRepository<Report> {
-  constructor(appDatabase: AppDatabase) {
-    super(appDatabase.reports);
+  constructor(db: AppDatabase) {
+    super(db.reports);
   }
 }

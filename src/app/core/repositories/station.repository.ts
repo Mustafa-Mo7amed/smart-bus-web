@@ -7,7 +7,7 @@ import { Station } from '../../shared/models/station.model';
   providedIn: 'root',
 })
 export class StationRepository extends BaseRepository<Station> {
-  constructor(appDatabase: AppDatabase) {
-    super(appDatabase.stations);
+  constructor(db: AppDatabase) {
+    super(db.stations);
   }
 }

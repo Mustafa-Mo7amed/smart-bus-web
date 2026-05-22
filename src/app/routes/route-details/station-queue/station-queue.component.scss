@@ -1,0 +1,210 @@
+@use 'variables' as v;
+
+// --- Card container ------------------------------------------
+.queue-card {
+  background-color: v.$color-bg-surface;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-md;
+  border: 1px solid v.$color-border-light;
+}
+
+// --- Header --------------------------------------------------
+.queue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 2.4rem;
+  border-bottom: 1px solid v.$color-border-light;
+}
+
+.queue-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: v.$color-text-heading;
+}
+
+.queue-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: v.$color-text-muted;
+  background-color: v.$color-bg-input;
+  border-radius: v.$radius-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+// --- Table wrapper -------------------------------------------
+.queue-table-wrapper {
+  max-height: 50vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 0 0 v.$radius-lg v.$radius-lg;
+
+  // Hide scrollbar
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// --- Table ---------------------------------------------------
+.queue-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  thead th {
+    position: sticky;
+    top: 0;
+    padding: 1.4rem 2.4rem;
+    text-align: left;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: v.$table-header-text;
+    background-color: v.$table-header-bg;
+    border-bottom: 1px solid v.$color-border;
+    z-index: 1;
+  }
+
+  tbody tr {
+    background-color: v.$color-bg-surface;
+    border-bottom: 1px solid v.$table-row-border;
+    transition: background-color v.$transition-fast;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover:not(.boarding) {
+      background-color: v.$table-row-hover;
+    }
+
+    &.boarding {
+      background-color: v.$color-primary;
+
+      td {
+        color: #ffffff;
+      }
+
+      .plate-number {
+        color: #ffffff;
+      }
+
+      .driver-name {
+        color: rgba(255, 255, 255, 0.75);
+      }
+
+      .menu-btn {
+        color: #ffffff;
+      }
+
+      .menu-btn:hover {
+        color: #000;
+      }
+    }
+  }
+
+  td {
+    padding: 1.4rem 2.4rem;
+    font-size: 1.4rem;
+    color: v.$color-text-body;
+    vertical-align: middle;
+  }
+
+  .actions-cell {
+    position: relative;
+    width: 4rem;
+
+    .menu-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      height: 3.2rem;
+      width: 3.2rem;
+      cursor: pointer;
+      border-radius: v.$radius-full;
+      color: v.$color-text-muted;
+      transition: all v.$transition-fast;
+
+      &:hover {
+        background-color: v.$color-primary;
+        color: #fff;
+      }
+    }
+  }
+
+  // --- Other cells ---------------------------------------------
+  .position-cell {
+    width: 5rem;
+  }
+
+  .position-number {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: v.$radius-md;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: v.$color-text-body;
+    background-color: v.$color-bg-input;
+
+    &.boarding {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+  }
+
+  .plate-number {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: v.$color-text-heading;
+  }
+
+  .driver-name {
+    font-size: 1.2rem;
+    color: v.$color-text-muted;
+  }
+
+  // --- States --------------------------------------------------
+  .spinner-cell,
+  .empty-cell {
+    padding: 4rem 0 !important;
+    text-align: center;
+  }
+
+  .spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;
+  }
+
+  .spinning-loader {
+    display: inline-block;
+    width: 3.2rem;
+    height: 3.2rem;
+    border: 3px solid v.$color-primary-bg;
+    border-left-color: v.$color-primary;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}

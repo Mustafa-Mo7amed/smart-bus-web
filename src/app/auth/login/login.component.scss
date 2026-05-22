@@ -1,0 +1,189 @@
+@use 'variables' as v;
+
+.container {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  background-color: v.$color-bg-page;
+}
+
+.bus-image-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: v.$color-bg-input;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 80%;
+    padding-bottom: 80%;
+    background-color: v.$color-primary;
+    border-radius: v.$radius-full;
+    opacity: 0.1;
+    z-index: 0;
+  }
+}
+
+.bus-image {
+  position: relative;
+  display: block;
+  width: 85%;
+  height: auto;
+  object-fit: contain;
+  z-index: 1;
+}
+
+.login-form {
+  padding: 8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: v.$color-bg-surface;
+  box-shadow: v.$shadow-lg;
+}
+
+.title {
+  font-size: 3.6rem;
+  font-weight: 700;
+  margin-bottom: 4.8rem;
+  letter-spacing: -1px;
+  line-height: 1.2;
+  color: v.$color-text-heading;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 2.4rem;
+
+  label {
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: v.$color-text-muted;
+  }
+
+  input {
+    padding: 1.4rem 1.6rem;
+    font-size: 1.6rem;
+    border: 2px solid v.$color-border;
+    border-radius: v.$radius-md;
+    transition: all v.$transition-fast;
+    background-color: v.$color-bg-input;
+    color: v.$color-text-body;
+
+    &::placeholder {
+      color: v.$color-text-placeholder;
+    }
+
+    &:focus {
+      background-color: v.$color-bg-surface;
+      border-color: v.$color-primary;
+      box-shadow: 0 0 0 3px rgba(v.$color-primary, 0.1);
+      outline: none;
+    }
+
+    &.invalid-input {
+      border-color: v.$color-error;
+
+      &:focus {
+        box-shadow: v.$shadow-error;
+      }
+    }
+  }
+}
+
+.control-error {
+  font-size: 1.3rem;
+  color: v.$color-error;
+  margin-top: 0.4rem;
+}
+
+.remember-me-forget-password-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3.2rem;
+}
+
+.remember-me-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  input[type="checkbox"] {
+    width: 1.8rem;
+    height: 1.8rem;
+    cursor: pointer;
+    accent-color: v.$color-primary;
+  }
+
+  label {
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: v.$color-text-body;
+  }
+}
+
+.forget-password {
+  font-size: 1.5rem;
+  color: v.$color-primary;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all v.$transition-fast;
+
+  &:hover {
+    color: v.$color-primary-dark;
+    text-decoration: underline;
+  }
+}
+
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+
+  font-size: 1.8rem;
+  font-weight: 700;
+
+  background: linear-gradient(135deg, v.$color-primary 0%, v.$color-primary-dark 100%);
+  color: #fff;
+
+  padding: 1.6rem 3.2rem;
+  border: none;
+  border-radius: v.$radius-lg;
+
+  cursor: pointer;
+  transition: all v.$transition-base;
+  box-shadow: v.$shadow-md;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: v.$shadow-lg;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: v.$color-text-placeholder;
+  }
+
+  .right-arrow-icon {
+    width: 2.4rem;
+    height: 2.4rem;
+    transition: all v.$transition-base;
+  }
+
+  &:hover:not(:disabled) .right-arrow-icon {
+    transform: translateX(4px);
+  }
+}

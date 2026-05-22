@@ -1,7 +1,7 @@
 import { AppDatabase } from './app.database';
 
-export function applyMigrations(appDatabase: AppDatabase) {
-  appDatabase.version(1).stores({
+export function applyMigrations(db: AppDatabase) {
+  db.version(1).stores({
     buses: 'id, busId, stationId, driverId, status',
 
     drivers: 'id, driverId, phone',
@@ -17,5 +17,13 @@ export function applyMigrations(appDatabase: AppDatabase) {
     queueItems: 'id, queueId, position, driverId, busId',
 
     reports: 'id, reportId, userId, tripId',
+  });
+
+  db.version(2).stores({
+    syncQueue: 'id, entityId, method, url, timestamp, retries',
+  });
+
+  db.version(3).stores({
+    syncQueue: null,
   });
 }

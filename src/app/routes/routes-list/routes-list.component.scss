@@ -1,0 +1,236 @@
+@use 'variables' as v;
+
+.container {
+  padding: 2.4rem 3.2rem;
+}
+
+// --- Page header --------------------------------------------
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3.2rem;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: v.$color-text-heading;
+}
+
+.register-route-btn {
+  border: none;
+  border-radius: v.$radius-md;
+  background-color: v.$color-primary;
+  color: v.$color-bg-surface;
+  padding: 1.4rem 2.8rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color v.$transition-fast;
+
+  &:hover {
+    background-color: v.$color-primary-dark;
+  }
+}
+
+// --- Tab navigation (underline style) -----------------------
+.route-list-nav {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+  list-style: none;
+  margin-bottom: 2.4rem;
+  border-bottom: 1px solid v.$color-border;
+  padding-bottom: 0;
+
+  li {
+    padding: 1.2rem 0.4rem;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: v.$color-text-muted;
+    cursor: pointer;
+    position: relative;
+    transition: color v.$transition-fast;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px; // overlap parent border
+
+    &:hover {
+      color: v.$color-primary;
+    }
+
+    &.active {
+      color: v.$color-primary;
+      border-bottom-color: v.$color-primary;
+      font-weight: 600;
+    }
+
+    &:last-child {
+      margin-left: auto;
+      border-bottom: none;
+      color: v.$color-text-placeholder;
+
+      // &:hover {
+      //   color: v.$color-primary;
+      // }
+    }
+  }
+}
+
+// --- Table wrapper ------------------------------------------
+.routes-table-wrapper {
+  width: 100%;
+  max-height: 60vh;
+  overflow-y: auto;
+  border-radius: v.$radius-md;
+  background-color: v.$color-bg-surface;
+  box-shadow: v.$shadow-md;
+  border: 1px solid v.$color-border-light;
+
+  // Hide scrollbar
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// --- Table --------------------------------------------------
+.routes-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  // Table header - clean white with gray labels
+  thead {
+    th {
+      position: sticky;
+      top: 0;
+      padding: 1.6rem 2.4rem;
+      text-align: left;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: v.$table-header-text;
+      background-color: v.$table-header-bg;
+      border-bottom: 1px solid v.$color-border;
+      z-index: 1;
+
+      &:first-child {
+        border-top-left-radius: v.$radius-md;
+      }
+
+      &:last-child {
+        border-top-right-radius: v.$radius-md;
+      }
+    }
+  }
+
+  // Table body
+  tbody tr {
+    background-color: v.$color-bg-surface;
+    border-bottom: 1px solid v.$table-row-border;
+    transition: background-color v.$transition-fast;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: v.$table-row-hover;
+      cursor: pointer;
+    }
+  }
+
+  td {
+    padding: 1.6rem 2.4rem;
+    font-size: 1.6rem;
+    height: 7.5rem;
+    color: v.$color-text-body;
+  }
+
+  // Color-coded columns
+  td.price-cell {
+    color: v.$table-price-color;
+    font-weight: 600;
+  }
+
+  td.active-buses-cell {
+    color: v.$table-active-buses;
+    font-weight: 600;
+  }
+}
+
+// --- Loading state ------------------------------------------
+.routes-table td.spinner-cell {
+  padding: 4rem 0 !important;
+  text-align: center;
+}
+
+.routes-table td.no-routes {
+  padding: 4rem 0 !important;
+  text-align: center;
+  color: v.$color-text-muted;
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.spinning-loader {
+  display: inline-block;
+  width: 5rem;
+  height: 5rem;
+  border: 4px solid v.$color-primary-bg;
+  border-left-color: v.$color-primary;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  color: v.$color-text-muted;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// --- Route cell (name + icon) --------------------------------
+.table-route {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+
+  .table-route-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 4.2rem;
+    width: 4.2rem;
+    background-color: v.$color-primary-bg;
+    border-radius: v.$radius-md;
+
+    mat-icon {
+      color: v.$color-primary;
+    }
+  }
+
+  .route-name {
+    color: v.$color-text-body;
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+
+  .route-class {
+    color: v.$color-text-muted;
+    font-size: 1.2rem;
+    margin-top: 0.2rem;
+  }
+}

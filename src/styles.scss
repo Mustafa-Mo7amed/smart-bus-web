@@ -1,1 +1,70 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'variables' as v;
+@use '@angular/material' as mat;
+
+// ==========================================================
+// GLOBAL STYLES — Smart Bus
+// ==========================================================
+
+// --- RESET -------------------------------------------------
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*:focus {
+  outline: 2px solid v.$color-focus-ring;
+}
+
+// --- ROOT --------------------------------------------------
+html {
+  font-size: 62.5%; // 1rem = 10px
+  height: 100%;
+}
+
+body {
+  font-family: v.$font-family-primary;
+  line-height: 1;
+  font-weight: 400;
+  font-size: 1.6rem;
+  color: v.$color-text-body;
+  height: 100%;
+  margin: 0;
+  background-color: v.$color-bg-page;
+}
+
+// --- UTILITY CLASSES ----------------------------------------
+.control-error {
+  color: v.$color-error;
+  font-size: 1.4rem;
+}
+
+.btn {
+  max-width: fit-content;
+  border: none;
+  border-radius: v.$radius-md;
+  background-color: v.$color-primary;
+  color: v.$color-bg-surface;
+  padding: 1.4rem 2.8rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color v.$transition-base;
+
+  &:hover {
+    background-color: v.$color-primary-dark;
+  }
+}
+
+// --- ANGULAR MATERIAL OVERRIDES ----------------------------
+@include mat.menu-overrides(
+  (
+    container-color: #ffffff,
+    container-shape: v.$radius-md,
+    item-label-text-color: v.$color-text-body,
+    item-icon-color: v.$color-text-muted,
+    item-hover-state-layer-color: v.$color-primary-bg-subtle,
+  )
+);

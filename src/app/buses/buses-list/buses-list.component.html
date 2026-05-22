@@ -1,0 +1,67 @@
+<header>
+  <h1 class="title">Buses</h1>
+  <button class="register-bus-btn" routerLink="register-bus">
+    + Register New Bus
+  </button>
+</header>
+
+<div class="buses-table-wrapper">
+  <table class="buses-table">
+    <thead>
+      <tr>
+        <th>Bus</th>
+        <th>Plate Number</th>
+        <th>Capacity</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (isLoading()) {
+        <tr>
+          <td colspan="5" class="spinner-cell">
+            <div class="spinner-container">
+              <span class="spinning-loader"></span>
+              <p class="loading-text">Fetching buses...</p>
+            </div>
+          </td>
+        </tr>
+      } @else {
+        @for (bus of buses(); track bus.busId) {
+          <tr>
+            <td class="table-bus">
+              <div class="table-bus-icon-wrapper">
+                <mat-icon>directions_bus</mat-icon>
+              </div>
+              <div>
+                <p class="bus-name">Microbus</p>
+                <p class="bus-id">ID: {{ bus.busId }}</p>
+              </div>
+            </td>
+            <td>{{ bus.plateNumber }}</td>
+            <td>{{ bus.capacity }} Seats</td>
+            <td>
+              <span class="status-badge" 
+                [class.status-badge--active]="bus.status === 'In Hub'"
+                [class.status-badge--route]="bus.status === 'On Route'"
+                [class.status-badge--unavailable]="bus.status === 'Unavailable'">
+                {{ bus.status }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button class="btn-icon">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="no-buses">
+              <p>No Buses Registered</p>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>

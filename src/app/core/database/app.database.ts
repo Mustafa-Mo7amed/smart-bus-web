@@ -8,7 +8,9 @@ import { Trip } from '../../shared/models/trip.model';
 import { applyMigrations } from './migrations';
 import { Route } from '@angular/router';
 import { QueueItem } from '../../shared/models/queue-item.model';
+import { Injectable } from '@angular/core';
 
+@Injectable({ providedIn: 'root' })
 export class AppDatabase extends Dexie {
   buses!: Table<Bus>;
   drivers!: Table<Driver>;
@@ -25,5 +27,3 @@ export class AppDatabase extends Dexie {
     applyMigrations(this);
   }
 }
-
-export const appDatabase = new AppDatabase();

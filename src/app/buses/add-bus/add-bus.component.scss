@@ -1,0 +1,313 @@
+@use 'variables' as v;
+
+// ─── Form Card ────────────────────────────────────────────────
+.form-card {
+  background-color: v.$color-bg-surface;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-md;
+  padding: 3.2rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    margin-bottom: 3.2rem;
+  }
+
+  &__icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.8rem;
+    height: 4.8rem;
+    background-color: v.$color-primary-bg;
+    border-radius: v.$radius-md;
+    color: v.$color-primary;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: v.$color-text-heading;
+  }
+
+  &__subtitle {
+    font-size: 1.4rem;
+    color: v.$color-text-muted;
+    margin-top: 0.4rem;
+  }
+}
+
+// ─── Alert ────────────────────────────────────────────────────
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1.2rem 1.6rem;
+  border-radius: v.$radius-md;
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-bottom: 2.4rem;
+  animation: slideDown 0.3s ease;
+
+  &--success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: v.$color-success;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ─── Form Layout ──────────────────────────────────────────────
+.bus-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.6rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  &--error .form-input {
+    border-color: v.$color-error;
+    background-color: rgba(239, 68, 68, 0.04);
+
+    &:focus {
+      box-shadow: v.$shadow-error;
+    }
+  }
+}
+
+.form-label {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: v.$color-text-body;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1.4rem;
+  color: v.$color-text-placeholder;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.form-input {
+  width: 100%;
+  padding: 1.2rem 1.4rem 1.2rem 4.4rem;
+  font-size: 1.5rem;
+  font-family: inherit;
+  color: v.$color-text-body;
+  background-color: v.$color-bg-input;
+  border: 1.5px solid v.$color-border;
+  border-radius: v.$radius-md;
+  outline: none;
+  transition: border-color v.$transition-fast, box-shadow v.$transition-fast, background-color v.$transition-fast;
+
+  // remove number spinners
+  // &[type='number'] {
+  //   -moz-appearance: textfield;
+  //   &::-webkit-outer-spin-button,
+  //   &::-webkit-inner-spin-button { -webkit-appearance: none; }
+  // }
+
+  &::placeholder {
+    color: v.$color-text-placeholder;
+  }
+
+  &:focus {
+    border-color: v.$color-primary;
+    background-color: v.$color-bg-surface;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  }
+}
+
+.form-hint {
+  font-size: 1.2rem;
+  color: v.$color-text-muted;
+  margin-top: -0.2rem;
+}
+
+.form-error {
+  font-size: 1.2rem;
+  color: v.$color-error;
+  font-weight: 500;
+}
+
+// ─── Actions ──────────────────────────────────────────────────
+.form-actions {
+  display: flex;
+  // justify-content: flex-start;
+  gap: 1.2rem;
+  margin-top: 0.8rem;
+}
+
+.btn {
+  &:active { transform: translateY(1px); }
+
+  &--primary {
+    background-color: v.$color-primary;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+
+    &:hover {
+      background-color: v.$color-primary-dark;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+  }
+
+  &--secondary {
+    margin-left: auto;
+    background-color: v.$color-bg-input;
+    color: v.$color-text-muted;
+    border: 1.5px solid v.$color-border;
+
+    &:hover {
+      background-color: v.$color-border-light;
+      color: v.$color-text-body;
+    }
+  }
+}
+
+// ─── Preview Card ─────────────────────────────────────────────
+// .preview-card {
+//   background-color: v.$color-bg-surface;
+//   border-radius: v.$radius-lg;
+//   border: 1px solid v.$color-border-light;
+//   box-shadow: v.$shadow-md;
+//   padding: 2.4rem 2.4rem 0;
+//   overflow: hidden;
+
+//   &__title {
+//     font-size: 1.6rem;
+//     font-weight: 700;
+//     color: v.$color-text-heading;
+//     margin-bottom: 2rem;
+//     display: flex;
+//     align-items: center;
+//     gap: 1rem;
+//   }
+// }
+
+// .preview-badge {
+//   display: inline-flex;
+//   align-items: center;
+//   justify-content: center;
+//   min-width: 2.4rem;
+//   height: 2.4rem;
+//   padding: 0 0.8rem;
+//   background-color: v.$color-primary-bg;
+//   color: v.$color-primary;
+//   border-radius: v.$radius-full;
+//   font-size: 1.2rem;
+//   font-weight: 700;
+// }
+
+// .preview-table-wrap {
+//   overflow-y: auto;
+//   max-height: 40rem;
+//   margin: 0 -2.4rem;
+
+//   scrollbar-width: none;
+//   &::-webkit-scrollbar { display: none; }
+// }
+
+// .preview-table {
+//   width: 100%;
+//   border-collapse: collapse;
+
+//   thead th {
+//     position: sticky;
+//     top: 0;
+//     padding: 1.2rem 1.6rem;
+//     text-align: left;
+//     font-size: 1.1rem;
+//     font-weight: 600;
+//     text-transform: uppercase;
+//     letter-spacing: 0.06em;
+//     color: v.$table-header-text;
+//     background-color: v.$color-bg-surface;
+//     border-bottom: 1px solid v.$color-border;
+//   }
+
+//   tbody tr {
+//     border-bottom: 1px solid v.$color-border-light;
+//     transition: background-color v.$transition-fast;
+
+//     &:last-child { border-bottom: none; }
+//     &:hover { background-color: v.$table-row-hover; }
+//   }
+
+//   td {
+//     padding: 1.2rem 1.6rem;
+//     font-size: 1.4rem;
+//     color: v.$color-text-body;
+//   }
+// }
+
+// .plate-badge {
+//   display: inline-block;
+//   padding: 0.4rem 1rem;
+//   background-color: v.$color-primary-bg-subtle;
+//   color: v.$color-primary;
+//   border-radius: v.$radius-sm;
+//   font-size: 1.2rem;
+//   font-weight: 700;
+//   letter-spacing: 0.05em;
+//   border: 1px solid v.$color-primary-bg;
+// }
+
+// .color-cell {
+//   display: flex;
+//   align-items: center;
+//   gap: 0.8rem;
+// }
+
+// .color-dot {
+//   width: 1.2rem;
+//   height: 1.2rem;
+//   border-radius: 50%;
+//   border: 1.5px solid v.$color-border;
+//   flex-shrink: 0;
+// }
+
+// .status-badge {
+//   display: inline-block;
+//   padding: 0.3rem 1rem;
+//   border-radius: v.$radius-full;
+//   font-size: 1.2rem;
+//   font-weight: 600;
+
+//   &--active {
+//     background-color: rgba(16, 185, 129, 0.1);
+//     color: v.$color-success;
+//   }
+
+//   &--inactive {
+//     background-color: rgba(100, 116, 139, 0.1);
+//     color: v.$color-text-muted;
+//   }
+// }

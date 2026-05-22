@@ -7,7 +7,7 @@ import { Queue } from '../../shared/models/queue.model';
   providedIn: 'root',
 })
 export class QueueRepository extends BaseRepository<Queue> {
-  constructor(appDatabase: AppDatabase) {
-    super(appDatabase.queues);
+  constructor(db: AppDatabase) {
+    super(db.queues);
   }
 }

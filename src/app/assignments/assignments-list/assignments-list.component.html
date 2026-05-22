@@ -1,0 +1,68 @@
+<header>
+  <h1 class="title">Bus Assignments</h1>
+  <button class="register-driver-btn" routerLink="assign-bus">
+    Assign bus to driver
+  </button>
+</header>
+
+<div class="search-container">
+  <mat-icon class="search-icon">search</mat-icon>
+  <input 
+    type="text" 
+    class="search-input" 
+    placeholder="Search by name, license, or plate number..." 
+    [(ngModel)]="searchQuery" 
+    (ngModelChange)="searchQuery.set($event)">
+</div>
+
+<div class="drivers-table-wrapper">
+  <table class="drivers-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>License Number</th>
+        <th>Plate Number</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (isLoading()) {
+        <tr>
+          <td colspan="4" class="spinner-cell">
+            <div class="spinner-container">
+              <span class="spinning-loader"></span>
+              <p class="loading-text">Fetching assignments...</p>
+            </div>
+          </td>
+        </tr>
+      } @else {
+        @for (assignment of assignments(); track assignment.id) {
+          <tr>
+            <td class="table-driver">
+              <div class="table-driver-icon-wrapper">
+                <mat-icon>person</mat-icon>
+              </div>
+              <div>
+                <p class="driver-name">{{ assignment.name }}</p>
+                <p class="driver-id">ID: {{ assignment.id }}</p>
+              </div>
+            </td>
+            <td>{{ assignment.licenseNumber }}</td>
+            <td>{{ assignment.plateNumber }}</td>
+            <td class="actions-cell">
+              <button class="btn-icon">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" class="no-drivers">
+              <p>No Assignments Found</p>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
