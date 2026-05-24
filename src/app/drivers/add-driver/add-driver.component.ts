@@ -10,15 +10,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { Router } from '@angular/router';
-
-export interface Driver {
-  id: string;
-  driverId: string;
-  name: string;
-  phone: string;
-  licenseNumber: string;
-  status: 'Active' | 'Inactive';
-}
+import { AddDriverRequest } from '../../shared/models/driver.model';
+import { DriverService } from '../../core/services/driver.service';
 
 function phoneValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
@@ -39,18 +32,7 @@ function phoneValidator(control: AbstractControl): ValidationErrors | null {
 })
 export class AddDriverComponent implements OnInit {
   private readonly router = inject(Router);
-
-  // Local dummy data list (shared in memory for this session)
-  drivers: Driver[] = [
-    {
-      id: '1',
-      driverId: 'DRV-1024',
-      name: 'Ahmed Hassan',
-      phone: '01012345678',
-      licenseNumber: 'LIC-001-EG',
-      status: 'Active',
-    },
-  ];
+  private readonly driverService = inject(DriverService);
 
   form = new FormGroup({
     name: new FormControl('', {
@@ -77,29 +59,25 @@ export class AddDriverComponent implements OnInit {
       return;
     }
 
-    const { name, phone, licenseNumber } = this.form.value as any;
-    
-    const driverId = `DRV-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
-    const newDriver: Driver = {
-      id: crypto.randomUUID(),
-      driverId: driverId,
-      name,
-      phone,
-      licenseNumber,
-      status: 'Active',
-    };
+    const newDriver = this.form.value as AddDriverRequest;
+    this.driverService.addDriver(newDriver).subscribe({
+      next: (response) => {
+        this.successMessage.set(`Driver "${newDriver.driverName}" registered successfully!`);
+        this.form.reset();
+        this.submitted.set(false);
 
-    // In a real app with dummy data, we'd push to a service
-    this.drivers.unshift(newDriver);
-    
-    this.successMessage.set(`Driver "${newDriver.name}" registered successfully!`);
-    this.form.reset();
-    this.submitted.set(false);
-
-    setTimeout(() => {
-      this.successMessage.set('');
-      this.router.navigate(['/drivers']);
-    }, 2000);
+        setTimeout(() => {
+          this.successMessage.set('');
+          this.goBack();
+        }, 2000);
+      },
+      error: (error) => {
+        this.successMessage.set('Something went wrong! Please try again later.');
+        this.form.reset();
+        this.submitted.set(false);
+        console.log('AddDriverError: ', error);
+      },
+    });
   }
 
   onReset() {
