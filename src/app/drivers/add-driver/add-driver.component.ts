@@ -59,19 +59,29 @@ export class AddDriverComponent implements OnInit {
       return;
     }
 
-    const newDriver = this.form.value as AddDriverRequest;
+    const { name, phone, licenseNumber } = this.form.value as any;
+    const newDriver: AddDriverRequest = {
+      driverName: name,
+      phoneNumber: phone,
+      licenseNumber,
+    };
     this.driverService.addDriver(newDriver).subscribe({
       next: (response) => {
-        this.successMessage.set(`Driver "${newDriver.driverName}" registered successfully!`);
-        this.form.reset();
-        this.submitted.set(false);
+        if (response.success) {
+          this.successMessage.set(`Driver "${newDriver.driverName}" registered successfully!`);
+          this.form.reset();
+          this.submitted.set(false);
 
-        setTimeout(() => {
-          this.successMessage.set('');
-          this.goBack();
-        }, 2000);
+          setTimeout(() => {
+            this.successMessage.set('');
+            this.goBack();
+          }, 2000);
+        } else {
+          throw 'failed to add driver';
+        }
       },
       error: (error) => {
+        console.error(error);
         this.successMessage.set('Something went wrong! Please try again later.');
         this.form.reset();
         this.submitted.set(false);

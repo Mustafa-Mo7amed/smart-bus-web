@@ -10,11 +10,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getToken();
 
-  const addToken = (request: HttpRequest<any>, token: string) => {
+  const addToken = (request: HttpRequest<unknown>, token: string) => {
     return request.clone({
-      body: {
-        ...request.body,
-        token: token,
+      setHeaders: {
+        Authorization: `Bearer ${token}`,
       },
     });
   };
