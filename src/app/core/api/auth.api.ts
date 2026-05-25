@@ -1,10 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BaseApi } from './base.api';
 import { Observable } from 'rxjs';
 import { AuthResponse, LoginRequest, RefreshTokenRequest } from '../../shared/models/auth.model';
+import { HttpBackend, HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class AuthApi extends BaseApi {
+  private readonly httpBackend = inject(HttpBackend);
+  private readonly cleanHttp = new HttpClient(this.httpBackend);
+
   constructor() {
     super('Account');
   }
@@ -18,6 +22,6 @@ export class AuthApi extends BaseApi {
   }
 
   refresh(request: RefreshTokenRequest): Observable<AuthResponse> {
-    return this.post<AuthResponse>('generate-new-jwt-token', request);
+    return this.cleanHttp.post<AuthResponse>(this.buildUrl('generate-new-jwt-token'), request);
   }
 }
