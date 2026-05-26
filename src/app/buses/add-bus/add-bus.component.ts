@@ -11,18 +11,9 @@ import {
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { RouteService } from '../../core/services/route.service';
-import { Route } from '../../shared/models/route.model';
-
-export interface Microbus {
-  id: string;
-  plateNumber: string;
-  model: string;
-  color: string;
-  capacity: number;
-  qrCode: string;
-  routeId: string;
-  isActive: boolean;
-}
+import { RouteDetailed, RoutesPaginatedResponse } from '../../shared/models/route.model';
+import { AddBusRequest } from '../../shared/models/bus.model';
+import { BusService } from '../../core/services/bus.service';
 
 function plateNumberValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
@@ -42,43 +33,11 @@ function plateNumberValidator(control: AbstractControl): ValidationErrors | null
   styleUrl: './add-bus.component.scss',
 })
 export class AddBusComponent implements OnInit {
-  private routeService = inject(RouteService);
+  private readonly routeService = inject(RouteService);
+  private readonly busService = inject(BusService);
 
-  routes = signal<Route[]>([]);
-
-  // Dummy data simulating the DB
-  buses: Microbus[] = [
-    {
-      id: 'b1c2d3e4-0001',
-      plateNumber: 'أ ب ج 123',
-      model: 'Toyota Hiace',
-      color: 'White',
-      capacity: 14,
-      qrCode: 'QR-001',
-      routeId: 'route1',
-      isActive: true,
-    },
-    {
-      id: 'b1c2d3e4-0002',
-      plateNumber: 'د ه و 456',
-      model: 'Hyundai H100',
-      color: 'Silver',
-      capacity: 12,
-      qrCode: 'QR-002',
-      routeId: 'route2',
-      isActive: true,
-    },
-    {
-      id: 'b1c2d3e4-0003',
-      plateNumber: 'ز ح ط 789',
-      model: 'Mitsubishi L300',
-      color: 'Blue',
-      capacity: 14,
-      qrCode: 'QR-003',
-      routeId: 'route3',
-      isActive: false,
-    },
-  ];
+  private _routes = signal<RouteDetailed[] | null>(null);
+  public routes = this._routes.asReadonly();
 
   form = new FormGroup({
     plateNumber: new FormControl('', {
@@ -102,8 +61,8 @@ export class AddBusComponent implements OnInit {
   successMessage = signal('');
 
   ngOnInit() {
-    this.routeService.getAllRoutes().subscribe((routes: Route[]) => {
-      this.routes.set(routes);
+    this.routeService.getAllRoutes().subscribe((routes: RouteDetailed[]) => {
+      this._routes.set(routes);
     });
   }
 
@@ -112,23 +71,27 @@ export class AddBusComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    const { plateNumber, model, color, capacity, qrCode, routeId } = this.form.value as any;
-    const newBus: Microbus = {
-      id: crypto.randomUUID(),
+    const { plateNumber, model, color, capacity, routeId } = this.form.value as any;
+    const newBus: AddBusRequest = {
       plateNumber,
       model,
       color,
-      capacity: Number(capacity),
-      qrCode,
+      passengerCount: Number(capacity),
       routeId,
-      isActive: true,
     };
-    this.buses.unshift(newBus);
-    this.successMessage.set(`Bus "${newBus.plateNumber}" registered successfully!`);
-    this.form.reset();
-    this.submitted.set(false);
-    setTimeout(() => this.successMessage.set(''), 3000);
-    console.log(this.successMessage());
+    this.busService.addBus(newBus).subscribe({
+      next: (response) => {
+        this.successMessage.set(`Bus "${newBus.plateNumber}" registered successfully!`);
+        this.form.reset();
+        this.submitted.set(false);
+        setTimeout(() => this.successMessage.set(''), 3000);
+        console.log(this.successMessage());
+        console.log(response);
+      },
+      error: (error) => {
+        console.error('Failed to add bus: ', error);
+      },
+    });
   }
 
   onReset() {

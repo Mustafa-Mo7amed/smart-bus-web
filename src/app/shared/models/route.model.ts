@@ -39,3 +39,27 @@ export interface MicrobusAtStation {
 }
 
 export interface MicrobusOnTheWay extends MicrobusAtStation {}
+
+export interface RouteDetailed {
+  id: string;
+  fromAr: string;
+  fromEn: string;
+  toAr: string;
+  toEn: string;
+  price: number;
+  distanceKm: number;
+  fromStationId: string;
+  toStationId: string;
+}
+
+export interface RoutesPaginatedResponse {
+  data: {
+    pageNumber: number;
+    pageSize: number;
+    totalCount: number;
+    data: RouteDetailed[];
+  };
+  success: boolean;
+  message: string;
+  statusCode: number;
+}

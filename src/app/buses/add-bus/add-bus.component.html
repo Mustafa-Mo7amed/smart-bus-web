@@ -176,8 +176,8 @@
           </svg>
           <select id="bus-route" class="form-input" formControlName="routeId">
             <option value="">Select a route</option>
-            @for (route of routes(); track route.routeId) {
-              <option [value]="route.routeId">{{ route.startCity }} - {{ route.endCity }}</option>
+            @for (route of routes(); track route.id) {
+              <option [value]="route.id">{{ route.fromEn }} - {{ route.toEn }}</option>
             }
           </select>
         </div>

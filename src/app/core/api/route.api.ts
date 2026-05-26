@@ -6,6 +6,7 @@ import {
   MicrobusOnTheWay,
   RouteDetails,
   RouteEndpoint,
+  RoutesPaginatedResponse,
   RouteSummary,
 } from '../../shared/models/route.model';
 import { HttpParams } from '@angular/common/http';
@@ -18,6 +19,13 @@ export class RouteApi extends BaseApi {
 
   getAllRouteSources(): Observable<RouteEndpoint[]> {
     return this.get<RouteEndpoint[]>();
+  }
+
+  getRoutesPaginated(pageNumber: number, pageSize: number): Observable<RoutesPaginatedResponse> {
+    let params = new HttpParams();
+    params = params.set('pageNumber', pageNumber);
+    params = params.set('pageSize', pageSize);
+    return this.get<RoutesPaginatedResponse>('paginated', params);
   }
 
   getRouteDestinations(fromStationId: string): Observable<RouteEndpoint[]> {
