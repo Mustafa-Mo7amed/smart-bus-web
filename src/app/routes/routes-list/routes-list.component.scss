@@ -10,12 +10,49 @@ header {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 3.2rem;
+
+  .header-actions {
+    display: flex;
+    gap: 1.2rem;
+  }
 }
 
 .title {
   font-size: 3rem;
   font-weight: 700;
   color: v.$color-text-heading;
+}
+
+.export-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  border: 1px solid v.$color-primary;
+  border-radius: v.$radius-md;
+  background-color: transparent;
+  color: v.$color-primary;
+  padding: 1.2rem 2.4rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all v.$transition-fast;
+
+  &:hover:not(:disabled) {
+    background-color: v.$color-primary-bg;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: v.$color-text-placeholder;
+    color: v.$color-text-placeholder;
+  }
+
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
 }
 
 .register-route-btn {

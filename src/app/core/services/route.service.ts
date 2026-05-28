@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { RouteApi } from '../api/route.api';
-import { from, map, mergeMap, Observable, switchMap, toArray } from 'rxjs';
+import { from, map, mergeMap, Observable, switchMap, tap, toArray } from 'rxjs';
 import {
   MicrobusAtStation,
   MicrobusOnTheWay,
@@ -14,7 +14,8 @@ export class RouteService {
 
   getAllRoutes(): Observable<Route[]> {
     return this.routeApi.getAllRouteSources().pipe(
-      switchMap((sources) => from(sources)),
+      switchMap((sources) => from(sources.slice(0, 20))),
+      tap((source) => console.log(source)),
       mergeMap((src) => {
         return this.routeApi.getRouteDestinations(src.stationId!).pipe(
           switchMap((destinations) => from(destinations)),
@@ -27,9 +28,9 @@ export class RouteService {
                 routeSummary,
               })),
             );
-          }),
+          }, 1),
         );
-      }),
+      }, 1),
       toArray(),
     );
   }

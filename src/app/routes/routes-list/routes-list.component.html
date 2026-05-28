@@ -1,7 +1,17 @@
 <div class="container">
   <header>
     <h1 class="title">Active Routes</h1>
-    <button class="register-route-btn">+ Register New Route</button>
+    <div class="header-actions">
+      <button
+        class="export-btn"
+        (click)="exportToExcel()"
+        [disabled]="isLoading || routes().length === 0"
+      >
+        <mat-icon>file_download</mat-icon>
+        Export
+      </button>
+      <button class="register-route-btn">+ Register New Route</button>
+    </div>
   </header>
 
   <ul class="route-list-nav">
@@ -40,7 +50,7 @@
             </td>
           </tr>
         } @else {
-          @for (route of routes(); track route.routeId) {
+        @for (route of routes(); track route.id) {
             <tr [routerLink]="['details', route.routeId]">
               <td class="table-route">
                 <div class="table-route-icon-wrapper">
