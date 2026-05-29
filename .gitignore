@@ -55,3 +55,6 @@ hosting.*.cache
 
 # github
 .github/
+
+# team communication files
+/API_DOCUMENT.md

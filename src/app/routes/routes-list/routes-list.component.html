@@ -30,7 +30,7 @@
         </tr>
       </thead>
       <tbody>
-        @if (isLoading) {
+        @if (isLoading()) {
           <tr>
             <td colspan="5" class="spinner-cell">
               <div class="spinner-container">
@@ -72,4 +72,12 @@
       </tbody>
     </table>
   </div>
+
+  <app-paginator
+    [totalCount]="totalCount()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="pageSize()"
+    [pageSizeOptions]="pageSizeOptions()"
+    [isLoading]="isLoading()"
+    (pageChange)="onPageChange($event)" />
 </div>

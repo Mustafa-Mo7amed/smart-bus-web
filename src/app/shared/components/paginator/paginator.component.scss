@@ -1,0 +1,152 @@
+@use 'variables' as v;
+
+.custom-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.6rem;
+  padding: 1.6rem 2.4rem;
+  background-color: v.$color-bg-surface;
+  border: 1px solid v.$color-border-light;
+  border-top: 1px solid v.$color-border;
+  border-radius: 0 0 v.$radius-md v.$radius-md; // Bottom corners rounded
+  box-shadow: v.$shadow-sm;
+  font-family: v.$font-family-primary, v.$font-family-fallback;
+  font-size: 1.4rem;
+  color: v.$color-text-body;
+  width: 100%;
+  box-sizing: border-box;
+
+  .entry-info {
+    font-weight: 500;
+    color: v.$color-text-muted;
+
+    span {
+      font-weight: 600;
+      color: v.$color-text-heading;
+    }
+  }
+
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 2.4rem;
+    flex-wrap: wrap;
+  }
+
+  // --- Page Size Select ---
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+
+    label {
+      font-weight: 500;
+      color: v.$color-text-muted;
+      white-space: nowrap;
+    }
+  }
+
+  .select-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-color: v.$color-bg-input;
+      border: 1px solid v.$color-border;
+      border-radius: v.$radius-sm;
+      padding: 0.6rem 3.2rem 0.6rem 1.2rem;
+      font-family: inherit;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: v.$color-text-body;
+      cursor: pointer;
+      outline: none;
+      transition: border-color v.$transition-fast, box-shadow v.$transition-fast;
+
+      &:focus {
+        border-color: v.$color-primary;
+        box-shadow: 0 0 0 2px v.$color-primary-bg;
+      }
+    }
+
+    .select-arrow {
+      position: absolute;
+      right: 1.2rem;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .svg-icon {
+        width: 1.4rem;
+        height: 1.4rem;
+        color: v.$color-text-muted;
+      }
+    }
+  }
+
+  // --- Navigation Buttons ---
+  .pagination-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .btn-page {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 3.6rem;
+    min-width: 3.6rem;
+    padding: 0 0.8rem;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: v.$radius-sm;
+    color: v.$color-text-body;
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all v.$transition-fast;
+    user-select: none;
+    outline: none;
+
+    &:hover:not([disabled]) {
+      background-color: v.$table-row-hover;
+      color: v.$color-primary;
+      border-color: v.$color-border;
+    }
+
+    &.active {
+      background-color: v.$color-primary;
+      color: v.$color-bg-surface;
+      border-color: v.$color-primary;
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.15);
+    }
+
+    &[disabled] {
+      opacity: 0.4;
+      cursor: not-allowed;
+      color: v.$color-text-placeholder;
+    }
+
+    .svg-icon {
+      width: 1.8rem;
+      height: 1.8rem;
+      stroke: currentColor;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+
+  .page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+}
