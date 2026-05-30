@@ -13,13 +13,50 @@ import { Router } from '@angular/router';
 import { AddDriverRequest } from '../../shared/models/driver.model';
 import { DriverService } from '../../core/services/driver.service';
 
-function phoneValidator(control: AbstractControl): ValidationErrors | null {
-  const value = control.value;
-  if (!value) return null;
-  const withoutSpaces = value.replace(/\s/g, '');
-  if (withoutSpaces.length < 10) {
-    return { invalidPhoneLength: true };
+export function phoneValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value?.toString().trim();
+  
+
+  if (!value) {
+    return null; 
   }
+
+  const withoutSpaces = value.replace(/\s/g, '');
+
+  const egPhoneRegex = /^01[0125]\d{8}$/;
+
+  if (!egPhoneRegex.test(withoutSpaces)) {
+    return { invalidEgyptianPhone: true };
+  }
+
+  return null;
+}
+
+export function licenseNumberValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value?.toString().trim();
+
+  if (!value) {
+    return null;
+  }
+
+  if (!((value[0] == 2 || value[0] == 3) && value.length == 14)) {
+    return { invalidLicenseNumber: true };
+  }
+
+  const century = value[0] === '2' ? 1900 : 2000;
+  const year = century + Number(value.substring(1, 3));
+  const month = Number(value.substring(3, 5));
+  const day = Number(value.substring(5, 7));
+
+  const date = new Date(year, month - 1, day);
+
+  const isValidDate =
+    date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
+
+  if (!isValidDate) {
+    return { invalidBirthDate: true };
+  }
+
   return null;
 }
 
@@ -42,7 +79,7 @@ export class AddDriverComponent implements OnInit {
       validators: [Validators.required, phoneValidator],
     }),
     licenseNumber: new FormControl('', {
-      validators: [Validators.required, Validators.maxLength(50)],
+      validators: [Validators.required, Validators.maxLength(50), licenseNumberValidator],
     }),
   });
 

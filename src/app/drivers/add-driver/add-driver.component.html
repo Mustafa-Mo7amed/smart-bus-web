@@ -79,8 +79,10 @@
         @if (submitted() && form.get('phone')?.invalid) {
           @if (form.get('phone')?.hasError('required')) {
             <span class="form-error">Phone number is required</span>
-          } @else if (form.get('phone')?.hasError('invalidPhoneLength')) {
-            <span class="form-error">Phone number must be at least 10 digits</span>
+          } @else if (form.get('phone')?.hasError('invalidEgyptianPhone')) {
+            <span class="form-error"
+              >Phone number must be at least 11 digits and has a valid prefix</span
+            >
           }
         }
       </div>
@@ -119,6 +121,11 @@
             <span class="form-error">License number is required</span>
           } @else if (form.get('licenseNumber')?.hasError('maxlength')) {
             <span class="form-error">License number must not exceed 50 characters</span>
+          } @else if (
+            form.get('licenseNumber')?.hasError('invalidLicenseNumber') ||
+            form.get('licenseNumber')?.hasError('invalidBirthDate')
+          ) {
+            <span class="form-error">License number is not valid</span>
           }
         }
       </div>
