@@ -18,7 +18,12 @@ export const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'routes',
+        redirectTo: 'overview',
+      },
+      {
+        path: 'overview',
+        loadComponent: () =>
+          import('./overview/overview.component').then((m) => m.OverviewComponent),
       },
       {
         path: 'routes',

@@ -1,0 +1,226 @@
+<div class="overview-container">
+  <!-- Page Header -->
+  <header class="overview-header">
+    <div class="welcome-section">
+      <h1 class="welcome-title">Welcome, {{ currentUser()?.name || 'Station Manager' }}</h1>
+      <p class="welcome-subtitle">
+        Station Manager Dashboard &bull; {{ currentUser()?.role || 'Ramsis Station' }}
+      </p>
+    </div>
+    <div class="time-badge">
+      <mat-icon>schedule</mat-icon>
+      <span>Live Operations Mode</span>
+    </div>
+  </header>
+
+  <!-- KPI Cards Grid -->
+  <section class="kpi-grid">
+    <div class="kpi-card kpi-card--primary">
+      <div class="kpi-card__icon-wrap">
+        <mat-icon>directions_bus</mat-icon>
+      </div>
+      <div class="kpi-card__info">
+        <span class="kpi-card__label">Active Buses in Hub</span>
+        <h2 class="kpi-card__value">{{ activeBusesCount() }}</h2>
+      </div>
+    </div>
+
+    <div class="kpi-card kpi-card--secondary">
+      <div class="kpi-card__icon-wrap">
+        <mat-icon>commute</mat-icon>
+      </div>
+      <div class="kpi-card__info">
+        <span class="kpi-card__label">Buses On-Route</span>
+        <h2 class="kpi-card__value">{{ busesOnTripCount() }}</h2>
+      </div>
+    </div>
+
+    <div class="kpi-card kpi-card--info">
+      <div class="kpi-card__icon-wrap">
+        <mat-icon>badge</mat-icon>
+      </div>
+      <div class="kpi-card__info">
+        <span class="kpi-card__label">Available Drivers</span>
+        <h2 class="kpi-card__value">{{ availableDriversCount() }}</h2>
+      </div>
+    </div>
+
+    <div class="kpi-card kpi-card--error" [class.has-alerts]="pendingReportsCount() > 0">
+      <div class="kpi-card__icon-wrap">
+        <mat-icon>warning</mat-icon>
+      </div>
+      <div class="kpi-card__info">
+        <span class="kpi-card__label">Pending Reports</span>
+        <h2 class="kpi-card__value">{{ pendingReportsCount() }}</h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Dashboard Panels Grid -->
+  <div class="dashboard-grid">
+    <!-- Left Column: Active Route Queues Visualizer -->
+    <section class="dashboard-panel queues-panel">
+      <div class="panel-header">
+        <div class="panel-title-group">
+          <mat-icon>route</mat-icon>
+          <h3>Active Station Queues</h3>
+        </div>
+        <span class="badge badge--success">Live Hub Line</span>
+      </div>
+
+      <div class="panel-body">
+        <div class="route-queue-card" *ngFor="let queue of routeQueues()">
+          <div class="route-queue-card__header">
+            <div class="route-info">
+              <span class="route-tag">Route</span>
+              <h4>{{ queue.from }} &rarr; {{ queue.to }}</h4>
+            </div>
+            <span class="price-tag">{{ queue.price | currency:'EGP ':'symbol':'1.0-0' }}</span>
+          </div>
+
+          <div class="queue-line-container">
+            <div class="queue-bus" *ngFor="let bus of queue.buses" [class.queue-bus--full]="bus.passengerCount === 14">
+              <div class="queue-bus__top">
+                <span class="position-tag">#{{ bus.position }}</span>
+                <div class="bus-meta">
+                  <strong>{{ bus.plateNumber }}</strong>
+                  <span>{{ bus.driverName }} ({{ bus.model }})</span>
+                </div>
+                <button class="simulate-board-btn" (click)="addPassenger(queue.routeId, bus.plateNumber)" [disabled]="bus.passengerCount >= 14">
+                  <mat-icon>person_add</mat-icon>
+                  <span>Board</span>
+                </button>
+              </div>
+
+              <!-- Passenger Boarding Progress -->
+              <div class="boarding-progress-wrapper">
+                <div class="boarding-progress-bar">
+                  <div class="progress-fill" [style.width.%]="(bus.passengerCount / 14) * 100" [class.progress-fill--full]="bus.passengerCount === 14"></div>
+                </div>
+                <div class="boarding-text">
+                  <span>Boarding Capacity:</span>
+                  <strong>{{ bus.passengerCount }} / 14 passengers</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Passenger Reports and Daily Flow Stats -->
+    <div class="side-panels-group">
+      <!-- Passenger Reports Panel -->
+      <section class="dashboard-panel reports-panel">
+        <div class="panel-header">
+          <div class="panel-title-group">
+            <mat-icon>notifications_active</mat-icon>
+            <h3>Recent Passenger Reports</h3>
+          </div>
+          <span class="badge badge--error" *ngIf="pendingReportsCount() > 0">{{ pendingReportsCount() }} Unresolved</span>
+        </div>
+
+        <div class="panel-body reports-feed">
+          <div class="report-feed-item" *ngFor="let report of passengerReports()" [class.report-feed-item--resolved]="report.status === 'Resolved'">
+            <div class="report-item-header">
+              <span class="plate-number-badge">{{ report.plateNumber }}</span>
+              <span class="report-date">{{ report.createdAt | date:'shortTime' }}</span>
+            </div>
+            <div class="report-item-body">
+              <h5>{{ report.reason }}</h5>
+              <p>{{ report.description }}</p>
+            </div>
+            <div class="report-item-actions" *ngIf="report.status === 'Pending'">
+              <button class="resolve-btn" (click)="resolveReport(report.id)">
+                <mat-icon>check_circle</mat-icon>
+                <span>Resolve Alert</span>
+              </button>
+            </div>
+            <div class="report-resolved-banner" *ngIf="report.status === 'Resolved'">
+              <mat-icon>check</mat-icon>
+              <span>Resolved and Audited</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SVG Transit Flow Chart Panel -->
+      <section class="dashboard-panel analytics-panel">
+        <div class="panel-header">
+          <div class="panel-title-group">
+            <mat-icon>trending_up</mat-icon>
+            <h3>Daily Passenger Volume Flow</h3>
+          </div>
+        </div>
+        <div class="panel-body flow-chart-body">
+          <div class="chart-container">
+            <!-- Custom Premium SVG Line Graph -->
+            <svg viewBox="0 0 400 150" class="flow-svg">
+              <defs>
+                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#2563eb" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#2563eb" stop-opacity="0.0"/>
+                </linearGradient>
+              </defs>
+              <!-- Chart Line & Area -->
+              <path d="M 30,120 L 75,100 L 120,70 L 165,85 L 210,50 L 255,25 L 300,35 L 345,65 L 380,105" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+              <path d="M 30,120 L 75,100 L 120,70 L 165,85 L 210,50 L 255,25 L 300,35 L 345,65 L 380,105 L 380,140 L 30,140 Z" fill="url(#chartGradient)"/>
+              <!-- Circles on points -->
+              <circle cx="30" cy="120" r="4" fill="#2563eb"/>
+              <circle cx="75" cy="100" r="4" fill="#2563eb"/>
+              <circle cx="120" cy="70" r="4" fill="#2563eb"/>
+              <circle cx="165" cy="85" r="4" fill="#2563eb"/>
+              <circle cx="210" cy="50" r="4" fill="#2563eb"/>
+              <circle cx="255" cy="25" r="4" fill="#2563eb"/>
+              <circle cx="300" cy="35" r="4" fill="#2563eb"/>
+              <circle cx="345" cy="65" r="4" fill="#2563eb"/>
+            </svg>
+          </div>
+          <!-- Chart Labels -->
+          <div class="chart-labels">
+            <span *ngFor="let data of hourlyData">{{ data.hour }}</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Bottom Section: Quick Action shortcuts -->
+  <section class="quick-actions-section">
+    <h3 class="section-title">Quick Operations</h3>
+    <div class="actions-grid">
+      <div class="action-card" routerLink="/buses/register-bus">
+        <div class="action-card__icon-wrap bg-primary">
+          <mat-icon>directions_bus</mat-icon>
+        </div>
+        <div class="action-card__info">
+          <h4>Register New Bus</h4>
+          <p>Add a microbus to the station roster</p>
+        </div>
+        <mat-icon class="arrow-icon">chevron_right</mat-icon>
+      </div>
+
+      <div class="action-card" routerLink="/drivers/register-driver">
+        <div class="action-card__icon-wrap bg-secondary">
+          <mat-icon>person_add_alt</mat-icon>
+        </div>
+        <div class="action-card__info">
+          <h4>Add New Driver</h4>
+          <p>Create a driver profile and credentials</p>
+        </div>
+        <mat-icon class="arrow-icon">chevron_right</mat-icon>
+      </div>
+
+      <div class="action-card" routerLink="/assignments/assign-bus">
+        <div class="action-card__icon-wrap bg-info">
+          <mat-icon>assignment_ind</mat-icon>
+        </div>
+        <div class="action-card__info">
+          <h4>Assign Driver to Bus</h4>
+          <p>Link a verified driver with an active vehicle</p>
+        </div>
+        <mat-icon class="arrow-icon">chevron_right</mat-icon>
+      </div>
+    </div>
+  </section>
+</div>
