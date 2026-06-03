@@ -42,7 +42,7 @@
       <a href="mailto:mostaamohamedd985@gmail.com" class="forget-password">Forgot password?</a>
     </div>
 
-    <button type="submit" [disabled]="form.invalid && form.touched">
+    <button type="submit" [disabled]="form.invalid && form.touched" [appButtonLoading]="isLoading()">
       <span>Login to Dashboard</span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
