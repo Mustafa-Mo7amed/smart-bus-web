@@ -3,7 +3,6 @@ import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validatio
 import { AuthService } from '../../core/services/auth.service';
 import { LoginRequest } from '../../shared/models/auth.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ButtonLoadingDirective } from '../../shared/directives/button-loading.directive';
 import { finalize } from 'rxjs';
 
 function phoneValidator(control: AbstractControl): ValidationErrors | null {
@@ -19,7 +18,7 @@ function phoneValidator(control: AbstractControl): ValidationErrors | null {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonLoadingDirective],
+  imports: [ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
