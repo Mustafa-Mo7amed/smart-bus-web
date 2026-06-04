@@ -17,6 +17,13 @@
     </div>
   }
 
+  @if (errorMessage()) {
+    <div class="alert alert--danger">
+      <mat-icon>error</mat-icon>
+      {{ errorMessage() }}
+    </div>
+  }
+
   <form class="driver-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
     <div class="form-row">
       <!-- Name -->
@@ -41,6 +48,7 @@
             type="text"
             placeholder="e.g. Ahmed Hassan"
             formControlName="name"
+            [attr.disabled]="isSubmitting() ? true : null"
           />
         </div>
         @if (submitted() && form.get('name')?.invalid) {
@@ -74,6 +82,7 @@
             type="tel"
             placeholder="e.g. 01012345678"
             formControlName="phone"
+            [attr.disabled]="isSubmitting() ? true : null"
           />
         </div>
         @if (submitted() && form.get('phone')?.invalid) {
@@ -114,6 +123,7 @@
             type="text"
             placeholder="e.g. LIC-001-EG"
             formControlName="licenseNumber"
+            [attr.disabled]="isSubmitting() ? true : null"
           />
         </div>
         @if (submitted() && form.get('licenseNumber')?.invalid) {
@@ -133,8 +143,14 @@
 
     <!-- Actions -->
     <div class="form-actions">
-      <button type="button" class="btn btn--secondary" (click)="onReset()">Reset</button>
-      <button type="submit" class="btn btn--primary">Register Driver</button>
+      <button type="button" class="btn btn--secondary" (click)="onReset()" [disabled]="isSubmitting()">Reset</button>
+      <button type="submit" class="btn btn--primary" [disabled]="isSubmitting()">
+        @if (isSubmitting()) {
+          <span>Registering...</span>
+        } @else {
+          <span>Register Driver</span>
+        }
+      </button>
     </div>
   </form>
 </div>

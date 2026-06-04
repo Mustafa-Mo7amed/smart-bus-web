@@ -81,6 +81,8 @@ export class AddBusComponent implements OnInit {
 
   public submitted = signal(false);
   public successMessage = signal('');
+  public errorMessage = signal('');
+  public isSubmitting = signal(false);
 
   ngOnInit() {
     this.routeService.getAllRoutes().subscribe((routes: RouteDetailed[]) => {
@@ -148,6 +150,11 @@ export class AddBusComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+
+    this.isSubmitting.set(true);
+    this.successMessage.set('');
+    this.errorMessage.set('');
+
     const { plateNumber, model, color, capacity, routeId } = this.form.value as any;
     const newBus: AddBusRequest = {
       plateNumber,
@@ -158,6 +165,7 @@ export class AddBusComponent implements OnInit {
     };
     this.busService.addBus(newBus).subscribe({
       next: (response) => {
+        this.isSubmitting.set(false);
         this.successMessage.set(`Bus "${newBus.plateNumber}" registered successfully!`);
         this.form.reset();
         this.submitted.set(false);
@@ -167,6 +175,8 @@ export class AddBusComponent implements OnInit {
         console.log(response);
       },
       error: (error) => {
+        this.isSubmitting.set(false);
+        this.errorMessage.set('Failed to register the bus. Please try again.');
         console.error('Failed to add bus: ', error);
       },
     });
@@ -186,6 +196,7 @@ export class AddBusComponent implements OnInit {
     this.form.reset();
     this.submitted.set(false);
     this.successMessage.set('');
+    this.errorMessage.set('');
     this.clearPlateSignals();
   }
 }

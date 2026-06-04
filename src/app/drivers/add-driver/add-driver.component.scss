@@ -57,6 +57,12 @@
     color: v.$color-success;
     border: 1px solid rgba(16, 185, 129, 0.25);
   }
+
+  &--danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: v.$color-error;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+  }
 }
 
 @keyframes slideDown {

@@ -17,6 +17,13 @@
     </div>
   }
 
+  @if (errorMessage()) {
+    <div class="alert alert--danger">
+      <mat-icon>error</mat-icon>
+      {{ errorMessage() }}
+    </div>
+  }
+
   <form class="bus-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
     <!-- Row 1: Plate Number (Centered by itself) -->
     <div class="form-row form-row--center">
@@ -256,8 +263,14 @@
 
     <!-- Actions -->
     <div class="form-actions">
-      <button type="button" class="btn btn--secondary" (click)="onReset()">Reset</button>
-      <button type="submit" class="btn btn--primary">Register Bus</button>
+      <button type="button" class="btn btn--secondary" (click)="onReset()" [disabled]="isSubmitting()">Reset</button>
+      <button type="submit" class="btn btn--primary" [disabled]="isSubmitting()">
+        @if (isSubmitting()) {
+          <span>Registering...</span>
+        } @else {
+          <span>Register Bus</span>
+        }
+      </button>
     </div>
   </form>
 </div>

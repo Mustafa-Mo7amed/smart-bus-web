@@ -85,6 +85,8 @@ export class AddDriverComponent implements OnInit {
 
   submitted = signal(false);
   successMessage = signal('');
+  errorMessage = signal('');
+  isSubmitting = signal(false);
 
   ngOnInit() {
     // Initialize any data if needed
@@ -96,6 +98,10 @@ export class AddDriverComponent implements OnInit {
       return;
     }
 
+    this.isSubmitting.set(true);
+    this.successMessage.set('');
+    this.errorMessage.set('');
+
     const { name, phone, licenseNumber } = this.form.value as any;
     const newDriver: AddDriverRequest = {
       driverName: name,
@@ -104,6 +110,7 @@ export class AddDriverComponent implements OnInit {
     };
     this.driverService.addDriver(newDriver).subscribe({
       next: (response) => {
+        this.isSubmitting.set(false);
         if (response.success) {
           this.successMessage.set(`Driver "${newDriver.driverName}" registered successfully!`);
           this.form.reset();
@@ -114,14 +121,13 @@ export class AddDriverComponent implements OnInit {
             this.goBack();
           }, 2000);
         } else {
-          throw 'failed to add driver';
+          throw new Error('failed to add driver');
         }
       },
       error: (error) => {
         console.error(error);
-        this.successMessage.set('Something went wrong! Please try again later.');
-        this.form.reset();
-        this.submitted.set(false);
+        this.errorMessage.set('Something went wrong! Please try again later.');
+        this.isSubmitting.set(false);
         console.log('AddDriverError: ', error);
       },
     });
@@ -131,6 +137,7 @@ export class AddDriverComponent implements OnInit {
     this.form.reset();
     this.submitted.set(false);
     this.successMessage.set('');
+    this.errorMessage.set('');
   }
 
   goBack() {

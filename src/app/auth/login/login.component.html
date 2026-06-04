@@ -6,6 +6,15 @@
   <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
     <h1 class="title">Manager Dashboard login</h1>
     
+    @if (errorMessage()) {
+      <div class="alert alert--danger">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18" style="flex-shrink: 0;">
+          <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
     <div class="input-group">
       <label for="phone">Phone Number</label>
       <input
@@ -14,6 +23,7 @@
         placeholder="e.g. 01012345678"
         formControlName="phoneNumber"
         [class.invalid-input]="isPhoneInvalid"
+        [attr.disabled]="isLoading() ? true : null"
       />
       @if (isPhoneInvalid) {
         <p class="control-error">Please enter a valid phone number (at least 10 digits).</p>
@@ -28,6 +38,7 @@
         placeholder="••••••••"
         formControlName="password"
         [class.invalid-input]="isPasswordInvalid"
+        [attr.disabled]="isLoading() ? true : null"
       />
       @if (isPasswordInvalid) {
         <p class="control-error">Password must be at least 8 characters long.</p>
@@ -36,28 +47,33 @@
 
     <div class="remember-me-forget-password-wrapper">
       <div class="remember-me-wrapper">
-        <input type="checkbox" id="remember-me" formControlName="rememberMe" />
+        <input type="checkbox" id="remember-me" formControlName="rememberMe" [attr.disabled]="isLoading() ? true : null" />
         <label for="remember-me">Remember me</label>
       </div>
       <a href="mailto:mostaamohamedd985@gmail.com" class="forget-password">Forgot password?</a>
     </div>
 
-    <button type="submit" [disabled]="form.invalid && form.touched">
-      <span>Login to Dashboard</span>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="right-arrow-icon"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-        />
-      </svg>
+    <button type="submit" [disabled]="(form.invalid && form.touched) || isLoading()">
+      @if (isLoading()) {
+        <span class="spinner" style="width: 1.8rem; height: 1.8rem;"></span>
+        <span>Logging in...</span>
+      } @else {
+        <span>Login to Dashboard</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="right-arrow-icon"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+          />
+        </svg>
+      }
     </button>
   </form>
 </div>

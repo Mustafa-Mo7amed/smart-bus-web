@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit {
 
   returnUrl: string = '/';
   isLoading = signal(false);
+  errorMessage = signal('');
 
   form = new FormGroup({
     phoneNumber: new FormControl('', {
@@ -63,6 +64,7 @@ export class LoginComponent implements OnInit {
     }
 
     this.isLoading.set(true);
+    this.errorMessage.set('');
     const { phoneNumber, password, rememberMe } = this.form.getRawValue();
     const loginData: LoginRequest = { phoneNumber, password, rememberMe };
 
@@ -75,6 +77,7 @@ export class LoginComponent implements OnInit {
         },
         error: (err) => {
           console.error('Login failed:', err);
+          this.errorMessage.set(err?.error?.message || 'Login failed. Please check your credentials and try again.');
         }
       });
   }
