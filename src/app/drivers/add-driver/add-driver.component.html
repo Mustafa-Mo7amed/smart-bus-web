@@ -130,7 +130,7 @@
           @if (form.get('licenseNumber')?.hasError('required')) {
             <span class="form-error">License number is required</span>
           } @else if (form.get('licenseNumber')?.hasError('maxlength')) {
-            <span class="form-error">License number must not exceed 50 characters</span>
+            <span class="form-error">License number must not exceed 14 characters</span>
           } @else if (
             form.get('licenseNumber')?.hasError('invalidLicenseNumber') ||
             form.get('licenseNumber')?.hasError('invalidBirthDate')

@@ -79,7 +79,7 @@ export class AddDriverComponent implements OnInit {
       validators: [Validators.required, phoneValidator],
     }),
     licenseNumber: new FormControl('', {
-      validators: [Validators.required, Validators.maxLength(50), licenseNumberValidator],
+      validators: [Validators.required, Validators.maxLength(14), licenseNumberValidator],
     }),
   });
 
