@@ -13,7 +13,7 @@ export interface ReportListItem {
   id: string;
   plateNumber: string;
   createdAt: string;
-  reviewedAt: string | null;
+  resolvedAt: string | null;
   status: 'Pending' | 'Reviewed';
 }
 
@@ -27,7 +27,7 @@ export interface ReportDetails {
   id: string;
   plateNumber: string;
   createdAt: string;
-  reviewedAt: string | null;
+  resolvedAt: string | null;
   status: 'Pending' | 'Reviewed';
 }
 

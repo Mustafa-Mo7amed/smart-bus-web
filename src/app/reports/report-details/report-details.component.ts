@@ -55,8 +55,15 @@ export class ReportDetailsComponent implements OnInit {
     if (!this.report()) return;
     this.isReviewing.set(true);
     this.reportService.reviewReport(this.reportId).subscribe({
-      next: (updatedDetails) => {
-        this.report.set(updatedDetails);
+      next: (response) => {
+        const current = this.report();
+        if (current) {
+          this.report.set({
+            ...current,
+            status: 'Reviewed',
+            resolvedAt: new Date().toISOString(),
+          });
+        }
         this.isReviewing.set(false);
       },
       error: (err) => {

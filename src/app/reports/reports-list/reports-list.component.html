@@ -98,10 +98,10 @@
       <label for="statusFilter">Status</label>
       <select
         id="statusFilter"
-        [(ngModel)]="status"
-        (ngModelChange)="onFilterChange()"
+        [ngModel]="status()"
+        (ngModelChange)="status.set($event); onFilterChange()"
       >
-        <option value="All">All Statuses</option>
+        <option [ngValue]="null">All</option>
         <option value="Pending">Pending</option>
         <option value="Reviewed">Reviewed</option>
       </select>
@@ -112,8 +112,8 @@
       <input
         id="fromDate"
         type="date"
-        [(ngModel)]="fromDate"
-        (ngModelChange)="onFilterChange()"
+        [ngModel]="fromDate()"
+        (ngModelChange)="fromDate.set($event); onFilterChange()"
       />
     </div>
 
@@ -122,8 +122,8 @@
       <input
         id="toDate"
         type="date"
-        [(ngModel)]="toDate"
-        (ngModelChange)="onFilterChange()"
+        [ngModel]="toDate()"
+        (ngModelChange)="toDate.set($event); onFilterChange()"
       />
     </div>
 
@@ -131,11 +131,11 @@
       <label for="orderBy">Sort By</label>
       <select
         id="orderBy"
-        [(ngModel)]="orderBy"
-        (ngModelChange)="onFilterChange()"
+        [ngModel]="orderBy()"
+        (ngModelChange)="orderBy.set($event); onFilterChange()"
       >
         <option value="createdAt">Date Created</option>
-        <option value="reviewedAt">Date Reviewed</option>
+        <option value="resolvedAt">Date Reviewed</option>
       </select>
     </div>
 
@@ -143,8 +143,8 @@
       <label for="orderDir">Order</label>
       <select
         id="orderDir"
-        [(ngModel)]="order"
-        (ngModelChange)="onFilterChange()"
+        [ngModel]="order()"
+        (ngModelChange)="order.set($event); onFilterChange()"
       >
         <option value="DESC">Newest First</option>
         <option value="ASC">Oldest First</option>
@@ -188,8 +188,8 @@
               </td>
               <td>{{ report.createdAt | date: 'MMM d, y, h:mm a' }}</td>
               <td>
-                @if (report.reviewedAt) {
-                  {{ report.reviewedAt | date: 'MMM d, y, h:mm a' }}
+                @if (report.resolvedAt) {
+                  {{ report.resolvedAt | date: 'MMM d, y, h:mm a' }}
                 } @else {
                   <span class="unresolved-dash">—</span>
                 }
@@ -241,48 +241,14 @@
   </div>
 
   <!-- Pagination Footer -->
-  @if (!isLoading() && totalCount() > 0) {
-    <div class="pagination-footer">
-      <div class="page-size-selector">
-        <span>Rows per page:</span>
-        <select [value]="pageSize" (change)="onPageSizeChange($event)">
-          <option [value]="5">5</option>
-          <option [value]="10">10</option>
-          <option [value]="25">25</option>
-        </select>
-      </div>
-
-      <div class="page-info">
-        Showing {{ getStartIndex() }} - {{ getEndIndex() }} of {{ totalCount() }}
-      </div>
-
-      <div class="pagination-buttons">
-        <button
-          class="btn-nav"
-          [disabled]="pageNumber === 1"
-          (click)="onPageChange(pageNumber - 1)"
-        >
-          <mat-icon>chevron_left</mat-icon>
-        </button>
-
-        @for (p of getPagesArray(); track p) {
-          <button
-            class="btn-page"
-            [class.btn-page--active]="p === pageNumber"
-            (click)="onPageChange(p)"
-          >
-            {{ p }}
-          </button>
-        }
-
-        <button
-          class="btn-nav"
-          [disabled]="pageNumber === totalPages"
-          (click)="onPageChange(pageNumber + 1)"
-        >
-          <mat-icon>chevron_right</mat-icon>
-        </button>
-      </div>
-    </div>
+  @if (totalCount() > 0) {
+    <app-paginator
+      [totalCount]="totalCount()"
+      [pageIndex]="pageNumber() - 1"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[5, 10, 20, 50]"
+      [isLoading]="isLoading()"
+      (pageChange)="handlePageChange($event)"
+    />
   }
 </div>

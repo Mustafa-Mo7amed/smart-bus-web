@@ -89,17 +89,17 @@
             <div class="timeline-item">
               <div
                 class="timeline-icon"
-                [class.timeline-icon--pending]="!report()?.reviewedAt"
-                [class.timeline-icon--reviewed]="report()?.reviewedAt"
+                [class.timeline-icon--pending]="!report()?.resolvedAt"
+                [class.timeline-icon--reviewed]="report()?.resolvedAt"
               >
                 <mat-icon>{{
-                  report()?.reviewedAt ? 'check_circle' : 'hourglass_empty'
+                  report()?.resolvedAt ? 'check_circle' : 'hourglass_empty'
                 }}</mat-icon>
               </div>
               <div class="timeline-content">
-                @if (report()?.reviewedAt) {
+                @if (report()?.resolvedAt) {
                   <p class="timeline-time">
-                    {{ report()?.reviewedAt | date: 'EEEE, MMMM d, y, h:mm a' }}
+                    {{ report()?.resolvedAt | date: 'EEEE, MMMM d, y, h:mm a' }}
                   </p>
                   <p class="timeline-label">Report marked as Reviewed</p>
                 } @else {
