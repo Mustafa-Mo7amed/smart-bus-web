@@ -1,0 +1,288 @@
+<div class="container">
+  <header>
+    <div class="title-section">
+      <h1 class="title">Passenger Reports</h1>
+      <span class="report-badge">{{ totalCount() }} Total</span>
+    </div>
+  </header>
+
+  <!-- Filters Panel -->
+  <div class="filters-panel">
+    <div class="filter-group plate-filter-group">
+      <label>Plate Number</label>
+      <div class="plate-inputs-container">
+        <!-- Numbers Group (Left side of the plate) -->
+        <div class="plate-inputs-group plate-inputs-group--numbers">
+          <input
+            #n1
+            type="text"
+            maxlength="1"
+            placeholder="•"
+            [value]="num1()"
+            class="plate-input plate-input--digit"
+            (input)="onInput($event, 'num1', n1, n2)"
+            (keydown)="onKeydown($event, n1, null, n2)"
+          />
+          <input
+            #n2
+            type="text"
+            maxlength="1"
+            placeholder="•"
+            [value]="num2()"
+            class="plate-input plate-input--digit"
+            (input)="onInput($event, 'num2', n2, n3)"
+            (keydown)="onKeydown($event, n2, n1, n3)"
+          />
+          <input
+            #n3
+            type="text"
+            maxlength="1"
+            placeholder="•"
+            [value]="num3()"
+            class="plate-input plate-input--digit"
+            (input)="onInput($event, 'num3', n3, n4)"
+            (keydown)="onKeydown($event, n3, n2, n4)"
+          />
+          <input
+            #n4
+            type="text"
+            maxlength="1"
+            placeholder="•"
+            [value]="num4()"
+            class="plate-input plate-input--digit"
+            (input)="onInput($event, 'num4', n4, l1)"
+            (keydown)="onKeydown($event, n4, n3, l1)"
+          />
+        </div>
+
+        <!-- Decorative Divider in the middle -->
+        <div class="plate-divider"></div>
+
+        <!-- Arabic Letters Group (Right side of the plate) -->
+        <div class="plate-inputs-group plate-inputs-group--letters">
+          <input
+            #l3
+            type="text"
+            maxlength="1"
+            placeholder="•"
+            [value]="let3()"
+            class="plate-input plate-input--letter"
+            (input)="onInput($event, 'let3', l3, null)"
+            (keydown)="onKeydown($event, l3, l2, null)"
+          />
+          <input
+            #l2
+            type="text"
+            maxlength="1"
+            placeholder="•"
+            [value]="let2()"
+            class="plate-input plate-input--letter"
+            (input)="onInput($event, 'let2', l2, l3)"
+            (keydown)="onKeydown($event, l2, l1, l3)"
+          />
+          <input
+            #l1
+            type="text"
+            maxlength="1"
+            placeholder="•"
+            [value]="let1()"
+            class="plate-input plate-input--letter"
+            (input)="onInput($event, 'let1', l1, l2)"
+            (keydown)="onKeydown($event, l1, n4, l2)"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label for="statusFilter">Status</label>
+      <select
+        id="statusFilter"
+        [(ngModel)]="status"
+        (ngModelChange)="onFilterChange()"
+      >
+        <option value="All">All Statuses</option>
+        <option value="Pending">Pending</option>
+        <option value="Reviewed">Reviewed</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="fromDate">From Date</label>
+      <input
+        id="fromDate"
+        type="date"
+        [(ngModel)]="fromDate"
+        (ngModelChange)="onFilterChange()"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="toDate">To Date</label>
+      <input
+        id="toDate"
+        type="date"
+        [(ngModel)]="toDate"
+        (ngModelChange)="onFilterChange()"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="orderBy">Sort By</label>
+      <select
+        id="orderBy"
+        [(ngModel)]="orderBy"
+        (ngModelChange)="onFilterChange()"
+      >
+        <option value="createdAt">Date Created</option>
+        <option value="reviewedAt">Date Reviewed</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="orderDir">Order</label>
+      <select
+        id="orderDir"
+        [(ngModel)]="order"
+        (ngModelChange)="onFilterChange()"
+      >
+        <option value="DESC">Newest First</option>
+        <option value="ASC">Oldest First</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="reports-table-wrapper">
+    <table class="reports-table">
+      <thead>
+        <tr>
+          <th>Reported Bus</th>
+          <th>Date Created</th>
+          <th>Date Reviewed</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (isLoading()) {
+          <tr>
+            <td colspan="5" class="spinner-cell">
+              <div class="spinner-container">
+                <span class="spinning-loader"></span>
+                <p class="loading-text">Loading reports...</p>
+              </div>
+            </td>
+          </tr>
+        } @else {
+          @for (report of reports(); track report.id) {
+            <tr (click)="viewReport(report.id)">
+              <td class="table-report-bus">
+                <div class="table-bus-icon-wrapper">
+                  <mat-icon>report_problem</mat-icon>
+                </div>
+                <div>
+                  <p class="bus-plate">{{ report.plateNumber }}</p>
+                  <p class="bus-id-sub">ID: {{ report.id.substring(0, 8) }}...</p>
+                </div>
+              </td>
+              <td>{{ report.createdAt | date: 'MMM d, y, h:mm a' }}</td>
+              <td>
+                @if (report.reviewedAt) {
+                  {{ report.reviewedAt | date: 'MMM d, y, h:mm a' }}
+                } @else {
+                  <span class="unresolved-dash">—</span>
+                }
+              </td>
+              <td>
+                <span
+                  class="status-badge"
+                  [class.status-badge--pending]="report.status === 'Pending'"
+                  [class.status-badge--reviewed]="report.status === 'Reviewed'"
+                >
+                  {{ report.status }}
+                </span>
+              </td>
+              <td class="actions-cell">
+                <button
+                  class="btn-icon"
+                  [matMenuTriggerFor]="menu"
+                  (click)="$event.stopPropagation()"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="before">
+                  <button mat-menu-item (click)="viewReport(report.id)">
+                    <mat-icon>visibility</mat-icon>
+                    <span>View Report</span>
+                  </button>
+                  @if (report.status === 'Pending') {
+                    <button mat-menu-item (click)="setAsReviewed(report.id)">
+                      <mat-icon>check_circle</mat-icon>
+                      <span>Set as Reviewed</span>
+                    </button>
+                  }
+                </mat-menu>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="no-reports">
+                <div class="empty-state">
+                  <mat-icon>assignment_turned_in</mat-icon>
+                  <p>No reports found matching filters.</p>
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination Footer -->
+  @if (!isLoading() && totalCount() > 0) {
+    <div class="pagination-footer">
+      <div class="page-size-selector">
+        <span>Rows per page:</span>
+        <select [value]="pageSize" (change)="onPageSizeChange($event)">
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="25">25</option>
+        </select>
+      </div>
+
+      <div class="page-info">
+        Showing {{ getStartIndex() }} - {{ getEndIndex() }} of {{ totalCount() }}
+      </div>
+
+      <div class="pagination-buttons">
+        <button
+          class="btn-nav"
+          [disabled]="pageNumber === 1"
+          (click)="onPageChange(pageNumber - 1)"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        @for (p of getPagesArray(); track p) {
+          <button
+            class="btn-page"
+            [class.btn-page--active]="p === pageNumber"
+            (click)="onPageChange(p)"
+          >
+            {{ p }}
+          </button>
+        }
+
+        <button
+          class="btn-nav"
+          [disabled]="pageNumber === totalPages"
+          (click)="onPageChange(pageNumber + 1)"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  }
+</div>
