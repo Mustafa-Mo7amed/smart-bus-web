@@ -58,12 +58,14 @@
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
+  min-width: 0;
 }
 
 .side-column {
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
+  min-width: 0;
 }
 
 // --- Detail Cards --------------------------------------------
@@ -77,8 +79,6 @@
 
 .detail-header-card {
   @extend .detail-card;
-  background: linear-gradient(135deg, v.$color-bg-surface, v.$color-primary-bg-subtle);
-  border-left: 4px solid v.$color-primary;
   padding: 2.2rem 2.8rem;
 }
 
@@ -169,8 +169,10 @@
   background-color: v.$color-bg-page;
   padding: 2.2rem 2.8rem;
   border-radius: v.$radius-md;
-  border-right: 4px solid v.$color-primary-light;
   overflow: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 
   .quote-icon {
     position: absolute;
@@ -192,6 +194,9 @@
     text-align: right;
     position: relative;
     z-index: 1;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
 
@@ -284,13 +289,8 @@
   }
 }
 
-// --- Action Panel --------------------------------------------
-.action-panel {
-  background-color: v.$color-bg-surface;
-  border-radius: v.$radius-lg;
-  box-shadow: v.$shadow-md;
-  border: 1px solid v.$color-border-light;
-  padding: 2rem 2.8rem;
+// --- Action Section --------------------------------------------
+.action-section {
   display: flex;
   justify-content: flex-end;
 }
@@ -457,7 +457,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 18rem;
+  max-width: 13.5rem;
   border: 2px solid #1e293b;
   border-radius: v.$radius-md;
   overflow: hidden;
