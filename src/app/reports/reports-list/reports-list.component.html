@@ -4,10 +4,29 @@
       <h1 class="title">Passenger Reports</h1>
       <span class="report-badge">{{ totalCount() }} Total</span>
     </div>
+    <div class="header-actions">
+      @if (activeFiltersCount() > 0) {
+        <button class="btn-clear-filters" (click)="resetFilters()">
+          <mat-icon>clear_all</mat-icon>
+          <span>Clear Filters</span>
+        </button>
+      }
+      <button
+        class="btn-toggle-filters"
+        [class.btn-toggle-filters--active]="showFilters()"
+        (click)="showFilters.set(!showFilters())"
+      >
+        <mat-icon>{{ showFilters() ? 'expand_less' : 'filter_list' }}</mat-icon>
+        <span>{{ showFilters() ? 'Hide Filters' : 'Filters' }}</span>
+        @if (activeFiltersCount() > 0) {
+          <span class="filters-badge">{{ activeFiltersCount() }}</span>
+        }
+      </button>
+    </div>
   </header>
 
   <!-- Filters Panel -->
-  <div class="filters-panel">
+  <div class="filters-panel" [class.filters-panel--collapsed]="!showFilters()">
     <div class="filter-group plate-filter-group">
       <label>Plate Number</label>
       <div class="plate-inputs-container">

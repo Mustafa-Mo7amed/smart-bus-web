@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -37,6 +37,19 @@ export class ReportsListComponent implements OnInit {
   status = signal<'Pending' | 'Reviewed' | null>(null);
   order = signal<'ASC' | 'DESC'>('DESC');
   orderBy = signal<'createdAt' | 'resolvedAt'>('createdAt');
+
+  showFilters = signal(false);
+
+  activeFiltersCount = computed(() => {
+    let count = 0;
+    if (this.plateNumber().trim()) count++;
+    if (this.status() !== null) count++;
+    if (this.fromDate()) count++;
+    if (this.toDate()) count++;
+    if (this.orderBy() !== 'createdAt') count++;
+    if (this.order() !== 'DESC') count++;
+    return count;
+  });
 
   // Segmented Plate Signals
   public num1 = signal('');
@@ -158,5 +171,22 @@ export class ReportsListComponent implements OnInit {
         console.error('Failed to review report', err);
       },
     });
+  }
+
+  resetFilters() {
+    this.num1.set('');
+    this.num2.set('');
+    this.num3.set('');
+    this.num4.set('');
+    this.let1.set('');
+    this.let2.set('');
+    this.let3.set('');
+    this.plateNumber.set('');
+    this.status.set(null);
+    this.fromDate.set('');
+    this.toDate.set('');
+    this.orderBy.set('createdAt');
+    this.order.set('DESC');
+    this.onFilterChange();
   }
 }

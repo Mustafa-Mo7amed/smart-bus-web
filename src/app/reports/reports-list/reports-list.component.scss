@@ -18,6 +18,77 @@ header {
     align-items: center;
     gap: 1.6rem;
   }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .btn-toggle-filters, .btn-clear-filters {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    height: 4rem;
+    padding: 0 1.6rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-radius: v.$radius-md;
+    cursor: pointer;
+    transition: all v.$transition-fast;
+    font-family: inherit;
+    border: 1px solid transparent;
+
+    mat-icon {
+      font-size: 2rem;
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  .btn-toggle-filters {
+    background-color: v.$color-bg-surface;
+    color: v.$color-text-body;
+    border-color: v.$color-border;
+    box-shadow: v.$shadow-sm;
+
+    &:hover {
+      background-color: v.$color-bg-input;
+      border-color: v.$color-text-placeholder;
+      color: v.$color-text-heading;
+    }
+
+    &--active {
+      background-color: v.$color-primary-bg;
+      color: v.$color-primary;
+      border-color: v.$color-primary-light;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .filters-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: v.$color-primary;
+      color: white;
+      min-width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 0 0.4rem;
+    }
+  }
+
+  .btn-clear-filters {
+    background: none;
+    color: v.$color-text-muted;
+
+    &:hover {
+      color: v.$color-error;
+      background-color: rgba(239, 68, 68, 0.05);
+    }
+  }
 }
 
 .title {
@@ -45,6 +116,26 @@ header {
   border-radius: v.$radius-lg;
   box-shadow: v.$shadow-sm;
   border: 1px solid v.$color-border-light;
+
+  // Animation properties
+  max-height: 500px;
+  opacity: 1;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s ease-in-out,
+              padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              margin 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.2s ease-in-out;
+
+  &.filters-panel--collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: -2.4rem; // offset container gap
+    border-color: transparent;
+    pointer-events: none;
+  }
 
   @media (min-width: 992px) {
     grid-template-columns: repeat(3, 1fr);
