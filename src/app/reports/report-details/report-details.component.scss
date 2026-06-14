@@ -1,0 +1,575 @@
+@use 'variables' as v;
+
+.container {
+  padding: 2.4rem 3.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+
+// --- Back Navigation ------------------------------------------
+.back-nav {
+  margin-bottom: 0.8rem;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: v.$color-text-muted;
+  cursor: pointer;
+  padding: 0.8rem 1.6rem;
+  border-radius: v.$radius-md;
+  transition: all v.$transition-fast;
+
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    transition: transform v.$transition-fast;
+  }
+
+  &:hover {
+    color: v.$color-primary;
+    background-color: v.$color-primary-bg-subtle;
+
+    mat-icon {
+      transform: translateX(-4px);
+    }
+  }
+}
+
+// --- Content Grid --------------------------------------------
+.report-content-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.4rem;
+
+  @media (min-width: 992px) {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.main-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  min-width: 0;
+}
+
+.side-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  min-width: 0;
+}
+
+// --- Detail Cards --------------------------------------------
+.detail-card {
+  background-color: v.$color-bg-surface;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-md;
+  border: 1px solid v.$color-border-light;
+  padding: 2.8rem;
+}
+
+.detail-header-card {
+  @extend .detail-card;
+  padding: 2.2rem 2.8rem;
+}
+
+.header-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.6rem;
+
+  .header-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+  }
+
+  .alert-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.8rem;
+    height: 4.8rem;
+    border-radius: 50%;
+    background-color: rgba(239, 68, 68, 0.1);
+    color: v.$color-error;
+
+    mat-icon {
+      font-size: 2.4rem;
+      width: 2.4rem;
+      height: 2.4rem;
+    }
+  }
+
+  .incident-subtitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: v.$color-text-muted;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .incident-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: v.$color-text-heading;
+    margin-top: 0.2rem;
+  }
+}
+
+// --- Incident Card sections ----------------------------------
+.incident-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2.8rem;
+}
+
+.card-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+
+  .section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: v.$color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+.reasons-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.reason-tag {
+  background-color: v.$color-primary-bg-subtle;
+  color: v.$color-primary-dark;
+  padding: 0.6rem 1.4rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-radius: v.$radius-md;
+}
+
+.description-box {
+  position: relative;
+  background-color: v.$color-bg-page;
+  padding: 2.2rem 2.8rem;
+  border-radius: v.$radius-md;
+  overflow: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+
+  .quote-icon {
+    position: absolute;
+    top: 1rem;
+    left: 1.5rem;
+    font-size: 6rem;
+    width: 6rem;
+    height: 6rem;
+    color: rgba(37, 99, 235, 0.05);
+    pointer-events: none;
+  }
+
+  .description-text {
+    font-size: 1.8rem;
+    line-height: 1.7;
+    color: v.$color-text-heading;
+    margin: 0;
+    font-weight: 500;
+    text-align: right;
+    position: relative;
+    z-index: 1;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+}
+
+// --- Timeline ------------------------------------------------
+.card-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: v.$color-text-heading;
+  border-bottom: 1px solid v.$color-border-light;
+  padding-bottom: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  position: relative;
+  padding-left: 2.4rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 4rem;
+    top: 2rem;
+    bottom: 2rem;
+    width: 2px;
+    background-color: v.$color-border-light;
+  }
+}
+
+.timeline-item {
+  display: flex;
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  background-color: v.$color-bg-input;
+  color: v.$color-text-muted;
+
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  &--created {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: v.$color-error;
+  }
+
+  &--pending {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: v.$color-warning;
+  }
+
+  &--reviewed {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: v.$color-success;
+  }
+}
+
+.timeline-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .timeline-time {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: v.$color-text-heading;
+  }
+
+  .unresolved-time {
+    color: v.$color-warning;
+  }
+
+  .timeline-label {
+    font-size: 1.3rem;
+    color: v.$color-text-muted;
+    margin-top: 0.4rem;
+  }
+}
+
+// --- Action Section --------------------------------------------
+.action-section {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-review {
+  border: none;
+  border-radius: v.$radius-md;
+  background-color: v.$color-success;
+  color: #fff;
+  padding: 1.4rem 2.8rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: background-color v.$transition-fast, transform v.$transition-fast;
+
+  mat-icon {
+    font-size: 2.2rem;
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: #0e9f6e; // darker green
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.btn-spinner {
+  display: inline-block;
+  width: 1.8rem;
+  height: 1.8rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-left-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.reviewed-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  width: 100%;
+  background-color: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: v.$radius-md;
+  padding: 1.6rem;
+  color: #0e9f6e;
+
+  mat-icon {
+    font-size: 3.6rem;
+    width: 3.6rem;
+    height: 3.6rem;
+  }
+
+  h4 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  p {
+    font-size: 1.4rem;
+    color: v.$color-text-muted;
+  }
+}
+
+// --- Involved Parties Card ------------------------------------
+.involved-parties-card {
+  .card-title {
+    margin-bottom: 2.4rem;
+  }
+}
+
+.parties-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+
+.party-item {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid v.$color-border-light;
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  &.vehicle-section {
+    align-items: flex-start;
+  }
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.8rem;
+  height: 4.8rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 2.4rem;
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+
+  &--passenger {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: v.$color-primary;
+  }
+
+  &--driver {
+    background-color: rgba(139, 92, 246, 0.1);
+    color: #8b5cf6;
+  }
+
+  &--vehicle {
+    background-color: rgba(100, 116, 139, 0.1);
+    color: #64748b;
+  }
+}
+
+.party-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+
+  .party-role {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: v.$color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .party-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: v.$color-text-heading;
+    text-align: right;
+  }
+}
+
+// --- Egyptian Plate Styling ---------------------------------
+.egypt-license-plate {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 13.5rem;
+  border: 2px solid #1e293b;
+  border-radius: v.$radius-md;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: v.$shadow-sm;
+  margin-top: 0.6rem;
+
+  .plate-header {
+    background-color: #1d4ed8; // Dark blue top bar for public transport in Egypt
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 800;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.3rem 1.2rem;
+    border-bottom: 2px solid #1e293b;
+    letter-spacing: 0.08em;
+  }
+
+  .plate-body {
+    padding: 0.8rem 1.2rem;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1e293b;
+    text-align: center;
+    letter-spacing: 0.12em;
+    font-family: 'Outfit', 'Inter', sans-serif;
+  }
+}
+
+// --- Status Badges -------------------------------------------
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.4rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  border-radius: v.$radius-full;
+  line-height: 1;
+
+  &--pending {
+    background-color: rgba(245, 158, 11, 0.12);
+    color: v.$color-warning;
+  }
+
+  &--reviewed {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: v.$color-success;
+  }
+}
+
+// --- States --------------------------------------------------
+.loading-state, .error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+  background-color: v.$color-bg-surface;
+  padding: 8rem 2.4rem;
+  border-radius: v.$radius-lg;
+  border: 1px solid v.$color-border-light;
+  box-shadow: v.$shadow-sm;
+  color: v.$color-text-muted;
+
+  mat-icon {
+    font-size: 4.8rem;
+    width: 4.8rem;
+    height: 4.8rem;
+  }
+
+  p {
+    font-size: 1.6rem;
+    font-weight: 500;
+  }
+}
+
+.error-state {
+  color: v.$color-error;
+}
+
+.btn-retry {
+  max-width: fit-content;
+  border: none;
+  border-radius: v.$radius-md;
+  background-color: v.$color-primary;
+  color: v.$color-bg-surface;
+  padding: 1rem 2rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color v.$transition-base;
+
+  &:hover {
+    background-color: v.$color-primary-dark;
+  }
+}
+
+.spinning-loader {
+  display: inline-block;
+  width: 4.8rem;
+  height: 4.8rem;
+  border: 4px solid v.$color-primary-bg;
+  border-left-color: v.$color-primary;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

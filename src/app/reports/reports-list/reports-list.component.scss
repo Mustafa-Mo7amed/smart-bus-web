@@ -1,0 +1,495 @@
+@use 'variables' as v;
+
+.container {
+  padding: 2.4rem 3.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+
+// --- Page Header ---------------------------------------------
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .title-section {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .btn-toggle-filters, .btn-clear-filters {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    height: 4rem;
+    padding: 0 1.6rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-radius: v.$radius-md;
+    cursor: pointer;
+    transition: all v.$transition-fast;
+    font-family: inherit;
+    border: 1px solid transparent;
+
+    mat-icon {
+      font-size: 2rem;
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  .btn-toggle-filters {
+    background-color: v.$color-bg-surface;
+    color: v.$color-text-body;
+    border-color: v.$color-border;
+    box-shadow: v.$shadow-sm;
+
+    &:hover {
+      background-color: v.$color-bg-input;
+      border-color: v.$color-text-placeholder;
+      color: v.$color-text-heading;
+    }
+
+    &--active {
+      background-color: v.$color-primary-bg;
+      color: v.$color-primary;
+      border-color: v.$color-primary-light;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .filters-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: v.$color-primary;
+      color: white;
+      min-width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 0 0.4rem;
+    }
+  }
+
+  .btn-clear-filters {
+    background: none;
+    color: v.$color-text-muted;
+
+    &:hover {
+      color: v.$color-error;
+      background-color: rgba(239, 68, 68, 0.05);
+    }
+  }
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: v.$color-text-heading;
+}
+
+.report-badge {
+  background-color: v.$color-primary-bg;
+  color: v.$color-primary;
+  padding: 0.6rem 1.4rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-radius: v.$radius-full;
+}
+
+// --- Filters Panel -------------------------------------------
+.filters-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.6rem;
+  background-color: v.$color-bg-surface;
+  padding: 2rem;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-sm;
+  border: 1px solid v.$color-border-light;
+
+  // Animation properties
+  max-height: 500px;
+  opacity: 1;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s ease-in-out,
+              padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              margin 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.2s ease-in-out;
+
+  &.filters-panel--collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: -2.4rem; // offset container gap
+    border-color: transparent;
+    pointer-events: none;
+  }
+
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas:
+      "plate sort order"
+      "status from to";
+
+    .plate-filter-group {
+      grid-area: plate;
+    }
+    .status-filter-group {
+      grid-area: status;
+    }
+    .from-date-filter-group {
+      grid-area: from;
+    }
+    .to-date-filter-group {
+      grid-area: to;
+    }
+    .sort-by-filter-group {
+      grid-area: sort;
+    }
+    .order-filter-group {
+      grid-area: order;
+    }
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    label {
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: v.$color-text-muted;
+    }
+
+    input:not(.plate-input), select {
+      height: 4.2rem;
+      padding: 0 1.2rem;
+      font-size: 1.4rem;
+      font-family: inherit;
+      color: v.$color-text-body;
+      background-color: v.$color-bg-input;
+      border: 1px solid transparent;
+      border-radius: v.$radius-md;
+      transition: all v.$transition-fast;
+      outline: none;
+      width: 100%;
+
+      &:focus {
+        background-color: v.$color-bg-surface;
+        border-color: v.$color-primary-light;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1.2rem center;
+      background-size: 1.6rem;
+      padding-right: 3.6rem;
+    }
+  }
+
+  .input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    mat-icon {
+      position: absolute;
+      left: 1.2rem;
+      color: v.$color-text-placeholder;
+      font-size: 2rem;
+      width: 2rem;
+      height: 2rem;
+    }
+
+    input {
+      padding-left: 4rem;
+    }
+  }
+}
+
+// --- Table Wrapper & Table -----------------------------------
+.reports-table-wrapper {
+  width: 100%;
+  border-radius: v.$radius-lg;
+  background-color: v.$color-bg-surface;
+  box-shadow: v.$shadow-md;
+  border: 1px solid v.$color-border-light;
+  overflow: hidden;
+}
+
+.reports-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  thead {
+    th {
+      padding: 1.8rem 2.4rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: v.$table-header-text;
+      background-color: v.$color-bg-surface;
+      border-bottom: 1px solid v.$color-border;
+    }
+  }
+
+  tbody tr {
+    background-color: v.$color-bg-surface;
+    border-bottom: 1px solid v.$color-border-light;
+    transition: background-color v.$transition-fast;
+    cursor: pointer;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: v.$table-row-hover;
+    }
+  }
+
+  td {
+    padding: 1.6rem 2.4rem;
+    font-size: 1.5rem;
+    color: v.$color-text-body;
+    vertical-align: middle;
+  }
+}
+
+// --- Specific Cell Layouts ----------------------------------
+.table-report-bus {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+
+  .table-bus-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 4.2rem;
+    width: 4.2rem;
+    background-color: rgba(239, 68, 68, 0.1); // subtle light red for warning
+    border-radius: v.$radius-md;
+
+    mat-icon {
+      color: v.$color-error;
+    }
+  }
+
+  .bus-plate {
+    font-weight: 600;
+    color: v.$color-text-heading;
+    font-size: 1.6rem;
+  }
+
+  .bus-id-sub {
+    font-size: 1.2rem;
+    color: v.$color-text-placeholder;
+    margin-top: 0.2rem;
+  }
+}
+
+.unresolved-dash {
+  color: v.$color-text-placeholder;
+  font-weight: 500;
+}
+
+// --- Status Badges -------------------------------------------
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.2rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-radius: v.$radius-full;
+  line-height: 1;
+
+  &--pending {
+    background-color: rgba(245, 158, 11, 0.12);
+    color: v.$color-warning;
+  }
+
+  &--reviewed {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: v.$color-success;
+  }
+}
+
+// --- Actions Cell & Buttons ----------------------------------
+.actions-cell {
+  text-align: right;
+  width: 6rem;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  height: 3.6rem;
+  width: 3.6rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: v.$color-text-muted;
+  transition: all v.$transition-fast;
+
+  &:hover {
+    background-color: v.$color-bg-input;
+    color: v.$color-text-heading;
+  }
+}
+
+// --- Empty / Loading States ----------------------------------
+.spinner-cell {
+  padding: 6rem 0 !important;
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.spinning-loader {
+  display: inline-block;
+  width: 4.8rem;
+  height: 4.8rem;
+  border: 4px solid v.$color-primary-bg;
+  border-left-color: v.$color-primary;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  color: v.$color-text-muted;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.no-reports {
+  padding: 6rem 0 !important;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  color: v.$color-text-placeholder;
+
+  mat-icon {
+    font-size: 4.8rem;
+    width: 4.8rem;
+    height: 4.8rem;
+  }
+
+  p {
+    font-size: 1.6rem;
+    font-weight: 500;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+// ─── Segmented Plate Input ───────────────────────────────────
+.plate-inputs-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: v.$color-bg-input;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  padding: 0.4rem 1.0rem;
+  gap: 1.0rem;
+  transition: border-color v.$transition-fast, box-shadow v.$transition-fast;
+  width: 100%;
+  height: 4.2rem;
+  box-sizing: border-box;
+
+  &:focus-within {
+    border-color: v.$color-primary;
+    background-color: v.$color-bg-surface;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  }
+}
+
+.plate-inputs-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.plate-input {
+  width: 3.2rem;
+  height: 3.4rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  background-color: v.$color-bg-surface;
+  color: v.$color-text-body;
+  outline: none;
+  transition: all v.$transition-fast;
+
+  &::placeholder {
+    color: v.$color-text-placeholder;
+    opacity: 0.5;
+  }
+
+  &:focus {
+    border-color: v.$color-primary;
+    background-color: v.$color-bg-surface;
+    transform: scale(1.06);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+  }
+
+  &--digit {
+    font-family: inherit;
+  }
+
+  &--letter {
+    font-family: inherit;
+    font-size: 1.6rem;
+  }
+}
+
+.plate-divider {
+  width: 1.5px;
+  height: 2.2rem;
+  background-color: v.$color-border;
+  flex-shrink: 0;
+}
+

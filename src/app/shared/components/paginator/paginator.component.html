@@ -1,0 +1,55 @@
+<div class="custom-pagination">
+  <!-- Showing items stats -->
+  <div class="entry-info">
+    Showing <span>{{ showingStart() }}</span> to <span>{{ showingEnd() }}</span> of <span>{{ totalCount() }}</span> records
+  </div>
+
+  <!-- Page navigation controls -->
+  <div class="pagination-controls">
+    <!-- Page Size Selector -->
+    <div class="control-group">
+      <label for="pageSize">Rows per page:</label>
+      <div class="select-wrapper">
+        <select id="pageSize" [value]="pageSize()" (change)="onPageSizeChange($event)">
+          @for (size of pageSizeOptions(); track size) {
+            <option [value]="size">{{ size }}</option>
+          }
+        </select>
+        <span class="select-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </span>
+      </div>
+    </div>
+
+    <!-- Navigation buttons -->
+    <nav class="pagination-nav" aria-label="Page Navigation">
+      <button (click)="goToPage(0)" class="btn-page btn-nav" [disabled]="pageIndex() === 0 || isLoading()" title="First Page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><polyline points="11 17 6 12 11 7"></polyline><polyline points="18 17 13 12 18 7"></polyline></svg>
+      </button>
+      
+      <button (click)="prevPage()" class="btn-page btn-nav" [disabled]="pageIndex() === 0 || isLoading()" title="Previous Page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+
+      <div class="page-numbers">
+        @for (pageNum of pageNumbers(); track pageNum) {
+          <button 
+            (click)="goToPage(pageNum - 1)" 
+            class="btn-page number-btn" 
+            [class.active]="pageNum - 1 === pageIndex()"
+            [disabled]="isLoading()">
+            {{ pageNum }}
+          </button>
+        }
+      </div>
+
+      <button (click)="nextPage()" class="btn-page btn-nav" [disabled]="pageIndex() === totalPages() - 1 || isLoading()" title="Next Page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+      
+      <button (click)="goToPage(totalPages() - 1)" class="btn-page btn-nav" [disabled]="pageIndex() === totalPages() - 1 || isLoading()" title="Last Page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
+      </button>
+    </nav>
+  </div>
+</div>

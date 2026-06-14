@@ -1,0 +1,273 @@
+<div class="container">
+  <header>
+    <div class="title-section">
+      <h1 class="title">Passenger Reports</h1>
+      <span class="report-badge">{{ totalCount() }} Total</span>
+    </div>
+    <div class="header-actions">
+      @if (activeFiltersCount() > 0) {
+        <button class="btn-clear-filters" (click)="resetFilters()">
+          <mat-icon>clear_all</mat-icon>
+          <span>Clear Filters</span>
+        </button>
+      }
+      <button
+        class="btn-toggle-filters"
+        [class.btn-toggle-filters--active]="showFilters()"
+        (click)="showFilters.set(!showFilters())"
+      >
+        <mat-icon>{{ showFilters() ? 'expand_less' : 'filter_list' }}</mat-icon>
+        <span>{{ showFilters() ? 'Hide Filters' : 'Filters' }}</span>
+        @if (activeFiltersCount() > 0) {
+          <span class="filters-badge">{{ activeFiltersCount() }}</span>
+        }
+      </button>
+    </div>
+  </header>
+
+  <!-- Filters Panel -->
+  <div class="filters-panel" [class.filters-panel--collapsed]="!showFilters()">
+    <div class="filter-group plate-filter-group">
+      <label>Plate Number</label>
+      <div class="plate-inputs-container">
+        <!-- Numbers Group (Left side of the plate) -->
+        <div class="plate-inputs-group plate-inputs-group--numbers">
+          <input
+            #n1
+            type="text"
+            maxlength="1"
+            placeholder="•"
+            [value]="num1()"
+            class="plate-input plate-input--digit"
+            (input)="onInput($event, 'num1', n1, n2)"
+            (keydown)="onKeydown($event, n1, null, n2)"
+          />
+          <input
+            #n2
+            type="text"
+            maxlength="1"
+            placeholder="•"
+            [value]="num2()"
+            class="plate-input plate-input--digit"
+            (input)="onInput($event, 'num2', n2, n3)"
+            (keydown)="onKeydown($event, n2, n1, n3)"
+          />
+          <input
+            #n3
+            type="text"
+            maxlength="1"
+            placeholder="•"
+            [value]="num3()"
+            class="plate-input plate-input--digit"
+            (input)="onInput($event, 'num3', n3, n4)"
+            (keydown)="onKeydown($event, n3, n2, n4)"
+          />
+          <input
+            #n4
+            type="text"
+            maxlength="1"
+            placeholder="•"
+            [value]="num4()"
+            class="plate-input plate-input--digit"
+            (input)="onInput($event, 'num4', n4, l1)"
+            (keydown)="onKeydown($event, n4, n3, l1)"
+          />
+        </div>
+
+        <!-- Decorative Divider in the middle -->
+        <div class="plate-divider"></div>
+
+        <!-- Arabic Letters Group (Right side of the plate) -->
+        <div class="plate-inputs-group plate-inputs-group--letters">
+          <input
+            #l3
+            type="text"
+            maxlength="1"
+            placeholder="•"
+            [value]="let3()"
+            class="plate-input plate-input--letter"
+            (input)="onInput($event, 'let3', l3, null)"
+            (keydown)="onKeydown($event, l3, l2, null)"
+          />
+          <input
+            #l2
+            type="text"
+            maxlength="1"
+            placeholder="•"
+            [value]="let2()"
+            class="plate-input plate-input--letter"
+            (input)="onInput($event, 'let2', l2, l3)"
+            (keydown)="onKeydown($event, l2, l1, l3)"
+          />
+          <input
+            #l1
+            type="text"
+            maxlength="1"
+            placeholder="•"
+            [value]="let1()"
+            class="plate-input plate-input--letter"
+            (input)="onInput($event, 'let1', l1, l2)"
+            (keydown)="onKeydown($event, l1, n4, l2)"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-group status-filter-group">
+      <label for="statusFilter">Status</label>
+      <select
+        id="statusFilter"
+        [ngModel]="status()"
+        (ngModelChange)="status.set($event); onFilterChange()"
+      >
+        <option [ngValue]="null">All</option>
+        <option value="Pending">Pending</option>
+        <option value="Reviewed">Reviewed</option>
+      </select>
+    </div>
+
+    <div class="filter-group from-date-filter-group">
+      <label for="fromDate">From Date</label>
+      <input
+        id="fromDate"
+        type="date"
+        [ngModel]="fromDate()"
+        (ngModelChange)="fromDate.set($event); onFilterChange()"
+      />
+    </div>
+
+    <div class="filter-group to-date-filter-group">
+      <label for="toDate">To Date</label>
+      <input
+        id="toDate"
+        type="date"
+        [ngModel]="toDate()"
+        (ngModelChange)="toDate.set($event); onFilterChange()"
+      />
+    </div>
+
+    <div class="filter-group sort-by-filter-group">
+      <label for="orderBy">Sort By</label>
+      <select
+        id="orderBy"
+        [ngModel]="orderBy()"
+        (ngModelChange)="orderBy.set($event); onFilterChange()"
+      >
+        <option value="createdAt">Date Created</option>
+        <option value="resolvedAt">Date Reviewed</option>
+      </select>
+    </div>
+
+    <div class="filter-group order-filter-group">
+      <label for="orderDir">Order</label>
+      <select
+        id="orderDir"
+        [ngModel]="order()"
+        (ngModelChange)="order.set($event); onFilterChange()"
+      >
+        <option value="DESC">Newest First</option>
+        <option value="ASC">Oldest First</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="reports-table-wrapper">
+    <table class="reports-table">
+      <thead>
+        <tr>
+          <th>Reported Bus</th>
+          <th>Date Created</th>
+          <th>Date Reviewed</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (isLoading()) {
+          <tr>
+            <td colspan="5" class="spinner-cell">
+              <div class="spinner-container">
+                <span class="spinning-loader"></span>
+                <p class="loading-text">Loading reports...</p>
+              </div>
+            </td>
+          </tr>
+        } @else {
+          @for (report of reports(); track report.id) {
+            <tr (click)="viewReport(report.id)">
+              <td class="table-report-bus">
+                <div class="table-bus-icon-wrapper">
+                  <mat-icon>report_problem</mat-icon>
+                </div>
+                <div>
+                  <p class="bus-plate">{{ report.plateNumber }}</p>
+                  <p class="bus-id-sub">ID: {{ report.id.substring(0, 8) }}...</p>
+                </div>
+              </td>
+              <td>{{ report.createdAt | date: 'MMM d, y, h:mm a' }}</td>
+              <td>
+                @if (report.resolvedAt) {
+                  {{ report.resolvedAt | date: 'MMM d, y, h:mm a' }}
+                } @else {
+                  <span class="unresolved-dash">—</span>
+                }
+              </td>
+              <td>
+                <span
+                  class="status-badge"
+                  [class.status-badge--pending]="report.status === 'Pending'"
+                  [class.status-badge--reviewed]="report.status === 'Reviewed'"
+                >
+                  {{ report.status }}
+                </span>
+              </td>
+              <td class="actions-cell">
+                <button
+                  class="btn-icon"
+                  [matMenuTriggerFor]="menu"
+                  (click)="$event.stopPropagation()"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="before">
+                  <button mat-menu-item (click)="viewReport(report.id)">
+                    <mat-icon>visibility</mat-icon>
+                    <span>View Report</span>
+                  </button>
+                  @if (report.status === 'Pending') {
+                    <button mat-menu-item (click)="setAsReviewed(report.id)">
+                      <mat-icon>check_circle</mat-icon>
+                      <span>Set as Reviewed</span>
+                    </button>
+                  }
+                </mat-menu>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="no-reports">
+                <div class="empty-state">
+                  <mat-icon>assignment_turned_in</mat-icon>
+                  <p>No reports found matching filters.</p>
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination Footer -->
+  @if (totalCount() > 0) {
+    <app-paginator
+      [totalCount]="totalCount()"
+      [pageIndex]="pageNumber() - 1"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[5, 10, 20, 50]"
+      [isLoading]="isLoading()"
+      (pageChange)="handlePageChange($event)"
+    />
+  }
+</div>

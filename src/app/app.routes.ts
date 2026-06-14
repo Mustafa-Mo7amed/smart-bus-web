@@ -101,6 +101,26 @@ export const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'reports',
+        loadComponent: () => import('../app/reports/reports.component').then((m) => m.ReportsComponent),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('../app/reports/reports-list/reports-list.component').then(
+                (m) => m.ReportsListComponent,
+              ),
+          },
+          {
+            path: 'details/:reportId',
+            loadComponent: () =>
+              import('../app/reports/report-details/report-details.component').then(
+                (m) => m.ReportDetailsComponent,
+              ),
+          },
+        ],
+      },
     ],
   },
 ];

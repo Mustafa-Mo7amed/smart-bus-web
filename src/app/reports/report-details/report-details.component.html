@@ -1,0 +1,193 @@
+<div class="container">
+  <!-- Back Navigation -->
+  <div class="back-nav">
+    <button class="btn-back" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back to Reports</span>
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <span class="spinning-loader"></span>
+      <p>Loading report details...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error-state">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ errorMessage() }}</p>
+      <button class="btn-retry" (click)="loadReportDetails()">Retry</button>
+    </div>
+  } @else if (report()) {
+    <!-- Main content grid -->
+    <div class="report-content-grid">
+      <!-- Left Column: Incident Details -->
+      <div class="main-column">
+        
+        <!-- Incident Header card -->
+        <div class="detail-header-card">
+          <div class="header-main">
+            <div class="header-title-wrapper">
+              <div class="alert-icon-wrapper">
+                <mat-icon>report_problem</mat-icon>
+              </div>
+              <div>
+                <span class="incident-subtitle">PASSENGER REPORT</span>
+                <h2 class="incident-title">Incident Details</h2>
+              </div>
+            </div>
+            <span
+              class="status-badge"
+              [class.status-badge--pending]="report()?.status === 'Pending'"
+              [class.status-badge--reviewed]="report()?.status === 'Reviewed'"
+            >
+              {{ report()?.status }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Description Card -->
+        <div class="detail-card incident-card">
+          <div class="card-section">
+            <h3 class="section-title">Reported Category</h3>
+            <div class="reasons-tags">
+              @for (reason of report()?.reasons; track reason) {
+                <span class="reason-tag">{{ reason }}</span>
+              }
+            </div>
+          </div>
+
+          <div class="card-section">
+            <h3 class="section-title">Incident Description</h3>
+            <div class="description-box">
+              <mat-icon class="quote-icon">format_quote</mat-icon>
+              <blockquote class="description-text" dir="rtl">
+                {{ report()?.description }}
+              </blockquote>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline Card -->
+        <div class="detail-card timeline-card">
+          <h3 class="card-title">Timeline</h3>
+          <div class="timeline">
+            <!-- Timeline Item: Created -->
+            <div class="timeline-item">
+              <div class="timeline-icon timeline-icon--created">
+                <mat-icon>add_alert</mat-icon>
+              </div>
+              <div class="timeline-content">
+                <p class="timeline-time">
+                  {{ report()?.createdAt | date: 'EEEE, MMMM d, y, h:mm a' }}
+                </p>
+                <p class="timeline-label">Report submitted by passenger</p>
+              </div>
+            </div>
+
+            <!-- Timeline Item: Reviewed -->
+            <div class="timeline-item">
+              <div
+                class="timeline-icon"
+                [class.timeline-icon--pending]="!report()?.resolvedAt"
+                [class.timeline-icon--reviewed]="report()?.resolvedAt"
+              >
+                <mat-icon>{{
+                  report()?.resolvedAt ? 'check_circle' : 'hourglass_empty'
+                }}</mat-icon>
+              </div>
+              <div class="timeline-content">
+                @if (report()?.resolvedAt) {
+                  <p class="timeline-time">
+                    {{ report()?.resolvedAt | date: 'EEEE, MMMM d, y, h:mm a' }}
+                  </p>
+                  <p class="timeline-label">Report marked as Reviewed</p>
+                } @else {
+                  <p class="timeline-time unresolved-time">Pending Review</p>
+                  <p class="timeline-label">Awaiting administrator action</p>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Section (Transparent wrap) -->
+        <div class="action-section">
+          @if (report()?.status === 'Pending') {
+            <button
+              class="btn-review"
+              [disabled]="isReviewing()"
+              (click)="reviewReport()"
+            >
+              @if (isReviewing()) {
+                <span class="btn-spinner"></span>
+                <span>Reviewing...</span>
+              } @else {
+                <mat-icon>check_circle</mat-icon>
+                <span>Mark as Reviewed</span>
+              }
+            </button>
+          } @else {
+            <div class="reviewed-banner">
+              <mat-icon>verified</mat-icon>
+              <div>
+                <h4>Reviewed Report</h4>
+                <p>This report has been reviewed and processed.</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Right Column: Involved Parties Info (Fully Refactored Card) -->
+      <div class="side-column">
+        <div class="detail-card involved-parties-card">
+          <h3 class="card-title">Involved Parties & Vehicle</h3>
+          
+          <div class="parties-list">
+            <!-- Passenger Section -->
+            <div class="party-item">
+              <div class="avatar avatar--passenger">
+                <mat-icon>person</mat-icon>
+              </div>
+              <div class="party-info">
+                <span class="party-role">Passenger</span>
+                <span class="party-name" dir="rtl">{{ report()?.passengerName }}</span>
+              </div>
+            </div>
+
+            <!-- Driver Section -->
+            <div class="party-item">
+              <div class="avatar avatar--driver">
+                <mat-icon>badge</mat-icon>
+              </div>
+              <div class="party-info">
+                <span class="party-role">Driver</span>
+                <span class="party-name" dir="rtl">{{ report()?.driverName }}</span>
+              </div>
+            </div>
+
+            <!-- Vehicle Section -->
+            <div class="party-item vehicle-section">
+              <div class="avatar avatar--vehicle">
+                <mat-icon>directions_bus</mat-icon>
+              </div>
+              <div class="party-info">
+                <span class="party-role">Bus Plate Number</span>
+                <div class="egypt-license-plate">
+                  <div class="plate-header">
+                    <span>EGYPT</span>
+                    <span>مصر</span>
+                  </div>
+                  <div class="plate-body">
+                    <span>{{ report()?.plateNumber }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
