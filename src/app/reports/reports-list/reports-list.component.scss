@@ -47,7 +47,29 @@ header {
   border: 1px solid v.$color-border-light;
 
   @media (min-width: 992px) {
-    grid-template-columns: 2fr repeat(5, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas:
+      "plate sort order"
+      "status from to";
+
+    .plate-filter-group {
+      grid-area: plate;
+    }
+    .status-filter-group {
+      grid-area: status;
+    }
+    .from-date-filter-group {
+      grid-area: from;
+    }
+    .to-date-filter-group {
+      grid-area: to;
+    }
+    .sort-by-filter-group {
+      grid-area: sort;
+    }
+    .order-filter-group {
+      grid-area: order;
+    }
   }
 
   .filter-group {
