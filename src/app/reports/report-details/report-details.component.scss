@@ -457,7 +457,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 13.5rem;
+  max-width: 16rem;
   border: 2px solid #1e293b;
   border-radius: v.$radius-md;
   overflow: hidden;
@@ -468,24 +468,47 @@
   .plate-header {
     background-color: #1d4ed8; // Dark blue top bar for public transport in Egypt
     color: #ffffff;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 800;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.3rem 1.2rem;
+    padding: 0.4rem 1.2rem;
     border-bottom: 2px solid #1e293b;
     letter-spacing: 0.08em;
   }
 
   .plate-body {
-    padding: 0.8rem 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem 1rem;
     font-size: 1.8rem;
     font-weight: 800;
     color: #1e293b;
-    text-align: center;
-    letter-spacing: 0.12em;
     font-family: 'Outfit', 'Inter', sans-serif;
+    direction: ltr;
+
+    .plate-numbers {
+      flex: 1;
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+
+    .plate-divider {
+      width: 2px;
+      height: 2.2rem;
+      background-color: #1e293b;
+      flex-shrink: 0;
+      margin: 0 0.8rem;
+    }
+
+    .plate-letters {
+      flex: 1;
+      text-align: center;
+      direction: rtl;
+      letter-spacing: 0.05em;
+    }
   }
 }
 

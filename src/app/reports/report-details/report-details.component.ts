@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,6 +22,14 @@ export class ReportDetailsComponent implements OnInit {
   isLoading = signal(false);
   isReviewing = signal(false);
   errorMessage = signal<string | null>(null);
+
+  plateParts = computed(() => {
+    const plate = this.report()?.plateNumber;
+    if (!plate) return { letters: '', numbers: '' };
+    const numbers = plate.replace(/[^0-9]/g, '');
+    const letters = plate.replace(/[0-9]/g, '').trim();
+    return { letters, numbers };
+  });
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {

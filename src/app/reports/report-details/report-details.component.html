@@ -180,7 +180,9 @@
                     <span>مصر</span>
                   </div>
                   <div class="plate-body">
-                    <span>{{ report()?.plateNumber }}</span>
+                    <span class="plate-numbers">{{ plateParts().numbers }}</span>
+                    <div class="plate-divider"></div>
+                    <span class="plate-letters">{{ plateParts().letters }}</span>
                   </div>
                 </div>
               </div>
