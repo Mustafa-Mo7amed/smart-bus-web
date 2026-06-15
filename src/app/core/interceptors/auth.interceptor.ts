@@ -1,8 +1,4 @@
-import {
-  HttpInterceptorFn,
-  HttpErrorResponse,
-  HttpRequest,
-} from '@angular/common/http';
+import { HttpInterceptorFn, HttpErrorResponse, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, switchMap, throwError, BehaviorSubject, filter, take } from 'rxjs';
 import { AuthService } from '../services/auth.service';
@@ -14,7 +10,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getToken();
 
-  const addToken = (request: HttpRequest<unknown>, token: string) => {
+  const addToken = (request: HttpRequest<any>, token: string) => {
     return request.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,
@@ -30,6 +26,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error) => {
       if (error instanceof HttpErrorResponse && error.status === 401) {
+        if (req.url.includes('/generate-new-jwt-token')) {
+          return next(req);
+        }
+        
         if (isRefreshing) {
           return refreshTokenSubject.pipe(
             filter((t) => t !== null),
@@ -59,7 +59,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                 isRefreshing = false;
                 authService.clearSession();
                 return throwError(() => refreshError);
-              })
+              }),
             );
           } else {
             isRefreshing = false;

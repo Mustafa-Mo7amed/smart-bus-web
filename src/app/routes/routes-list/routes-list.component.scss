@@ -80,18 +80,12 @@ header {
 // --- Table wrapper ------------------------------------------
 .routes-table-wrapper {
   width: 100%;
-  max-height: 60vh;
-  overflow-y: auto;
-  border-radius: v.$radius-md;
+  border-radius: v.$radius-md v.$radius-md 0 0; // Top corners rounded
   background-color: v.$color-bg-surface;
-  box-shadow: v.$shadow-md;
+  box-shadow: v.$shadow-sm;
   border: 1px solid v.$color-border-light;
-
-  // Hide scrollbar
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  border-bottom: none;
+  overflow: hidden;
 }
 
 // --- Table --------------------------------------------------

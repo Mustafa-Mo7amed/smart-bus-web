@@ -1,33 +1,58 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal, untracked } from '@angular/core';
 import { RouteService } from '../../core/services/route.service';
-import { Route } from '../../shared/models/route.model';
+import { RouteDetailed } from '../../shared/models/route.model';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
+
+export interface RouteListItem {
+  details: RouteDetailed;
+  numberOfMicrobusesInQueue: number;
+  numberOfMicrobusesOnTheWay: number;
+  nearestArrivalMinutes: number;
+}
 
 @Component({
   selector: 'app-routes-list',
-  imports: [MatIcon, RouterLink, RouterLinkActive],
+  imports: [MatIcon, RouterLink, RouterLinkActive, PaginatorComponent],
   templateUrl: './routes-list.component.html',
   styleUrl: './routes-list.component.scss',
 })
-export class RoutesListComponent implements OnInit {
+export class RoutesListComponent {
   routeService = inject(RouteService);
-  isLoading = false;
-  routes = signal<Route[]>([]);
+  isLoading = signal(false);
+  routes = signal<RouteListItem[]>([]);
+  totalCount = signal(0);
 
-  ngOnInit() {
-    this.isLoading = true;
-    this.routeService.getAllRoutes().subscribe({
-      next: (routes) => {
-        this.routes.set(routes);
-        this.isLoading = false;
+  pageSize = signal(5);
+  pageIndex = signal(0);
+  pageSizeOptions = signal<number[]>([5, 10, 20, 50]);
+
+  constructor() {
+    effect(() => {
+      const pageIndex = this.pageIndex();
+      const pageSize = this.pageSize();
+      untracked(() => this.fetchRoutes(pageIndex + 1, pageSize));
+    });
+  }
+
+  fetchRoutes(pageNumber: number, pageSize: number) {
+    this.isLoading.set(true);
+    this.routeService.getRouteListItems(pageNumber, pageSize).subscribe({
+      next: (response) => {
+        this.routes.set(response.data);
+        this.totalCount.set(response.totalCount);
+        this.isLoading.set(false);
       },
       error: (error) => {
-        console.log(this.routes);
-        // TODO: replace with some pop-up cards
         console.error('Error fetching routes:', error);
-        this.isLoading = false;
+        this.isLoading.set(false);
       },
     });
+  }
+
+  onPageChange(event: { pageIndex: number; pageSize: number }) {
+    this.pageSize.set(event.pageSize);
+    this.pageIndex.set(event.pageIndex);
   }
 }

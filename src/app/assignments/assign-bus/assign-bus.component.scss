@@ -192,6 +192,100 @@
   margin-bottom: 2.4rem;
 }
 
+.form-input--license {
+  height: 4.8rem;
+  padding: 0 1.2rem;
+  font-size: 1.5rem;
+}
+
+// ─── Segmented Plate Input ───────────────────────────────────
+.plate-inputs-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: v.$color-bg-input;
+  border: 1.5px solid v.$color-border;
+  border-radius: v.$radius-md;
+  padding: 0.4rem 1.0rem;
+  gap: 1.0rem;
+  transition: border-color v.$transition-fast, box-shadow v.$transition-fast;
+  width: 100%;
+  height: 4.8rem;
+  box-sizing: border-box;
+
+  &:focus-within {
+    border-color: v.$color-primary;
+    background-color: v.$color-bg-surface;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  }
+}
+
+.plate-inputs-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.plate-input {
+  width: 3.2rem;
+  height: 3.8rem;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  border: 1.5px solid v.$color-border;
+  border-radius: v.$radius-md;
+  background-color: v.$color-bg-surface;
+  color: v.$color-text-body;
+  outline: none;
+  transition: all v.$transition-fast;
+
+  &::placeholder {
+    color: v.$color-text-placeholder;
+    opacity: 0.5;
+  }
+
+  &:focus {
+    border-color: v.$color-primary;
+    background-color: v.$color-bg-surface;
+    transform: scale(1.06);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+  }
+
+  &--digit {
+    font-family: inherit;
+  }
+
+  &--letter {
+    font-family: inherit;
+    font-size: 1.7rem;
+  }
+}
+
+.plate-divider {
+  width: 2px;
+  height: 2.4rem;
+  background-color: v.$color-border;
+  flex-shrink: 0;
+}
+
+// Error state for plate container
+.form-group--error {
+  .plate-inputs-container {
+    border-color: v.$color-error;
+    background-color: rgba(239, 68, 68, 0.02);
+
+    &:focus-within {
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    }
+  }
+
+  .plate-input {
+    border-color: rgba(239, 68, 68, 0.4);
+  }
+}
+
 @media print {
   ::ng-deep {
     body * {

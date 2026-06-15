@@ -56,6 +56,12 @@
     color: v.$color-success;
     border: 1px solid rgba(16, 185, 129, 0.25);
   }
+
+  &--danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: v.$color-error;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+  }
 }
 
 @keyframes slideDown {
@@ -78,12 +84,24 @@
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
   }
+
+  &--center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+
+  &--plate {
+    width: 100%;
+    max-width: 50rem;
+  }
 
   &--error .form-input {
     border-color: v.$color-error;
@@ -99,6 +117,15 @@
   font-size: 1.4rem;
   font-weight: 600;
   color: v.$color-text-body;
+
+  &--center {
+    text-align: center;
+  }
+}
+
+.form-error-wrapper {
+  text-align: center;
+  margin-top: 0.4rem;
 }
 
 .input-wrapper {
@@ -311,3 +338,91 @@
 //     color: v.$color-text-muted;
 //   }
 // }
+
+// ─── Segmented Plate Input ───────────────────────────────────
+.plate-inputs-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: v.$color-bg-input;
+  border: 1.5px solid v.$color-border;
+  border-radius: v.$radius-md;
+  padding: 1.2rem 2rem;
+  gap: 2rem;
+  transition: border-color v.$transition-fast, box-shadow v.$transition-fast;
+  width: 100%;
+  box-sizing: border-box;
+
+  &:focus-within {
+    border-color: v.$color-primary;
+    background-color: v.$color-bg-surface;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  }
+}
+
+.plate-inputs-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.plate-input {
+  width: 4.6rem;
+  height: 5.2rem;
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  border: 1.5px solid v.$color-border;
+  border-radius: v.$radius-md;
+  background-color: v.$color-bg-surface;
+  color: v.$color-text-body;
+  outline: none;
+  transition: all v.$transition-fast;
+
+  &::placeholder {
+    color: v.$color-text-placeholder;
+    opacity: 0.5;
+  }
+
+  &:focus {
+    border-color: v.$color-primary;
+    background-color: v.$color-bg-surface;
+    transform: scale(1.06);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+  }
+
+  &--digit {
+    font-family: inherit;
+  }
+
+  &--letter {
+    font-family: inherit;
+    font-size: 2.3rem;
+  }
+}
+
+.plate-divider {
+  width: 3px;
+  height: 3.6rem;
+  background-color: v.$color-border;
+  flex-shrink: 0;
+}
+
+// Error state for plate container
+.form-group--error {
+  .plate-inputs-container {
+    border-color: v.$color-error;
+    background-color: rgba(239, 68, 68, 0.02);
+
+    &:focus-within {
+      box-shadow: v.$shadow-error;
+    }
+  }
+
+  .plate-input {
+    border-color: rgba(239, 68, 68, 0.4);
+  }
+}
+

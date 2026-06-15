@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-routes',
+  standalone: true,
   imports: [RouterOutlet],
   templateUrl: './routes.component.html',
   styleUrl: './routes.component.scss',

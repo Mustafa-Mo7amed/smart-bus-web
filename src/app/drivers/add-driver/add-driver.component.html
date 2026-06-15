@@ -17,6 +17,13 @@
     </div>
   }
 
+  @if (errorMessage()) {
+    <div class="alert alert--danger">
+      <mat-icon>error</mat-icon>
+      {{ errorMessage() }}
+    </div>
+  }
+
   <form class="driver-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
     <div class="form-row">
       <!-- Name -->
@@ -41,6 +48,7 @@
             type="text"
             placeholder="e.g. Ahmed Hassan"
             formControlName="name"
+            [attr.disabled]="isSubmitting() ? true : null"
           />
         </div>
         @if (submitted() && form.get('name')?.invalid) {
@@ -74,13 +82,16 @@
             type="tel"
             placeholder="e.g. 01012345678"
             formControlName="phone"
+            [attr.disabled]="isSubmitting() ? true : null"
           />
         </div>
         @if (submitted() && form.get('phone')?.invalid) {
           @if (form.get('phone')?.hasError('required')) {
             <span class="form-error">Phone number is required</span>
-          } @else if (form.get('phone')?.hasError('invalidPhoneLength')) {
-            <span class="form-error">Phone number must be at least 10 digits</span>
+          } @else if (form.get('phone')?.hasError('invalidEgyptianPhone')) {
+            <span class="form-error"
+              >Phone number must be at least 11 digits and has a valid prefix</span
+            >
           }
         }
       </div>
@@ -112,13 +123,19 @@
             type="text"
             placeholder="e.g. LIC-001-EG"
             formControlName="licenseNumber"
+            [attr.disabled]="isSubmitting() ? true : null"
           />
         </div>
         @if (submitted() && form.get('licenseNumber')?.invalid) {
           @if (form.get('licenseNumber')?.hasError('required')) {
             <span class="form-error">License number is required</span>
           } @else if (form.get('licenseNumber')?.hasError('maxlength')) {
-            <span class="form-error">License number must not exceed 50 characters</span>
+            <span class="form-error">License number must not exceed 14 characters</span>
+          } @else if (
+            form.get('licenseNumber')?.hasError('invalidLicenseNumber') ||
+            form.get('licenseNumber')?.hasError('invalidBirthDate')
+          ) {
+            <span class="form-error">License number is not valid</span>
           }
         }
       </div>
@@ -126,8 +143,14 @@
 
     <!-- Actions -->
     <div class="form-actions">
-      <button type="button" class="btn btn--secondary" (click)="onReset()">Reset</button>
-      <button type="submit" class="btn btn--primary">Register Driver</button>
+      <button type="button" class="btn btn--secondary" (click)="onReset()" [disabled]="isSubmitting()">Reset</button>
+      <button type="submit" class="btn btn--primary" [disabled]="isSubmitting()">
+        @if (isSubmitting()) {
+          <span>Registering...</span>
+        } @else {
+          <span>Register Driver</span>
+        }
+      </button>
     </div>
   </form>
 </div>

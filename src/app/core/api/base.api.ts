@@ -31,7 +31,7 @@ export abstract class BaseApi {
   }
   
   protected patch<T>(url = '', body: any) {
-    return this.http.patch<T>(this.buildUrl(url), body);
+    return this.http.put<T>(this.buildUrl(url), body);
   }
 
   protected delete<T>(url = '') {

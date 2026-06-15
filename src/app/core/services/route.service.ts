@@ -1,37 +1,31 @@
 import { inject, Injectable } from '@angular/core';
 import { RouteApi } from '../api/route.api';
-import { from, map, mergeMap, Observable, switchMap, toArray } from 'rxjs';
+import {
+  delay,
+  from,
+  interval,
+  map,
+  mergeMap,
+  Observable,
+  switchMap,
+  toArray,
+  zipWith,
+} from 'rxjs';
 import {
   MicrobusAtStation,
   MicrobusOnTheWay,
-  Route,
+  RouteDetailed,
   RouteDetails,
+  RouteSummary,
 } from '../../shared/models/route.model';
+import { RouteListItem } from '../../routes/routes-list/routes-list.component';
 
 @Injectable({ providedIn: 'root' })
 export class RouteService {
   routeApi = inject(RouteApi);
 
-  getAllRoutes(): Observable<Route[]> {
-    return this.routeApi.getAllRouteSources().pipe(
-      switchMap((sources) => from(sources)),
-      mergeMap((src) => {
-        return this.routeApi.getRouteDestinations(src.stationId!).pipe(
-          switchMap((destinations) => from(destinations)),
-          mergeMap((dest) => {
-            return this.routeApi.getRouteSummary(dest.routeId!).pipe(
-              map((routeSummary) => ({
-                startCity: src.cityName || '',
-                endCity: dest.to || '',
-                routeId: dest.routeId!,
-                routeSummary,
-              })),
-            );
-          }),
-        );
-      }),
-      toArray(),
-    );
+  getAllRoutes(): Observable<RouteDetailed[]> {
+    return this.routeApi.getRoutesPaginated(1, 10000).pipe(map((response) => response.data.data));
   }
 
   getRouteDetails(routeId: string): Observable<RouteDetails> {
@@ -55,6 +49,58 @@ export class RouteService {
           return a.position - b.position;
         }),
       ),
+    );
+  }
+
+  getRouteSummary(routeId: string): Observable<RouteSummary> {
+    return this.routeApi.getRouteSummary(routeId);
+  }
+
+  getAllRouteListItems(): Observable<RouteListItem[]> {
+    return this.getAllRoutes().pipe(
+      switchMap((routes) => from(routes)),
+      zipWith(interval(1000 / 10)),
+      mergeMap(
+        ([route]) =>
+          this.getRouteSummary(route.id).pipe(
+            map((summary) => {
+              return {
+                details: route,
+                numberOfMicrobusesInQueue: summary.numberOfMicrobusesInQueue,
+                numberOfMicrobusesOnTheWay: summary.numberOfMicrobusesOnTheWay,
+                nearestArrivalMinutes: summary.nearestArrivalMinutes,
+              };
+            }),
+          ),
+      ),
+      toArray(),
+    );
+  }
+
+  getRouteListItems(
+    pageNumber: number,
+    pageSize: number,
+  ): Observable<{ data: RouteListItem[]; totalCount: number }> {
+    return this.routeApi.getRoutesPaginated(pageNumber, pageSize).pipe(
+      switchMap((response) => {
+        const routes = response.data.data;
+        const totalCount = response.data.totalCount;
+        return from(routes).pipe(
+          zipWith(interval(1000 / 10)),
+          mergeMap(([route]) =>
+            this.getRouteSummary(route.id).pipe(
+              map((summary) => ({
+                details: route,
+                numberOfMicrobusesInQueue: summary.numberOfMicrobusesInQueue,
+                numberOfMicrobusesOnTheWay: summary.numberOfMicrobusesOnTheWay,
+                nearestArrivalMinutes: summary.nearestArrivalMinutes,
+              })),
+            ),
+          ),
+          toArray(),
+          map((data) => ({ data, totalCount })),
+        );
+      }),
     );
   }
 }

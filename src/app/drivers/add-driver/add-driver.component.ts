@@ -10,23 +10,53 @@ import {
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { AddDriverRequest } from '../../shared/models/driver.model';
+import { DriverService } from '../../core/services/driver.service';
 
-export interface Driver {
-  id: string;
-  driverId: string;
-  name: string;
-  phone: string;
-  licenseNumber: string;
-  status: 'Active' | 'Inactive';
+export function phoneValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value?.toString().trim();
+  
+
+  if (!value) {
+    return null; 
+  }
+
+  const withoutSpaces = value.replace(/\s/g, '');
+
+  const egPhoneRegex = /^01[0125]\d{8}$/;
+
+  if (!egPhoneRegex.test(withoutSpaces)) {
+    return { invalidEgyptianPhone: true };
+  }
+
+  return null;
 }
 
-function phoneValidator(control: AbstractControl): ValidationErrors | null {
-  const value = control.value;
-  if (!value) return null;
-  const withoutSpaces = value.replace(/\s/g, '');
-  if (withoutSpaces.length < 10) {
-    return { invalidPhoneLength: true };
+export function licenseNumberValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value?.toString().trim();
+
+  if (!value) {
+    return null;
   }
+
+  if (!((value[0] == 2 || value[0] == 3) && value.length == 14)) {
+    return { invalidLicenseNumber: true };
+  }
+
+  const century = value[0] === '2' ? 1900 : 2000;
+  const year = century + Number(value.substring(1, 3));
+  const month = Number(value.substring(3, 5));
+  const day = Number(value.substring(5, 7));
+
+  const date = new Date(year, month - 1, day);
+
+  const isValidDate =
+    date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
+
+  if (!isValidDate) {
+    return { invalidBirthDate: true };
+  }
+
   return null;
 }
 
@@ -39,18 +69,7 @@ function phoneValidator(control: AbstractControl): ValidationErrors | null {
 })
 export class AddDriverComponent implements OnInit {
   private readonly router = inject(Router);
-
-  // Local dummy data list (shared in memory for this session)
-  drivers: Driver[] = [
-    {
-      id: '1',
-      driverId: 'DRV-1024',
-      name: 'Ahmed Hassan',
-      phone: '01012345678',
-      licenseNumber: 'LIC-001-EG',
-      status: 'Active',
-    },
-  ];
+  private readonly driverService = inject(DriverService);
 
   form = new FormGroup({
     name: new FormControl('', {
@@ -60,12 +79,14 @@ export class AddDriverComponent implements OnInit {
       validators: [Validators.required, phoneValidator],
     }),
     licenseNumber: new FormControl('', {
-      validators: [Validators.required, Validators.maxLength(50)],
+      validators: [Validators.required, Validators.maxLength(14), licenseNumberValidator],
     }),
   });
 
   submitted = signal(false);
   successMessage = signal('');
+  errorMessage = signal('');
+  isSubmitting = signal(false);
 
   ngOnInit() {
     // Initialize any data if needed
@@ -77,35 +98,46 @@ export class AddDriverComponent implements OnInit {
       return;
     }
 
+    this.isSubmitting.set(true);
+    this.successMessage.set('');
+    this.errorMessage.set('');
+
     const { name, phone, licenseNumber } = this.form.value as any;
-    
-    const driverId = `DRV-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
-    const newDriver: Driver = {
-      id: crypto.randomUUID(),
-      driverId: driverId,
-      name,
-      phone,
+    const newDriver: AddDriverRequest = {
+      driverName: name,
+      phoneNumber: phone,
       licenseNumber,
-      status: 'Active',
     };
+    this.driverService.addDriver(newDriver).subscribe({
+      next: (response) => {
+        this.isSubmitting.set(false);
+        if (response.success) {
+          this.successMessage.set(`Driver "${newDriver.driverName}" registered successfully!`);
+          this.form.reset();
+          this.submitted.set(false);
 
-    // In a real app with dummy data, we'd push to a service
-    this.drivers.unshift(newDriver);
-    
-    this.successMessage.set(`Driver "${newDriver.name}" registered successfully!`);
-    this.form.reset();
-    this.submitted.set(false);
-
-    setTimeout(() => {
-      this.successMessage.set('');
-      this.router.navigate(['/drivers']);
-    }, 2000);
+          setTimeout(() => {
+            this.successMessage.set('');
+            this.goBack();
+          }, 2000);
+        } else {
+          throw new Error('failed to add driver');
+        }
+      },
+      error: (error) => {
+        console.error(error);
+        this.errorMessage.set('Something went wrong! Please try again later.');
+        this.isSubmitting.set(false);
+        console.log('AddDriverError: ', error);
+      },
+    });
   }
 
   onReset() {
     this.form.reset();
     this.submitted.set(false);
     this.successMessage.set('');
+    this.errorMessage.set('');
   }
 
   goBack() {

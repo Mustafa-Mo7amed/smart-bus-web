@@ -1,7 +1,7 @@
 <div class="container">
   <header>
     <h1 class="title">Active Routes</h1>
-    <button class="register-route-btn">+ Register New Route</button>
+    <button class="register-route-btn" routerLink="register-route">+ Register New Route</button>
   </header>
 
   <ul class="route-list-nav">
@@ -30,7 +30,7 @@
         </tr>
       </thead>
       <tbody>
-        @if (isLoading) {
+        @if (isLoading()) {
           <tr>
             <td colspan="5" class="spinner-cell">
               <div class="spinner-container">
@@ -40,26 +40,26 @@
             </td>
           </tr>
         } @else {
-          @for (route of routes(); track route.routeId) {
-            <tr [routerLink]="['details', route.routeId]">
+          @for (route of routes(); track route.details.id) {
+            <tr [routerLink]="['details', route.details.id]">
               <td class="table-route">
                 <div class="table-route-icon-wrapper">
                   <mat-icon>alt_route</mat-icon>
                 </div>
                 <div>
-                  <p class="route-name">{{ route.startCity }} - {{ route.endCity }}</p>
+                  <p class="route-name">{{ route.details.fromEn }} - {{ route.details.toEn }}</p>
                   <p class="route-class">main route</p>
                 </div>
               </td>
-              <td class="price-cell">{{ route.routeSummary.price }} LE</td>
-              <td>{{ route.routeSummary.distanceKm }} km</td>
+              <td class="price-cell">{{ route.details.price }} LE</td>
+              <td>{{ route.details.distanceKm }} km</td>
               <td class="active-buses-cell">
                 {{
-                  route.routeSummary.numberOfMicrobusesInQueue +
-                    route.routeSummary.numberOfMicrobusesOnTheWay
+                  route.numberOfMicrobusesInQueue +
+                    route.numberOfMicrobusesOnTheWay
                 }}
               </td>
-              <td>{{ route.routeSummary.nearestArrivalMinutes }}</td>
+              <td>{{ route.nearestArrivalMinutes }}</td>
             </tr>
           } @empty {
             <tr>
@@ -72,4 +72,12 @@
       </tbody>
     </table>
   </div>
+
+  <app-paginator
+    [totalCount]="totalCount()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="pageSize()"
+    [pageSizeOptions]="pageSizeOptions()"
+    [isLoading]="isLoading()"
+    (pageChange)="onPageChange($event)" />
 </div>

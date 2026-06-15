@@ -1,5 +1,9 @@
 @use 'variables' as v;
 
+.container {
+  padding: 2.4rem 3.2rem;
+}
+
 // ─── Form Card ────────────────────────────────────────────────
 .form-card {
   background-color: v.$color-bg-surface;
@@ -24,6 +28,12 @@
     border-radius: v.$radius-md;
     color: v.$color-primary;
     flex-shrink: 0;
+
+    mat-icon {
+      font-size: 2.4rem;
+      width: 2.4rem;
+      height: 2.4rem;
+    }
   }
 
   &__title {
@@ -57,27 +67,15 @@
     color: v.$color-success;
     border: 1px solid rgba(16, 185, 129, 0.25);
   }
-
-  &--danger {
-    background-color: rgba(239, 68, 68, 0.1);
-    color: v.$color-error;
-    border: 1px solid rgba(239, 68, 68, 0.25);
-  }
 }
 
 @keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 // ─── Form Layout ──────────────────────────────────────────────
-.driver-form {
+.route-form {
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -103,7 +101,7 @@
     background-color: rgba(239, 68, 68, 0.04);
 
     &:focus {
-      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+      box-shadow: v.$shadow-error;
     }
   }
 }
@@ -118,6 +116,23 @@
   position: relative;
   display: flex;
   align-items: center;
+
+  &:focus-within {
+    .input-icon {
+      color: v.$color-primary;
+    }
+  }
+
+  &[dir="rtl"] {
+    .input-icon {
+      left: auto;
+      right: 1.4rem;
+    }
+    .form-input {
+      padding: 1.2rem 4.4rem 1.2rem 1.4rem;
+      text-align: right;
+    }
+  }
 }
 
 .input-icon {
@@ -126,6 +141,7 @@
   color: v.$color-text-placeholder;
   pointer-events: none;
   flex-shrink: 0;
+  transition: color v.$transition-fast;
 }
 
 .form-input {
@@ -138,10 +154,7 @@
   border: 1.5px solid v.$color-border;
   border-radius: v.$radius-md;
   outline: none;
-  transition:
-    border-color v.$transition-fast,
-    box-shadow v.$transition-fast,
-    background-color v.$transition-fast;
+  transition: border-color v.$transition-fast, box-shadow v.$transition-fast, background-color v.$transition-fast;
 
   &::placeholder {
     color: v.$color-text-placeholder;
@@ -151,29 +164,6 @@
     border-color: v.$color-primary;
     background-color: v.$color-bg-surface;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-  }
-
-  &--password {
-    padding-right: 4.8rem;
-  }
-}
-
-.toggle-password {
-  position: absolute;
-  right: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  padding: 0.4rem;
-  cursor: pointer;
-  color: v.$color-text-placeholder;
-  border-radius: v.$radius-sm;
-  transition: color v.$transition-fast;
-
-  &:hover {
-    color: v.$color-primary;
   }
 }
 
@@ -186,15 +176,12 @@
 // ─── Actions ──────────────────────────────────────────────────
 .form-actions {
   display: flex;
-  // justify-content: flex-start;
   gap: 1.2rem;
   margin-top: 0.8rem;
 }
 
 .btn {
-  &:active {
-    transform: translateY(1px);
-  }
+  &:active { transform: translateY(1px); }
 
   &--primary {
     background-color: v.$color-primary;
@@ -218,118 +205,4 @@
       color: v.$color-text-body;
     }
   }
-}
-
-// ─── Preview Card ─────────────────────────────────────────────
-.preview-card {
-  background-color: v.$color-bg-surface;
-  border-radius: v.$radius-lg;
-  border: 1px solid v.$color-border-light;
-  box-shadow: v.$shadow-md;
-  padding: 2.4rem 2.4rem 0;
-  overflow: hidden;
-
-  &__title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: v.$color-text-heading;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-}
-
-.preview-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 2.4rem;
-  height: 2.4rem;
-  padding: 0 0.8rem;
-  background-color: v.$color-primary-bg;
-  color: v.$color-primary;
-  border-radius: v.$radius-full;
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-
-.preview-table-wrap {
-  overflow-y: auto;
-  max-height: 40rem;
-  margin: 0 -2.4rem;
-
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-.preview-table {
-  width: 100%;
-  border-collapse: collapse;
-
-  thead th {
-    position: sticky;
-    top: 0;
-    padding: 1.2rem 2.4rem;
-    text-align: left;
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: v.$table-header-text;
-    background-color: v.$color-bg-surface;
-    border-bottom: 1px solid v.$color-border;
-  }
-
-  tbody tr {
-    border-bottom: 1px solid v.$color-border-light;
-    transition: background-color v.$transition-fast;
-
-    &:last-child {
-      border-bottom: none;
-    }
-    &:hover {
-      background-color: v.$table-row-hover;
-    }
-  }
-
-  td {
-    padding: 1.4rem 2.4rem;
-    font-size: 1.4rem;
-    color: v.$color-text-body;
-  }
-}
-
-.driver-cell {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-weight: 500;
-}
-
-.driver-avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3.2rem;
-  height: 3.2rem;
-  border-radius: 50%;
-  background-color: v.$color-primary-bg;
-  color: v.$color-primary;
-  font-size: 1.3rem;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.license-badge {
-  display: inline-block;
-  padding: 0.4rem 1rem;
-  background-color: v.$color-primary-bg-subtle;
-  color: v.$color-primary;
-  border-radius: v.$radius-full;
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
 }

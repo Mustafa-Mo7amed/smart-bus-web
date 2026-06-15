@@ -14,3 +14,11 @@ export interface Bus extends BaseEntity {
   stationId: string;
   driverId: string;
 }
+
+export interface AddBusRequest {
+  plateNumber: string;
+  routeId: string;
+  passengerCount: number;
+  model: string;
+  color: string;
+}

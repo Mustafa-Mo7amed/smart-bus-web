@@ -1,8 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { LoginRequest } from '../../shared/models/auth.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { finalize } from 'rxjs';
 
 function phoneValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
@@ -27,6 +28,8 @@ export class LoginComponent implements OnInit {
   private route = inject(ActivatedRoute);
 
   returnUrl: string = '/';
+  isLoading = signal(false);
+  errorMessage = signal('');
 
   form = new FormGroup({
     phoneNumber: new FormControl('', {
@@ -60,17 +63,22 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    this.isLoading.set(true);
+    this.errorMessage.set('');
     const { phoneNumber, password, rememberMe } = this.form.getRawValue();
     const loginData: LoginRequest = { phoneNumber, password, rememberMe };
 
-    this.authService.login(loginData).subscribe({
-      next: (response) => {
-        console.log('Login successful, navigating to:', this.returnUrl);
-        this.router.navigateByUrl(this.returnUrl);
-      },
-      error: (err) => {
-        console.error('Login failed:', err);
-      }
-    });
+    this.authService.login(loginData)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          console.log('Login successful, navigating to:', this.returnUrl);
+          this.router.navigateByUrl(this.returnUrl);
+        },
+        error: (err) => {
+          console.error('Login failed:', err);
+          this.errorMessage.set(err?.error?.message || 'Login failed. Please check your credentials and try again.');
+        }
+      });
   }
 }
