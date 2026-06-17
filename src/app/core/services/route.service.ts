@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { RouteApi } from '../api/route.api';
 import {
-  delay,
   from,
   interval,
   map,
@@ -15,7 +14,6 @@ import {
   MicrobusAtStation,
   MicrobusOnTheWay,
   RouteDetailed,
-  RouteDetails,
   RouteSummary,
 } from '../../shared/models/route.model';
 import { RouteListItem } from '../../routes/routes-list/routes-list.component';
@@ -25,11 +23,11 @@ export class RouteService {
   routeApi = inject(RouteApi);
 
   getAllRoutes(): Observable<RouteDetailed[]> {
-    return this.routeApi.getRoutesPaginated(1, 10000).pipe(map((response) => response.data.data));
+    return this.routeApi.getRoutesPaginated(1, 10000).pipe(map((response) => response.data));
   }
 
-  getRouteDetails(routeId: string): Observable<RouteDetails> {
-    return this.routeApi.getRouteDetails(routeId);
+  getRouteById(routeId: string): Observable<RouteDetailed> {
+    return this.routeApi.getRouteById(routeId);
   }
 
   getMicrobusesAtStation(routeId: string): Observable<MicrobusAtStation[]> {
@@ -83,8 +81,8 @@ export class RouteService {
   ): Observable<{ data: RouteListItem[]; totalCount: number }> {
     return this.routeApi.getRoutesPaginated(pageNumber, pageSize).pipe(
       switchMap((response) => {
-        const routes = response.data.data;
-        const totalCount = response.data.totalCount;
+        const routes = response.data;
+        const totalCount = response.totalCount;
         return from(routes).pipe(
           zipWith(interval(1000 / 10)),
           mergeMap(([route]) =>

@@ -250,7 +250,7 @@
           <select id="bus-route" class="form-input" formControlName="routeId">
             <option value="">Select a route</option>
             @for (route of routes(); track route.id) {
-              <option [value]="route.id">{{ route.fromEn }} - {{ route.toEn }}</option>
+              <option [value]="route.id">{{ route.from }} - {{ route.to }}</option>
             }
           </select>
         </div>

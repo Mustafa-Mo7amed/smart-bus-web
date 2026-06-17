@@ -22,11 +22,6 @@ export interface RouteSummary {
   nearestArrivalMinutes: number;
 }
 
-export interface RouteDetails extends RouteSummary {
-  startCity: string;
-  endCity: string;
-}
-
 export interface MicrobusAtStation {
   driverId: string;
   driverName: string;
@@ -42,10 +37,8 @@ export interface MicrobusOnTheWay extends MicrobusAtStation {}
 
 export interface RouteDetailed {
   id: string;
-  fromAr: string;
-  fromEn: string;
-  toAr: string;
-  toEn: string;
+  from: string;
+  to: string;
   price: number;
   distanceKm: number;
   fromStationId: string;
@@ -53,12 +46,10 @@ export interface RouteDetailed {
 }
 
 export interface RoutesPaginatedResponse {
-  data: {
-    pageNumber: number;
-    pageSize: number;
-    totalCount: number;
-    data: RouteDetailed[];
-  };
+  pageNumber: number;
+  pageSize: number;
+  totalCount: number;
+  data: RouteDetailed[];
   success: boolean;
   message: string;
   statusCode: number;
@@ -79,10 +70,10 @@ export interface RouteSummary {
   nearestArrivalMinutes: number;
 }
 
-export interface RouteDetails extends RouteSummary {
-  startCity: string;
-  endCity: string;
-}
+// export interface RouteDetails extends RouteSummary {
+//   startCity: string;
+//   endCity: string;
+// }
 
 export interface MicrobusAtStation {
   driverId: string;
