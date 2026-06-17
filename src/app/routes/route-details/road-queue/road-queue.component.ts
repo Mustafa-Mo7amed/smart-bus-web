@@ -17,6 +17,7 @@ export class RoadQueueComponent implements OnInit {
   roadBuses = signal<MicrobusOnTheWay[]>([]);
   isLoading = false;
 
+
   ngOnInit() {
     this.isLoading = true;
     this.routeService

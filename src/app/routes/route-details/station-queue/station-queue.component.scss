@@ -1,11 +1,16 @@
 @use 'variables' as v;
 
 // --- Card container ------------------------------------------
+:host {
+  display: block;
+}
+
 .queue-card {
   background-color: v.$color-bg-surface;
   border-radius: v.$radius-lg;
   box-shadow: v.$shadow-md;
   border: 1px solid v.$color-border-light;
+  overflow: hidden;
 }
 
 // --- Header --------------------------------------------------
@@ -43,7 +48,7 @@
   max-height: 50vh;
   overflow-y: auto;
   overflow-x: hidden;
-  border-radius: 0 0 v.$radius-lg v.$radius-lg;
+  border-radius: 0;
 
   // Hide scrollbar
   scrollbar-width: none;
@@ -206,5 +211,40 @@
     to {
       transform: rotate(360deg);
     }
+  }
+}
+
+.queue-actions-footer {
+  padding: 1.6rem 2.4rem;
+  border-top: 1px solid v.$color-border-light;
+  background-color: v.$color-bg-surface;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-add-footer {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 1.2rem 2.4rem;
+  border-radius: v.$radius-md;
+  border: 1.5px dashed v.$color-primary;
+  background-color: v.$color-primary-bg-subtle;
+  color: v.$color-primary;
+  font-size: 1.4rem;
+  font-weight: 600;
+  cursor: not-allowed;
+  transition: all v.$transition-fast;
+
+  mat-icon {
+    font-size: 2rem;
+    height: 2rem;
+    width: 2rem;
+  }
+
+  &:hover {
+    background-color: v.$color-primary-bg;
   }
 }

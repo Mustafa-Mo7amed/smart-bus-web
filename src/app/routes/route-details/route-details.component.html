@@ -1,10 +1,83 @@
 <div class="container">
-  <div class="route-endpoints">
-    <h1>{{ routeDetails()?.startCity }} - {{ routeDetails()?.endCity }}</h1>
-    <button class="btn add-driver-btn" title="adds a driver to station queue">+ Add Driver</button>
+  <!-- Top Navigation & Title Bar -->
+  <div class="route-header-bar">
+    <a routerLink="/routes" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back to Routes</span>
+    </a>
+    
+    <div class="route-endpoints">
+      <div class="title-with-badge">
+        <h1>{{ routeDetails()?.startCity || 'Loading' }} &rarr; {{ routeDetails()?.endCity || 'Route' }}</h1>
+      </div>
+    </div>
   </div>
+
+  <!-- Realtime Stats Grid (RouteLiveUpdateDTO and Summary - Clean Design) -->
+  <div class="stats-grid">
+    <!-- Card 1: Station Queue -->
+    <div class="stat-card">
+      <div class="stat-icon-wrapper queue-icon">
+        <mat-icon>departure_board</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Station Queue</span>
+        <h2 class="stat-val">{{ routeDetails()?.numberOfMicrobusesInQueue ?? 0 }}</h2>
+        <span class="stat-trend">Buses at terminal</span>
+      </div>
+    </div>
+
+    <!-- Card 2: En Route Queue -->
+    <div class="stat-card">
+      <div class="stat-icon-wrapper road-icon">
+        <mat-icon>alt_route</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Road Queue</span>
+        <h2 class="stat-val">{{ routeDetails()?.numberOfMicrobusesOnTheWay ?? 0 }}</h2>
+        <span class="stat-trend">Buses currently driving</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Nearest Arrival -->
+    <div class="stat-card">
+      <div class="stat-icon-wrapper time-icon">
+        <mat-icon>schedule</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Nearest Arrival</span>
+        <h2 class="stat-val">
+          @if (routeDetails()?.nearestArrivalMinutes !== null && routeDetails()?.nearestArrivalMinutes !== undefined) {
+            {{ routeDetails()?.nearestArrivalMinutes }} <span class="unit">min</span>
+          } @else {
+            N/A
+          }
+        </h2>
+        <span class="stat-trend">Est. waiting time</span>
+      </div>
+    </div>
+
+    <!-- Card 4: Distance & Price -->
+    <div class="stat-card">
+      <div class="stat-icon-wrapper specs-icon">
+        <mat-icon>payments</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Price & Distance</span>
+        <h2 class="stat-val">{{ routeDetails()?.price ?? 0 }} <span class="unit">LE</span></h2>
+        <span class="stat-trend">Distance: {{ routeDetails()?.distanceKm ?? 0 }} km</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Queues Containers Grid -->
   <div class="queues-container">
-    <router-outlet style="display: none;" />
-    <app-road-queue [routeId]="routeId()" />
+    <div class="queue-column-wrapper">
+      <!-- Child router outlet renders StationQueueComponent -->
+      <router-outlet />
+    </div>
+    <div class="queue-column-wrapper">
+      <app-road-queue [routeId]="routeId()" />
+    </div>
   </div>
 </div>

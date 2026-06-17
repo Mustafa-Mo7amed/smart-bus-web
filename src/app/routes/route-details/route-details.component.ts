@@ -1,13 +1,14 @@
 import { Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { RouteService } from '../../core/services/route.service';
-import { MicrobusOnTheWay, RouteDetails } from '../../shared/models/route.model';
+import { RouteDetails } from '../../shared/models/route.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterOutlet } from "@angular/router";
+import { RouterOutlet, RouterLink } from "@angular/router";
 import { RoadQueueComponent } from "./road-queue/road-queue.component";
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-route-details',
-  imports: [RouterOutlet, RoadQueueComponent],
+  imports: [RouterOutlet, RoadQueueComponent, MatIconModule, RouterLink],
   templateUrl: './route-details.component.html',
   styleUrl: './route-details.component.scss',
 })
@@ -17,8 +18,6 @@ export class RouteDetailsComponent implements OnInit {
   readonly routeId = input.required<string>();
 
   routeDetails = signal<RouteDetails | null>(null);
-  
-  roadBuses = signal<MicrobusOnTheWay[]>([]);
 
   ngOnInit() {
     this.routeService
@@ -28,7 +27,6 @@ export class RouteDetailsComponent implements OnInit {
         next: (details) => {
           this.routeDetails.set(details);
         },
-        // TODO: replace with some pop-up cards
         error: (error) => console.log('Error fetching route details:', error),
       });
   }
