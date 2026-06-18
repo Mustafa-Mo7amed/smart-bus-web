@@ -34,8 +34,8 @@
         id="searchFilter"
         type="text"
         placeholder="Search"
-        [ngModel]="search()"
-        (ngModelChange)="search.set($event); onFilterChange()"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="onSearchQueryChange($event)"
       />
     </div>
 

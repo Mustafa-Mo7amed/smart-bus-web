@@ -6,6 +6,8 @@ import { RouterLink } from '@angular/router';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 export interface RouteListItem {
   details: RouteDetailed;
@@ -31,6 +33,7 @@ export class RoutesListComponent {
   pageSizeOptions = signal<number[]>([5, 10, 20, 50]);
 
   // Filters
+  searchQuery = signal('');
   search = signal('');
   sortBy = signal<'To' | 'Price' | 'Distance' | null>(null);
   sortOrder = signal<'ASC' | 'DESC'>('DESC');
@@ -41,9 +44,11 @@ export class RoutesListComponent {
 
   showFilters = signal(false);
 
+  private searchSubject = new Subject<string>();
+
   activeFiltersCount = computed(() => {
     let count = 0;
-    if (this.search().trim()) count++;
+    if (this.searchQuery().trim()) count++;
     if (this.sortBy() !== null) count++;
     if (this.sortOrder() !== 'DESC') count++;
     if (this.minPrice() !== null) count++;
@@ -59,6 +64,17 @@ export class RoutesListComponent {
       const pageSize = this.pageSize();
       untracked(() => this.fetchRoutes());
     });
+
+    this.searchSubject
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        takeUntilDestroyed()
+      )
+      .subscribe((value) => {
+        this.search.set(value);
+        this.onFilterChange();
+      });
   }
 
   fetchRoutes() {
@@ -91,12 +107,18 @@ export class RoutesListComponent {
     this.pageIndex.set(event.pageIndex);
   }
 
+  onSearchQueryChange(value: string) {
+    this.searchQuery.set(value);
+    this.searchSubject.next(value);
+  }
+
   onFilterChange() {
     this.pageIndex.set(0);
     this.fetchRoutes();
   }
 
   resetFilters() {
+    this.searchQuery.set('');
     this.search.set('');
     this.sortBy.set(null);
     this.sortOrder.set('DESC');
