@@ -8,7 +8,7 @@
     
     <div class="route-endpoints">
       <div class="title-with-badge">
-        <h1>{{ routeDetails()?.startCity || 'Loading' }} &rarr; {{ routeDetails()?.endCity || 'Route' }}</h1>
+        <h1>{{ route()?.from || 'Loading' }} &rarr; {{ route()?.to || 'Route' }}</h1>
       </div>
     </div>
   </div>
@@ -22,7 +22,7 @@
       </div>
       <div class="stat-content">
         <span class="stat-label">Station Queue</span>
-        <h2 class="stat-val">{{ routeDetails()?.numberOfMicrobusesInQueue ?? 0 }}</h2>
+        <h2 class="stat-val">{{ routeLiveUpdate()?.numberOfMicrobusesInQueue ?? 0 }}</h2>
         <span class="stat-trend">Buses at terminal</span>
       </div>
     </div>
@@ -34,7 +34,7 @@
       </div>
       <div class="stat-content">
         <span class="stat-label">Road Queue</span>
-        <h2 class="stat-val">{{ routeDetails()?.numberOfMicrobusesOnTheWay ?? 0 }}</h2>
+        <h2 class="stat-val">{{ routeLiveUpdate()?.numberOfMicrobusesOnTheWay ?? 0 }}</h2>
         <span class="stat-trend">Buses currently driving</span>
       </div>
     </div>
@@ -47,8 +47,8 @@
       <div class="stat-content">
         <span class="stat-label">Nearest Arrival</span>
         <h2 class="stat-val">
-          @if (routeDetails()?.nearestArrivalMinutes !== null && routeDetails()?.nearestArrivalMinutes !== undefined) {
-            {{ routeDetails()?.nearestArrivalMinutes }} <span class="unit">min</span>
+          @if (routeLiveUpdate()?.nearestArrivalMinutes !== null && routeLiveUpdate()?.nearestArrivalMinutes !== undefined) {
+            {{ routeLiveUpdate()?.nearestArrivalMinutes }} <span class="unit">min</span>
           } @else {
             N/A
           }
@@ -64,8 +64,8 @@
       </div>
       <div class="stat-content">
         <span class="stat-label">Price & Distance</span>
-        <h2 class="stat-val">{{ routeDetails()?.price ?? 0 }} <span class="unit">LE</span></h2>
-        <span class="stat-trend">Distance: {{ routeDetails()?.distanceKm ?? 0 }} km</span>
+        <h2 class="stat-val">{{ route()?.price ?? 0 }} <span class="unit">LE</span></h2>
+        <span class="stat-trend">Distance: {{ route()?.distanceKm ?? 0 }} km</span>
       </div>
     </div>
   </div>

@@ -14,8 +14,7 @@ export abstract class BaseSignalRService {
   ) {}
 
   private getHubUrl(): string {
-    const origin = new URL(environment.hubURL).origin;
-    return `${origin}${this.hubPath}`;
+    return `${environment.hubURL}${this.hubPath}`;
   }
 
   async start(): Promise<void> {
@@ -29,6 +28,7 @@ export abstract class BaseSignalRService {
         ...(this.requiresAuth && {
           accessTokenFactory: () => this.authService.getToken() ?? '',
         }),
+        withCredentials: false,
       })
       .withAutomaticReconnect([0, 2000, 5000, 10000, 30000])
       .configureLogging(signalR.LogLevel.Warning);
