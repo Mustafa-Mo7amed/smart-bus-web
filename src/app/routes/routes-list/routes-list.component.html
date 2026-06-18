@@ -35,7 +35,7 @@
         type="text"
         placeholder="Search"
         [ngModel]="searchQuery()"
-        (ngModelChange)="onSearchQueryChange($event)"
+        (ngModelChange)="updateDebouncedField('searchQuery', $event)"
       />
     </div>
 
@@ -71,8 +71,8 @@
         id="minPriceFilter"
         type="number"
         placeholder="MinPrice"
-        [ngModel]="minPrice()"
-        (ngModelChange)="minPrice.set($event); onFilterChange()"
+        [ngModel]="minPriceInput()"
+        (ngModelChange)="updateDebouncedField('minPrice', $event)"
       />
     </div>
 
@@ -82,8 +82,8 @@
         id="maxPriceFilter"
         type="number"
         placeholder="MaxPrice"
-        [ngModel]="maxPrice()"
-        (ngModelChange)="maxPrice.set($event); onFilterChange()"
+        [ngModel]="maxPriceInput()"
+        (ngModelChange)="updateDebouncedField('maxPrice', $event)"
       />
     </div>
 
@@ -93,8 +93,8 @@
         id="minDistanceFilter"
         type="number"
         placeholder="MinDistance"
-        [ngModel]="minDistance()"
-        (ngModelChange)="minDistance.set($event); onFilterChange()"
+        [ngModel]="minDistanceInput()"
+        (ngModelChange)="updateDebouncedField('minDistance', $event)"
       />
     </div>
 
@@ -104,8 +104,8 @@
         id="maxDistanceFilter"
         type="number"
         placeholder="MaxDistance"
-        [ngModel]="maxDistance()"
-        (ngModelChange)="maxDistance.set($event); onFilterChange()"
+        [ngModel]="maxDistanceInput()"
+        (ngModelChange)="updateDebouncedField('maxDistance', $event)"
       />
     </div>
   </div>

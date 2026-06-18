@@ -123,7 +123,7 @@ header {
 // --- Filters Panel -------------------------------------------
 .filters-panel {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
   gap: 1.6rem;
   background-color: v.$color-bg-surface;
   padding: 2rem;

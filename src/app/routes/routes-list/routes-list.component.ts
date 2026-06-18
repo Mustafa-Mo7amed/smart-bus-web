@@ -32,29 +32,37 @@ export class RoutesListComponent {
   pageIndex = signal(0);
   pageSizeOptions = signal<number[]>([5, 10, 20, 50]);
 
-  // Filters
+  // UI / Immediate Input Signals
   searchQuery = signal('');
+  minPriceInput = signal<number | null>(null);
+  maxPriceInput = signal<number | null>(null);
+  minDistanceInput = signal<number | null>(null);
+  maxDistanceInput = signal<number | null>(null);
+
+  // Active Filters used for API requests
   search = signal('');
-  sortBy = signal<'To' | 'Price' | 'Distance' | null>(null);
-  sortOrder = signal<'ASC' | 'DESC'>('DESC');
   minPrice = signal<number | null>(null);
   maxPrice = signal<number | null>(null);
   minDistance = signal<number | null>(null);
   maxDistance = signal<number | null>(null);
 
+  // Immediate Dropdowns
+  sortBy = signal<'To' | 'Price' | 'Distance' | null>(null);
+  sortOrder = signal<'ASC' | 'DESC'>('DESC');
+
   showFilters = signal(false);
 
-  private searchSubject = new Subject<string>();
+  private debounceSubject = new Subject<void>();
 
   activeFiltersCount = computed(() => {
     let count = 0;
     if (this.searchQuery().trim()) count++;
     if (this.sortBy() !== null) count++;
     if (this.sortOrder() !== 'DESC') count++;
-    if (this.minPrice() !== null) count++;
-    if (this.maxPrice() !== null) count++;
-    if (this.minDistance() !== null) count++;
-    if (this.maxDistance() !== null) count++;
+    if (this.minPriceInput() !== null) count++;
+    if (this.maxPriceInput() !== null) count++;
+    if (this.minDistanceInput() !== null) count++;
+    if (this.maxDistanceInput() !== null) count++;
     return count;
   });
 
@@ -65,14 +73,17 @@ export class RoutesListComponent {
       untracked(() => this.fetchRoutes());
     });
 
-    this.searchSubject
+    this.debounceSubject
       .pipe(
         debounceTime(300),
-        distinctUntilChanged(),
         takeUntilDestroyed()
       )
-      .subscribe((value) => {
-        this.search.set(value);
+      .subscribe(() => {
+        this.search.set(this.searchQuery());
+        this.minPrice.set(this.minPriceInput());
+        this.maxPrice.set(this.maxPriceInput());
+        this.minDistance.set(this.minDistanceInput());
+        this.maxDistance.set(this.maxDistanceInput());
         this.onFilterChange();
       });
   }
@@ -107,9 +118,14 @@ export class RoutesListComponent {
     this.pageIndex.set(event.pageIndex);
   }
 
-  onSearchQueryChange(value: string) {
-    this.searchQuery.set(value);
-    this.searchSubject.next(value);
+  updateDebouncedField(field: 'searchQuery' | 'minPrice' | 'maxPrice' | 'minDistance' | 'maxDistance', value: any) {
+    if (field === 'searchQuery') this.searchQuery.set(value);
+    else if (field === 'minPrice') this.minPriceInput.set(value);
+    else if (field === 'maxPrice') this.maxPriceInput.set(value);
+    else if (field === 'minDistance') this.minDistanceInput.set(value);
+    else if (field === 'maxDistance') this.maxDistanceInput.set(value);
+
+    this.debounceSubject.next();
   }
 
   onFilterChange() {
@@ -119,13 +135,19 @@ export class RoutesListComponent {
 
   resetFilters() {
     this.searchQuery.set('');
+    this.minPriceInput.set(null);
+    this.maxPriceInput.set(null);
+    this.minDistanceInput.set(null);
+    this.maxDistanceInput.set(null);
+
     this.search.set('');
-    this.sortBy.set(null);
-    this.sortOrder.set('DESC');
     this.minPrice.set(null);
     this.maxPrice.set(null);
     this.minDistance.set(null);
     this.maxDistance.set(null);
+
+    this.sortBy.set(null);
+    this.sortOrder.set('DESC');
     this.onFilterChange();
   }
 }
