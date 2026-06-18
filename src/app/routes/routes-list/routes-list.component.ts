@@ -1,9 +1,11 @@
-import { Component, effect, inject, OnInit, signal, untracked } from '@angular/core';
+import { Component, effect, inject, signal, untracked, computed } from '@angular/core';
 import { RouteService } from '../../core/services/route.service';
 import { RouteDetailed } from '../../shared/models/route.model';
 import { MatIcon } from '@angular/material/icon';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 export interface RouteListItem {
   details: RouteDetailed;
@@ -14,7 +16,7 @@ export interface RouteListItem {
 
 @Component({
   selector: 'app-routes-list',
-  imports: [MatIcon, RouterLink, RouterLinkActive, PaginatorComponent],
+  imports: [MatIcon, RouterLink, PaginatorComponent, FormsModule, CommonModule],
   templateUrl: './routes-list.component.html',
   styleUrl: './routes-list.component.scss',
 })
@@ -28,17 +30,50 @@ export class RoutesListComponent {
   pageIndex = signal(0);
   pageSizeOptions = signal<number[]>([5, 10, 20, 50]);
 
+  // Filters
+  search = signal('');
+  sortBy = signal<'To' | 'Price' | 'Distance' | null>(null);
+  sortOrder = signal<'ASC' | 'DESC'>('DESC');
+  minPrice = signal<number | null>(null);
+  maxPrice = signal<number | null>(null);
+  minDistance = signal<number | null>(null);
+  maxDistance = signal<number | null>(null);
+
+  showFilters = signal(false);
+
+  activeFiltersCount = computed(() => {
+    let count = 0;
+    if (this.search().trim()) count++;
+    if (this.sortBy() !== null) count++;
+    if (this.sortOrder() !== 'DESC') count++;
+    if (this.minPrice() !== null) count++;
+    if (this.maxPrice() !== null) count++;
+    if (this.minDistance() !== null) count++;
+    if (this.maxDistance() !== null) count++;
+    return count;
+  });
+
   constructor() {
     effect(() => {
       const pageIndex = this.pageIndex();
       const pageSize = this.pageSize();
-      untracked(() => this.fetchRoutes(pageIndex + 1, pageSize));
+      untracked(() => this.fetchRoutes());
     });
   }
 
-  fetchRoutes(pageNumber: number, pageSize: number) {
+  fetchRoutes() {
     this.isLoading.set(true);
-    this.routeService.getRouteListItems(pageNumber, pageSize).subscribe({
+    this.routeService.getRouteListItems({
+      pageNumber: this.pageIndex() + 1,
+      pageSize: this.pageSize(),
+      search: this.search() || undefined,
+      sortBy: this.sortBy() || undefined,
+      sortOrder: this.sortOrder() || undefined,
+      minPrice: this.minPrice() ?? undefined,
+      maxPrice: this.maxPrice() ?? undefined,
+      minDistance: this.minDistance() ?? undefined,
+      maxDistance: this.maxDistance() ?? undefined,
+    }).subscribe({
       next: (response) => {
         this.routes.set(response.data);
         this.totalCount.set(response.totalCount);
@@ -54,5 +89,21 @@ export class RoutesListComponent {
   onPageChange(event: { pageIndex: number; pageSize: number }) {
     this.pageSize.set(event.pageSize);
     this.pageIndex.set(event.pageIndex);
+  }
+
+  onFilterChange() {
+    this.pageIndex.set(0);
+    this.fetchRoutes();
+  }
+
+  resetFilters() {
+    this.search.set('');
+    this.sortBy.set(null);
+    this.sortOrder.set('DESC');
+    this.minPrice.set(null);
+    this.maxPrice.set(null);
+    this.minDistance.set(null);
+    this.maxDistance.set(null);
+    this.onFilterChange();
   }
 }

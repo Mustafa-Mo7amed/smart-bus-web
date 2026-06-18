@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { RouteApi } from '../api/route.api';
+import { RouteApi, RoutesFilters } from '../api/route.api';
 import {
   from,
   interval,
@@ -23,7 +23,7 @@ export class RouteService {
   routeApi = inject(RouteApi);
 
   getAllRoutes(): Observable<RouteDetailed[]> {
-    return this.routeApi.getRoutesPaginated(1, 10000).pipe(map((response) => response.data));
+    return this.routeApi.getRoutesPaginated({ pageNumber: 1, pageSize: 10000 }).pipe(map((response) => response.data));
   }
 
   getRouteById(routeId: string): Observable<RouteDetailed> {
@@ -76,10 +76,9 @@ export class RouteService {
   }
 
   getRouteListItems(
-    pageNumber: number,
-    pageSize: number,
+    filters?: RoutesFilters
   ): Observable<{ data: RouteListItem[]; totalCount: number }> {
-    return this.routeApi.getRoutesPaginated(pageNumber, pageSize).pipe(
+    return this.routeApi.getRoutesPaginated(filters).pipe(
       switchMap((response) => {
         const routes = response.data;
         const totalCount = response.totalCount;
