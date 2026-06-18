@@ -25,7 +25,7 @@ export class RouteApi extends BaseApi {
     let params = new HttpParams();
     params = params.set('pageNumber', pageNumber);
     params = params.set('pageSize', pageSize);
-    return this.get<RoutesPaginatedResponse>('paginated', params);
+    return this.get<RoutesPaginatedResponse>('all', params);
   }
 
   getRouteDestinations(fromStationId: string): Observable<RouteEndpoint[]> {
