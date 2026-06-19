@@ -88,7 +88,8 @@ export class ReportsListComponent implements OnInit {
     if (current.classList.contains('plate-input--digit')) {
       val = val.replace(/[^0-9]/g, '');
     } else {
-      val = val.replace(/[^أاإبجدرسصطعفقلمنهويى]/g, '');
+      // val = val.replace(/[^أاإبجدرسصطعفقلمنهويى]/g, '');
+      val = val.replace(/[^ء-ي]/g, '');
     }
 
     val = val.slice(0, 1);

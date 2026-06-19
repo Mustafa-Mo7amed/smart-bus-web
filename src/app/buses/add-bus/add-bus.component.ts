@@ -20,7 +20,8 @@ export function plateNumberValidator(control: AbstractControl): ValidationErrors
   if (!value) return null; // Let the 'required' validator handle empty values
 
   // The 17 allowed Arabic letters
-  const allowedLetters = '[أاإبجدرسصطعفقلمنهويى]';
+  // const allowedLetters = '[أاإبجدرسصطعفقلمنهويى]';
+  const allowedLetters = '[ء-ي]';
   const digit = '\\d';
 
   // Cairo: 3 Letters, 3 Numbers (e.g., "أ ب ج 123")
@@ -97,7 +98,8 @@ export class AddBusComponent implements OnInit {
     if (current.classList.contains('plate-input--digit')) {
       val = val.replace(/[^0-9]/g, '');
     } else {
-      val = val.replace(/[^أاإبجدرسصطعفقلمنهويى]/g, '');
+      // val = val.replace(/[^أاإبجدرسصطعفقلمنهويى]/g, '');
+      val = val.replace(/[^ء-ي]/g, '');
     }
 
     val = val.slice(0, 1);
