@@ -1,33 +1,35 @@
-import { Component, signal } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, signal, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterLink, Router } from '@angular/router';
+import { RouteService } from '../../core/services/route.service';
 
 @Component({
   selector: 'app-add-route',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MatIconModule],
+  imports: [ReactiveFormsModule, CommonModule, MatIconModule, RouterLink],
   templateUrl: './add-route.component.html',
   styleUrl: './add-route.component.scss',
 })
 export class AddRouteComponent {
+  private readonly routeService = inject(RouteService);
+  private readonly router = inject(Router);
+
   public form = new FormGroup({
-    fromAr: new FormControl('', {
-      validators: [Validators.required, Validators.maxLength(100)],
-    }),
-    fromEn: new FormControl('', {
-      validators: [Validators.required, Validators.maxLength(100)],
-    }),
     toAr: new FormControl('', {
-      validators: [Validators.required, Validators.maxLength(100)],
+      validators: [
+        Validators.required,
+        Validators.maxLength(100),
+        Validators.pattern(/^[\u0600-\u06FF\s0-9\-\.\,]+$/)
+      ],
     }),
     toEn: new FormControl('', {
-      validators: [Validators.required, Validators.maxLength(100)],
+      validators: [
+        Validators.required,
+        Validators.maxLength(100),
+        Validators.pattern(/^[a-zA-Z\s0-9\-\.\,]+$/)
+      ],
     }),
     price: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(0)],
@@ -38,20 +40,45 @@ export class AddRouteComponent {
   });
 
   public submitted = signal(false);
+  public isSubmitting = signal(false);
   public successMessage = signal('');
+  public errorMessage = signal('');
 
   onSubmit() {
     this.submitted.set(true);
+    this.errorMessage.set('');
+    this.successMessage.set('');
+
     if (this.form.invalid) {
       return;
     }
-    console.log('Form Submitted', this.form.value);
-    this.successMessage.set('Route added successfully! (UI Only)');
+
+    const formValues = this.form.value;
+    const request = {
+      toAr: formValues.toAr!,
+      toEn: formValues.toEn!,
+      price: formValues.price!,
+      distanceKm: formValues.distanceKm!,
+    };
+
+    this.isSubmitting.set(true);
+    this.routeService.addRoute(request).subscribe({
+      next: (response) => {
+        this.isSubmitting.set(false);
+        this.successMessage.set(response.message || 'Route created successfully!');
+      },
+      error: (error) => {
+        this.isSubmitting.set(false);
+        console.error('Error adding route:', error);
+        this.errorMessage.set('Failed to create route. Please try again.');
+      },
+    });
   }
 
   onReset() {
     this.form.reset();
     this.submitted.set(false);
     this.successMessage.set('');
+    this.errorMessage.set('');
   }
 }

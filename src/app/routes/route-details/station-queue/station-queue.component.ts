@@ -4,6 +4,8 @@ import { RouteService } from '../../../core/services/route.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
+import { RouteTrackingSignalRService } from '../../../core/services/signalr/route-tracking-signalr.service';
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-station-queue',
@@ -13,6 +15,7 @@ import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
 })
 export class StationQueueComponent implements OnInit {
   private readonly routeService = inject(RouteService);
+  private readonly routeTrackingService = inject(RouteTrackingSignalRService);
   private readonly destroyRef = inject(DestroyRef);
   routeId = input.required<string>();
 
@@ -20,10 +23,20 @@ export class StationQueueComponent implements OnInit {
   isLoading = false;
 
   ngOnInit() {
+    this.fetchMicrobusesAtStation(0);
+
+    this.routeTrackingService.routeUpdated$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((update) => {
+        this.fetchMicrobusesAtStation(100);
+      });
+  }
+
+  private fetchMicrobusesAtStation(delayTime: number) {
     this.isLoading = true;
     this.routeService
       .getMicrobusesAtStation(this.routeId())
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(takeUntilDestroyed(this.destroyRef), delay(delayTime))
       .subscribe({
         next: (microbuses) => {
           this.stationBuses.set(microbuses);

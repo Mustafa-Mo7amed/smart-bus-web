@@ -1,6 +1,10 @@
 @use 'variables' as v;
 
 // --- Card container ------------------------------------------
+:host {
+  display: block;
+}
+
 .queue-card {
   background-color: v.$color-bg-surface;
   border-radius: v.$radius-lg;
@@ -41,7 +45,7 @@
 
 // --- Table wrapper -------------------------------------------
 .queue-table-wrapper {
-  max-height: 50vh;
+  height: 41.4rem;
   overflow-y: auto;
 
   // Hide scrollbar
@@ -61,7 +65,7 @@
   thead th {
     position: sticky;
     top: 0;
-    padding: 0.8rem 2.4rem; // 0.8rem is weird but it matchs the station table
+    padding: 1.4rem 2.4rem;
     text-align: left;
     font-size: 1.2rem;
     font-weight: 600;
@@ -78,6 +82,7 @@
     background-color: v.$color-bg-surface;
     border-bottom: 1px solid v.$table-row-border;
     transition: background-color v.$transition-fast;
+    cursor: pointer;
 
     &:last-child {
       border-bottom: none;
@@ -85,6 +90,11 @@
 
     &:hover:not(.boarding) {
       background-color: v.$table-row-hover;
+    }
+
+    &.selected {
+      background-color: v.$color-primary-bg;
+      box-shadow: inset 4px 0 0 v.$color-primary;
     }
 
     // --- Boarding row (first bus) ---

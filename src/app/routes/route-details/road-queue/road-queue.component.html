@@ -1,6 +1,6 @@
 <div class="queue-card">
   <div class="queue-header">
-    <h2 class="queue-title">Live En Route</h2>
+    <h2 class="queue-title">Road Queue</h2>
     <span class="queue-badge">{{ roadBuses().length }} Buses</span>
   </div>
 
@@ -25,7 +25,7 @@
           </tr>
         } @else {
           @for (bus of roadBuses(); track bus.driverId; let i = $index) {
-            <tr [class.boarding]="i === 0">
+            <tr [class.boarding]="i === 0" [class.selected]="bus.driverId === selectedDriverId()" (click)="driverSelected.emit(bus.driverId)">
               <td class="position-cell">
                 <span class="position-number" [class.boarding]="i === 0">{{ i + 1 }}</span>
               </td>

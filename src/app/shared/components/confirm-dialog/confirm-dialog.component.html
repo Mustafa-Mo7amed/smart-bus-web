@@ -1,0 +1,22 @@
+@if (show()) {
+  <div class="confirm-overlay" (click)="onCancel()">
+    <div class="confirm-card" [class.confirm-card--danger]="type() === 'danger'" (click)="$event.stopPropagation()">
+      <div class="confirm-card__icon-wrap">
+        <mat-icon>{{ icon() }}</mat-icon>
+      </div>
+      <h3 class="confirm-card__title">{{ title() }}</h3>
+      <p class="confirm-card__message">{{ message() }}</p>
+      <div class="confirm-card__actions">
+        <button class="confirm-btn confirm-btn--cancel" (click)="onCancel()">Cancel</button>
+        <button
+          class="confirm-btn"
+          [class.confirm-btn--primary]="type() !== 'danger'"
+          [class.confirm-btn--danger]="type() === 'danger'"
+          (click)="onConfirm()"
+        >
+          {{ confirmText() }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

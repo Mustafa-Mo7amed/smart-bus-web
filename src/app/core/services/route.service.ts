@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { RouteApi } from '../api/route.api';
+import { RouteApi, RoutesFilters, AddRouteRequest, UpdateRouteRequest } from '../api/route.api';
 import {
-  delay,
   from,
   interval,
   map,
@@ -15,21 +14,21 @@ import {
   MicrobusAtStation,
   MicrobusOnTheWay,
   RouteDetailed,
-  RouteDetails,
   RouteSummary,
 } from '../../shared/models/route.model';
 import { RouteListItem } from '../../routes/routes-list/routes-list.component';
+import { SuccessResponse } from '../api/manager.api';
 
 @Injectable({ providedIn: 'root' })
 export class RouteService {
   routeApi = inject(RouteApi);
 
   getAllRoutes(): Observable<RouteDetailed[]> {
-    return this.routeApi.getRoutesPaginated(1, 10000).pipe(map((response) => response.data.data));
+    return this.routeApi.getRoutesPaginated({ pageNumber: 1, pageSize: 10000 }).pipe(map((response) => response.data));
   }
 
-  getRouteDetails(routeId: string): Observable<RouteDetails> {
-    return this.routeApi.getRouteDetails(routeId);
+  getRouteById(routeId: string): Observable<RouteDetailed> {
+    return this.routeApi.getRouteById(routeId);
   }
 
   getMicrobusesAtStation(routeId: string): Observable<MicrobusAtStation[]> {
@@ -78,13 +77,12 @@ export class RouteService {
   }
 
   getRouteListItems(
-    pageNumber: number,
-    pageSize: number,
+    filters?: RoutesFilters
   ): Observable<{ data: RouteListItem[]; totalCount: number }> {
-    return this.routeApi.getRoutesPaginated(pageNumber, pageSize).pipe(
+    return this.routeApi.getRoutesPaginated(filters).pipe(
       switchMap((response) => {
-        const routes = response.data.data;
-        const totalCount = response.data.totalCount;
+        const routes = response.data;
+        const totalCount = response.totalCount;
         return from(routes).pipe(
           zipWith(interval(1000 / 10)),
           mergeMap(([route]) =>
@@ -102,5 +100,17 @@ export class RouteService {
         );
       }),
     );
+  }
+
+  addRoute(route: AddRouteRequest): Observable<SuccessResponse> {
+    return this.routeApi.addRoute(route);
+  }
+
+  updateRoute(route: UpdateRouteRequest): Observable<SuccessResponse> {
+    return this.routeApi.updateRoute(route);
+  }
+
+  deleteRoute(routeId: string): Observable<SuccessResponse> {
+    return this.routeApi.deleteRoute(routeId);
   }
 }

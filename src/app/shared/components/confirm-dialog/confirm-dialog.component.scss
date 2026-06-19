@@ -1,0 +1,134 @@
+@use 'variables' as v;
+
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.confirm-card {
+  background-color: v.$color-bg-surface;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-lg;
+  padding: 3.2rem;
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  border: 1px solid v.$color-border-light;
+  animation: scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &--danger {
+    .confirm-card__icon-wrap {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: v.$color-error;
+    }
+  }
+
+  &__icon-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 6.4rem;
+    height: 6.4rem;
+    border-radius: 50%;
+    background-color: rgba(37, 99, 235, 0.1);
+    color: v.$color-primary;
+    margin-bottom: 0.8rem;
+
+    mat-icon {
+      font-size: 3.2rem;
+      width: 3.2rem;
+      height: 3.2rem;
+    }
+  }
+
+  &__title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: v.$color-text-heading;
+    margin: 0;
+  }
+
+  &__message {
+    font-size: 1.5rem;
+    color: v.$color-text-muted;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 1.2rem;
+    width: 100%;
+    margin-top: 1.2rem;
+  }
+}
+
+.confirm-btn {
+  flex: 1;
+  padding: 1.2rem 2rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-radius: v.$radius-md;
+  cursor: pointer;
+  transition: all v.$transition-fast;
+  border: none;
+  font-family: inherit;
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &--cancel {
+    background-color: v.$color-bg-input;
+    color: v.$color-text-muted;
+    border: 1.5px solid v.$color-border;
+
+    &:hover {
+      background-color: v.$color-border-light;
+      color: v.$color-text-body;
+    }
+  }
+
+  &--primary {
+    background-color: v.$color-primary;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+
+    &:hover {
+      background-color: v.$color-primary-dark;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+  }
+
+  &--danger {
+    background-color: v.$color-error;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+
+    &:hover {
+      background-color: #dc2626;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.9); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}

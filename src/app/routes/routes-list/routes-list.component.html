@@ -1,23 +1,115 @@
 <div class="container">
   <header>
-    <h1 class="title">Active Routes</h1>
-    <button class="register-route-btn" routerLink="register-route">+ Register New Route</button>
+    <div class="title-section">
+      <h1 class="title">Active Routes</h1>
+      <span class="report-badge">{{ totalCount() }} Total</span>
+    </div>
+    <div class="header-actions">
+      @if (activeFiltersCount() > 0) {
+        <button class="btn-clear-filters" (click)="resetFilters()">
+          <mat-icon>clear_all</mat-icon>
+          <span>Clear Filters</span>
+        </button>
+      }
+      <button
+        class="btn-toggle-filters"
+        [class.btn-toggle-filters--active]="showFilters()"
+        (click)="showFilters.set(!showFilters())"
+      >
+        <mat-icon>{{ showFilters() ? 'expand_less' : 'filter_list' }}</mat-icon>
+        <span>{{ showFilters() ? 'Hide Filters' : 'Filters' }}</span>
+        @if (activeFiltersCount() > 0) {
+          <span class="filters-badge">{{ activeFiltersCount() }}</span>
+        }
+      </button>
+      <button class="register-route-btn" routerLink="register-route">+ Register New Route</button>
+    </div>
   </header>
 
-  <ul class="route-list-nav">
-    <li routerLink="./" [queryParams]="{ whichRoutes: 'all-routes' }" routerLinkActive="active">
-      All Routes
-    </li>
-    <li routerLink="./" [queryParams]="{ whichRoutes: 'core-hubs' }" routerLinkActive="active">
-      Core Hubs
-    </li>
-    <li routerLink="./" [queryParams]="{ whichRoutes: 'from-this-hub' }" routerLinkActive="active">
-      From this Hub
-    </li>
-    <li>
-      <mat-icon routerLink="./" [queryParams]="">filter_list</mat-icon>
-    </li>
-  </ul>
+  <!-- Filters Panel -->
+  <div class="filters-panel" [class.filters-panel--collapsed]="!showFilters()">
+    <div class="filter-group">
+      <label for="searchFilter">Search string (query)</label>
+      <input
+        id="searchFilter"
+        type="text"
+        placeholder="Search"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="updateDebouncedField('searchQuery', $event)"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="sortByFilter">SortBy string (query)</label>
+      <select
+        id="sortByFilter"
+        [ngModel]="sortBy()"
+        (ngModelChange)="sortBy.set($event); onFilterChange()"
+      >
+        <option [ngValue]="null">--</option>
+        <option value="To">To</option>
+        <option value="Price">Price</option>
+        <option value="Distance">Distance</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="sortOrderFilter">SortOrder string (query)</label>
+      <select
+        id="sortOrderFilter"
+        [ngModel]="sortOrder()"
+        (ngModelChange)="sortOrder.set($event); onFilterChange()"
+      >
+        <option value="DESC">DESC</option>
+        <option value="ASC">ASC</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="minPriceFilter">MinPrice number (query)</label>
+      <input
+        id="minPriceFilter"
+        type="number"
+        placeholder="MinPrice"
+        [ngModel]="minPriceInput()"
+        (ngModelChange)="updateDebouncedField('minPrice', $event)"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="maxPriceFilter">MaxPrice number (query)</label>
+      <input
+        id="maxPriceFilter"
+        type="number"
+        placeholder="MaxPrice"
+        [ngModel]="maxPriceInput()"
+        (ngModelChange)="updateDebouncedField('maxPrice', $event)"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="minDistanceFilter">MinDistance number (query)</label>
+      <input
+        id="minDistanceFilter"
+        type="number"
+        placeholder="MinDistance"
+        [ngModel]="minDistanceInput()"
+        (ngModelChange)="updateDebouncedField('minDistance', $event)"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="maxDistanceFilter">MaxDistance number (query)</label>
+      <input
+        id="maxDistanceFilter"
+        type="number"
+        placeholder="MaxDistance"
+        [ngModel]="maxDistanceInput()"
+        (ngModelChange)="updateDebouncedField('maxDistance', $event)"
+      />
+    </div>
+  </div>
+
   <div class="routes-table-wrapper">
     <table class="routes-table">
       <thead>
@@ -27,12 +119,13 @@
           <th>distance</th>
           <th>active buses</th>
           <th>nearest arrival</th>
+          <th class="actions-header"></th>
         </tr>
       </thead>
       <tbody>
         @if (isLoading()) {
           <tr>
-            <td colspan="5" class="spinner-cell">
+            <td colspan="6" class="spinner-cell">
               <div class="spinner-container">
                 <span class="spinning-loader"></span>
                 <p class="loading-text">Fetching routes...</p>
@@ -41,13 +134,13 @@
           </tr>
         } @else {
           @for (route of routes(); track route.details.id) {
-            <tr [routerLink]="['details', route.details.id]">
+            <tr (click)="viewRoute(route.details.id)">
               <td class="table-route">
                 <div class="table-route-icon-wrapper">
                   <mat-icon>alt_route</mat-icon>
                 </div>
                 <div>
-                  <p class="route-name">{{ route.details.fromEn }} - {{ route.details.toEn }}</p>
+                  <p class="route-name">{{ route.details.from }} - {{ route.details.to }}</p>
                   <p class="route-class">main route</p>
                 </div>
               </td>
@@ -60,10 +153,33 @@
                 }}
               </td>
               <td>{{ route.nearestArrivalMinutes }}</td>
+              <td class="actions-cell">
+                <button
+                  class="btn-icon"
+                  [matMenuTriggerFor]="menu"
+                  (click)="$event.stopPropagation()"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="before">
+                  <button mat-menu-item (click)="viewRoute(route.details.id)">
+                    <mat-icon>visibility</mat-icon>
+                    <span>View Details</span>
+                  </button>
+                  <button mat-menu-item (click)="navigateToUpdate(route.details.id)">
+                    <mat-icon>edit</mat-icon>
+                    <span>Update Route</span>
+                  </button>
+                  <button mat-menu-item class="menu-item--danger" (click)="deleteRoute(route.details.id)">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete Route</span>
+                  </button>
+                </mat-menu>
+              </td>
             </tr>
           } @empty {
             <tr>
-              <td colspan="5" class="no-routes">
+              <td colspan="6" class="no-routes">
                 <p>No Routes</p>
               </td>
             </tr>
@@ -81,3 +197,13 @@
     [isLoading]="isLoading()"
     (pageChange)="onPageChange($event)" />
 </div>
+
+<app-confirm-dialog
+  [show]="confirmDialog().show"
+  [title]="confirmDialog().title"
+  [message]="confirmDialog().message"
+  [confirmText]="confirmDialog().confirmText"
+  [icon]="confirmDialog().icon"
+  [type]="confirmDialog().type || 'primary'"
+  (confirm)="executeConfirm()"
+  (cancel)="closeConfirm()" />
