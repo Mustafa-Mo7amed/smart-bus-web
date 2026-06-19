@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReportService } from '../../core/services/report.service';
 import { ReportListItem } from '../../shared/models/report.model';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
+import { Subject, debounceTime } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-reports-list',
@@ -25,6 +27,7 @@ import { PaginatorComponent } from '../../shared/components/paginator/paginator.
 export class ReportsListComponent implements OnInit {
   private readonly reportService = inject(ReportService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   reports = signal<ReportListItem[]>([]);
   totalCount = signal(0);
@@ -64,6 +67,20 @@ export class ReportsListComponent implements OnInit {
   pageNumber = signal(1);
   pageSize = signal(5);
 
+  private debounceSubject = new Subject<void>();
+
+  constructor() {
+    this.debounceSubject
+      .pipe(
+        debounceTime(300),
+        takeUntilDestroyed()
+      )
+      .subscribe(() => {
+        this.pageNumber.set(1);
+        this.fetchReports();
+      });
+  }
+
   onInput(event: Event, field: 'num1'|'num2'|'num3'|'num4'|'let1'|'let2'|'let3', current: HTMLInputElement, next: HTMLInputElement | null) {
     const input = event.target as HTMLInputElement;
     let val = input.value;
@@ -71,7 +88,8 @@ export class ReportsListComponent implements OnInit {
     if (current.classList.contains('plate-input--digit')) {
       val = val.replace(/[^0-9]/g, '');
     } else {
-      val = val.replace(/[^أاإبجدرسصطعفقلمنهويى]/g, '');
+      // val = val.replace(/[^أاإبجدرسصطعفقلمنهويى]/g, '');
+      val = val.replace(/[^ء-ي]/g, '');
     }
 
     val = val.slice(0, 1);
@@ -118,11 +136,59 @@ export class ReportsListComponent implements OnInit {
   }
 
   ngOnInit() {
+    const params = this.route.snapshot.queryParamMap;
+    if (params.has('plateNumber')) this.plateNumber.set(params.get('plateNumber')!);
+    if (params.has('status')) this.status.set(params.get('status') as any);
+    if (params.has('fromDate')) this.fromDate.set(params.get('fromDate')!);
+    if (params.has('toDate')) this.toDate.set(params.get('toDate')!);
+    if (params.has('orderBy')) this.orderBy.set(params.get('orderBy') as any);
+    if (params.has('order')) this.order.set(params.get('order') as any);
+    if (params.has('pageNumber')) this.pageNumber.set(Number(params.get('pageNumber')));
+    if (params.has('pageSize')) this.pageSize.set(Number(params.get('pageSize')));
+
+    if (this.plateNumber()) {
+      const p = this.plateNumber();
+      const lettersStr = p.replace(/[0-9]/g, '').trim().split(' ');
+      const numbersStr = p.replace(/[^0-9]/g, '');
+      
+      if (lettersStr[0]) this.let1.set(lettersStr[0]);
+      if (lettersStr[1]) this.let2.set(lettersStr[1]);
+      if (lettersStr[2]) this.let3.set(lettersStr[2]);
+      
+      if (numbersStr[0]) this.num1.set(numbersStr[0]);
+      if (numbersStr[1]) this.num2.set(numbersStr[1]);
+      if (numbersStr[2]) this.num3.set(numbersStr[2]);
+      if (numbersStr[3]) this.num4.set(numbersStr[3]);
+    }
+    
+    if (this.activeFiltersCount() > 0) {
+      this.showFilters.set(true);
+    }
+
     this.fetchReports();
+  }
+
+  updateQueryParams() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        plateNumber: this.plateNumber() || null,
+        fromDate: this.fromDate() || null,
+        toDate: this.toDate() || null,
+        status: this.status() || null,
+        order: this.order() === 'DESC' ? null : this.order(),
+        orderBy: this.orderBy() === 'createdAt' ? null : this.orderBy(),
+        pageNumber: this.pageNumber() === 1 ? null : this.pageNumber(),
+        pageSize: this.pageSize() === 5 ? null : this.pageSize(),
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   fetchReports() {
     this.isLoading.set(true);
+    this.updateQueryParams();
     this.reportService
       .getReports({
         plateNumber: this.plateNumber() || undefined,
@@ -148,8 +214,7 @@ export class ReportsListComponent implements OnInit {
   }
 
   onFilterChange() {
-    this.pageNumber.set(1);
-    this.fetchReports();
+    this.debounceSubject.next();
   }
 
   handlePageChange(event: { pageIndex: number; pageSize: number }) {

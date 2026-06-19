@@ -2,12 +2,12 @@ import { Component, effect, inject, signal, untracked, computed } from '@angular
 import { RouteService } from '../../core/services/route.service';
 import { RouteDetailed } from '../../shared/models/route.model';
 import { MatIcon } from '@angular/material/icon';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, debounceTime } from 'rxjs';
 import { MatMenuModule } from '@angular/material/menu';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
@@ -27,6 +27,7 @@ export interface RouteListItem {
 export class RoutesListComponent {
   routeService = inject(RouteService);
   private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
   isLoading = signal(false);
   routes = signal<RouteListItem[]>([]);
   totalCount = signal(0);
@@ -70,6 +71,41 @@ export class RoutesListComponent {
   });
 
   constructor() {
+    const params = this.activatedRoute.snapshot.queryParamMap;
+    if (params.has('search')) {
+      const searchVal = params.get('search')!;
+      this.searchQuery.set(searchVal);
+      this.search.set(searchVal);
+    }
+    if (params.has('minPrice')) {
+      const val = Number(params.get('minPrice'));
+      this.minPriceInput.set(val);
+      this.minPrice.set(val);
+    }
+    if (params.has('maxPrice')) {
+      const val = Number(params.get('maxPrice'));
+      this.maxPriceInput.set(val);
+      this.maxPrice.set(val);
+    }
+    if (params.has('minDistance')) {
+      const val = Number(params.get('minDistance'));
+      this.minDistanceInput.set(val);
+      this.minDistance.set(val);
+    }
+    if (params.has('maxDistance')) {
+      const val = Number(params.get('maxDistance'));
+      this.maxDistanceInput.set(val);
+      this.maxDistance.set(val);
+    }
+    if (params.has('sortBy')) this.sortBy.set(params.get('sortBy') as any);
+    if (params.has('sortOrder')) this.sortOrder.set(params.get('sortOrder') as any);
+    if (params.has('pageIndex')) this.pageIndex.set(Number(params.get('pageIndex')));
+    if (params.has('pageSize')) this.pageSize.set(Number(params.get('pageSize')));
+    
+    if (this.activeFiltersCount() > 0) {
+      this.showFilters.set(true);
+    }
+
     effect(() => {
       const pageIndex = this.pageIndex();
       const pageSize = this.pageSize();
@@ -91,8 +127,28 @@ export class RoutesListComponent {
       });
   }
 
+  updateQueryParams() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        search: this.search() || null,
+        minPrice: this.minPrice() ?? null,
+        maxPrice: this.maxPrice() ?? null,
+        minDistance: this.minDistance() ?? null,
+        maxDistance: this.maxDistance() ?? null,
+        sortBy: this.sortBy() || null,
+        sortOrder: this.sortOrder() === 'DESC' ? null : this.sortOrder(),
+        pageIndex: this.pageIndex() === 0 ? null : this.pageIndex(),
+        pageSize: this.pageSize() === 5 ? null : this.pageSize(),
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
+
   fetchRoutes() {
     this.isLoading.set(true);
+    this.updateQueryParams();
     this.routeService.getRouteListItems({
       pageNumber: this.pageIndex() + 1,
       pageSize: this.pageSize(),
