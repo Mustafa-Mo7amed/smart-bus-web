@@ -1,45 +1,50 @@
-<div class="nav-header">
-  <img src="smart-bus.png" alt="smart bus icon" />
-  <div class="nav-title">
-    <h1>Smart Bus</h1>
-    <p>The Modern Way</p>
+<!-- Brand Area -->
+<div class="brand-area">
+  <div class="brand-logo-wrap">
+    <img src="wasla-logo-rounded.png" alt="Wasla logo" class="brand-logo" />
+  </div>
+  <div class="brand-text">
+    <h1>Wasla</h1>
+    <span class="brand-tagline">Transit Manager</span>
   </div>
 </div>
-<ul class="nav-items">
-  <li>
+
+<div class="brand-divider"></div>
+
+<p class="nav-section-label">Main Menu</p>
+
+<!-- Navigation Links -->
+<ul class="nav-links">
+  <li class="nav-link-item" routerLink="overview" routerLinkActive="active" id="nav-overview">
     <mat-icon>widgets</mat-icon>
-    <p>Overview</p>
+    <span>Overview</span>
   </li>
-  <li routerLink="routes" routerLinkActive="active">
+  <li class="nav-link-item" routerLink="routes" routerLinkActive="active" id="nav-routes">
     <mat-icon>route</mat-icon>
-    <p>Routes</p>
+    <span>Routes</span>
   </li>
-  <li>
-    <mat-icon>format_list_numbered</mat-icon>
-    <p>Queue</p>
-  </li>
-  <li routerLink="drivers" routerLinkActive="active">
+  <li class="nav-link-item" routerLink="drivers" routerLinkActive="active" id="nav-drivers">
     <mat-icon>group</mat-icon>
-    <p>Drivers</p>
+    <span>Drivers</span>
   </li>
-  <li routerLink="buses" routerLinkActive="active">
+  <li class="nav-link-item" routerLink="buses" routerLinkActive="active" id="nav-buses">
     <mat-icon>directions_bus</mat-icon>
-    <p>Buses</p>
+    <span>Buses</span>
   </li>
-  <li routerLink="assignments" routerLinkActive="active">
+  <li class="nav-link-item" routerLink="assignments" routerLinkActive="active" id="nav-assignments">
     <mat-icon>assignment</mat-icon>
-    <p>Assignments</p>
+    <span>Assignments</span>
   </li>
-  <li routerLink="reports" routerLinkActive="active">
+  <li class="nav-link-item" routerLink="reports" routerLinkActive="active" id="nav-reports">
     <mat-icon>report</mat-icon>
-    <p>Reports</p>
-  </li>
-  <li>
-    <mat-icon>notifications_active</mat-icon>
-    <p>Alerts</p>
-  </li>
-  <li>
-    <mat-icon>settings</mat-icon>
-    <p>Settings</p>
+    <span>Reports</span>
   </li>
 </ul>
+
+<!-- Bottom Section -->
+<div class="nav-bottom">
+  <div class="nav-link-item nav-logout" (click)="onLogout()" id="nav-logout">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </div>
+</div>

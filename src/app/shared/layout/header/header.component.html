@@ -1,21 +1,26 @@
-<div class="search-container">
-  <div class="input-wrapper">
-    <mat-icon class="search-icon">search</mat-icon>
-    <input type="text" placeholder="Search routes, codes, or hubs..." />
-  </div>
-  <div class="search-results-dropdown"></div>
+<!-- The :host element IS the header bar — no extra wrapper needed -->
+<div class="header-left">
+  <h2 class="page-title">{{ pageTitle }}</h2>
 </div>
 
-<!-- TODO: make icons outlined -->
-<mat-icon class="notifications-icon">notifications</mat-icon>
-<mat-icon class="help-icon">help</mat-icon>
+<div class="header-right">
+  <!-- Support Link -->
+  <a href="mailto:mostaamoahmedd985@gmail.com" class="support-link" id="header-support">
+    <mat-icon>help_outline</mat-icon>
+    <span>Support</span>
+  </a>
 
-<a href="mailto:mostaamoahmedd985@gmail.com" class="contact-support">Support</a>
+  <!-- Divider -->
+  <div class="header-divider"></div>
 
-<div class="manager-profile">
-  <div>
-    <p class="manager-name">Station Manager</p>
-    <p class="station-name">Minya Station</p>
+  <!-- Manager Profile -->
+  <div class="manager-profile" id="header-profile">
+    <div class="profile-info">
+      <p class="manager-name">Station Manager</p>
+      <p class="station-name">Minya Station</p>
+    </div>
+    <div class="profile-avatar">
+      <img src="wasla-logo-rounded.png" alt="Manager profile" />
+    </div>
   </div>
-  <img src="smart-bus.png" alt="manager profile avatar" class="manager-avatar" />
 </div>
