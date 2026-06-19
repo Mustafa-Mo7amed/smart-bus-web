@@ -33,10 +33,18 @@ export class UpdateRouteComponent implements OnInit {
   public route = signal<RouteDetailed | null>(null);
   public form = new FormGroup({
     toAr: new FormControl('', {
-      validators: [Validators.required, Validators.maxLength(100)],
+      validators: [
+        Validators.required,
+        Validators.maxLength(100),
+        Validators.pattern(/^[\u0600-\u06FF\s0-9\-\.\,]+$/)
+      ],
     }),
     toEn: new FormControl('', {
-      validators: [Validators.required, Validators.maxLength(100)],
+      validators: [
+        Validators.required,
+        Validators.maxLength(100),
+        Validators.pattern(/^[a-zA-Z\s0-9\-\.\,]+$/)
+      ],
     }),
     price: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(0)],
@@ -125,7 +133,21 @@ export class UpdateRouteComponent implements OnInit {
       error: (error) => {
         this.isSubmitting.set(false);
         console.error('Error updating route:', error);
-        this.errorMessage.set('Failed to update route. Please try again.');
+        
+        // Handle server validation errors
+        if (error.status === 400 && error.error && error.error.errors) {
+          const validationErrors = error.error.errors;
+          for (const key of Object.keys(validationErrors)) {
+            const formKey = key.charAt(0).toLowerCase() + key.slice(1);
+            const control = this.form.get(formKey);
+            if (control) {
+              control.setErrors({ serverError: validationErrors[key][0] });
+            }
+          }
+          this.errorMessage.set('Please fix the validation errors below.');
+        } else {
+          this.errorMessage.set(error.error?.message || 'Failed to update route. Please try again.');
+        }
       },
     });
   }

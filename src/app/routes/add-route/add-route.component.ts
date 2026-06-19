@@ -18,10 +18,18 @@ export class AddRouteComponent {
 
   public form = new FormGroup({
     toAr: new FormControl('', {
-      validators: [Validators.required, Validators.maxLength(100)],
+      validators: [
+        Validators.required,
+        Validators.maxLength(100),
+        Validators.pattern(/^[\u0600-\u06FF\s0-9\-\.\,]+$/)
+      ],
     }),
     toEn: new FormControl('', {
-      validators: [Validators.required, Validators.maxLength(100)],
+      validators: [
+        Validators.required,
+        Validators.maxLength(100),
+        Validators.pattern(/^[a-zA-Z\s0-9\-\.\,]+$/)
+      ],
     }),
     price: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(0)],

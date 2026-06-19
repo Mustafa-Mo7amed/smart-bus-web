@@ -61,7 +61,15 @@
               />
             </div>
             @if (submitted() && form.get('toAr')?.invalid) {
-              <span class="form-error">Destination in Arabic is required</span>
+              @if (form.get('toAr')?.hasError('required')) {
+                <span class="form-error">Destination in Arabic is required</span>
+              } @else if (form.get('toAr')?.hasError('maxlength')) {
+                <span class="form-error">Destination in Arabic must be at most 100 characters long</span>
+              } @else if (form.get('toAr')?.hasError('pattern')) {
+                <span class="form-error">Destination in Arabic must contain only Arabic characters</span>
+              } @else if (form.get('toAr')?.hasError('serverError')) {
+                <span class="form-error">{{ form.get('toAr')?.getError('serverError') }}</span>
+              }
             }
           </div>
 
@@ -89,7 +97,15 @@
               />
             </div>
             @if (submitted() && form.get('toEn')?.invalid) {
-              <span class="form-error">Destination in English is required</span>
+              @if (form.get('toEn')?.hasError('required')) {
+                <span class="form-error">Destination in English is required</span>
+              } @else if (form.get('toEn')?.hasError('maxlength')) {
+                <span class="form-error">Destination in English must be at most 100 characters long</span>
+              } @else if (form.get('toEn')?.hasError('pattern')) {
+                <span class="form-error">Destination in English must contain only English characters</span>
+              } @else if (form.get('toEn')?.hasError('serverError')) {
+                <span class="form-error">{{ form.get('toEn')?.getError('serverError') }}</span>
+              }
             }
           </div>
         </div>
@@ -121,7 +137,13 @@
               />
             </div>
             @if (submitted() && form.get('price')?.invalid) {
-              <span class="form-error">Valid price is required</span>
+              @if (form.get('price')?.hasError('required')) {
+                <span class="form-error">Price is required</span>
+              } @else if (form.get('price')?.hasError('min')) {
+                <span class="form-error">Price must be a positive number</span>
+              } @else if (form.get('price')?.hasError('serverError')) {
+                <span class="form-error">{{ form.get('price')?.getError('serverError') }}</span>
+              }
             }
           </div>
 
@@ -150,7 +172,13 @@
               />
             </div>
             @if (submitted() && form.get('distanceKm')?.invalid) {
-              <span class="form-error">Distance is required</span>
+              @if (form.get('distanceKm')?.hasError('required')) {
+                <span class="form-error">Distance is required</span>
+              } @else if (form.get('distanceKm')?.hasError('min')) {
+                <span class="form-error">Distance must be a positive number</span>
+              } @else if (form.get('distanceKm')?.hasError('serverError')) {
+                <span class="form-error">{{ form.get('distanceKm')?.getError('serverError') }}</span>
+              }
             }
           </div>
         </div>
