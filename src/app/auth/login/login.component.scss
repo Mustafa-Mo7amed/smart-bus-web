@@ -30,10 +30,34 @@
 .bus-image {
   position: relative;
   display: block;
-  width: 85%;
+  width: 45%; /* Smaller width since it's a logo rather than a large illustration */
+  max-width: 400px;
   height: auto;
   object-fit: contain;
   z-index: 1;
+  /* Play entrance bounce immediately, then switch to infinite floating */
+  animation: entranceBounce 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+             floatLogo 6s ease-in-out infinite 1s;
+}
+
+@keyframes entranceBounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-15deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes floatLogo {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 .login-form {
