@@ -3,6 +3,7 @@ import { BaseApi } from './base.api';
 import { AddDriverRequest } from '../../shared/models/driver.model';
 import { Observable } from 'rxjs';
 import { AddBusRequest } from '../../shared/models/bus.model';
+import { DashboardOverviewResponse } from '../../shared/models/overview.model';
 
 export interface AssignDriverBusRequest {
   driverId: string;
@@ -30,5 +31,9 @@ export class ManagerApi extends BaseApi {
   // TODO: should return a QR code not a SuccessResponse
   assignDriverBus(assignment: AssignDriverBusRequest): Observable<SuccessResponse> {
     return this.post('assign-driver-microbus', assignment);
+  }
+
+  getDashboardOverview(): Observable<DashboardOverviewResponse> {
+    return this.get<DashboardOverviewResponse>('dashboard/overview');
   }
 }
