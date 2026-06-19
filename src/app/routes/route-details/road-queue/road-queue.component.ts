@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, input, output, OnInit, signal } from '@angular/core';
 import { MicrobusOnTheWay } from '../../../shared/models/route.model';
 import { RouteService } from '../../../core/services/route.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -16,6 +16,8 @@ export class RoadQueueComponent implements OnInit {
   private readonly routeTrackingService = inject(RouteTrackingSignalRService);
   private readonly destroyRef = inject(DestroyRef);
   routeId = input.required<string>();
+  selectedDriverId = input<string | null>(null);
+  driverSelected = output<string>();
 
   roadBuses = signal<MicrobusOnTheWay[]>([]);
   isLoading = false;

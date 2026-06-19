@@ -77,7 +77,40 @@
       <router-outlet />
     </div>
     <div class="queue-column-wrapper">
-      <app-road-queue [routeId]="routeId()" />
+      <app-road-queue 
+        [routeId]="routeId()" 
+        [selectedDriverId]="selectedDriverId()"
+        (driverSelected)="onDriverSelected($event)" 
+      />
     </div>
+  </div>
+
+  <!-- Live Tracking Map Section -->
+  <div class="map-section" [class.is-active]="selectedDriverId() !== null">
+    @if (!selectedDriverId()) {
+      <div class="map-overlay">
+        <div class="overlay-content">
+          <mat-icon class="overlay-icon">touch_app</mat-icon>
+          <h3>Live Tracking Paused</h3>
+          <p>Click a driver in the road list to start tracking their live location.</p>
+        </div>
+      </div>
+    }
+    
+    <div id="tracking-map" class="map-container"></div>
+
+    @if (selectedDriverId()) {
+      <div class="map-custom-controls">
+        <button class="map-control-btn" (click)="zoomIn()" title="Zoom In">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button class="map-control-btn" (click)="zoomOut()" title="Zoom Out">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button class="map-control-btn" (click)="reCenter()" title="Focus on Driver">
+          <mat-icon>my_location</mat-icon>
+        </button>
+      </div>
+    }
   </div>
 </div>

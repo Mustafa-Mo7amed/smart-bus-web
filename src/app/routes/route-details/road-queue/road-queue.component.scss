@@ -45,7 +45,7 @@
 
 // --- Table wrapper -------------------------------------------
 .queue-table-wrapper {
-  max-height: 50vh;
+  height: 41.4rem;
   overflow-y: auto;
 
   // Hide scrollbar
@@ -82,6 +82,7 @@
     background-color: v.$color-bg-surface;
     border-bottom: 1px solid v.$table-row-border;
     transition: background-color v.$transition-fast;
+    cursor: pointer;
 
     &:last-child {
       border-bottom: none;
@@ -89,6 +90,11 @@
 
     &:hover:not(.boarding) {
       background-color: v.$table-row-hover;
+    }
+
+    &.selected {
+      background-color: v.$color-primary-bg;
+      box-shadow: inset 4px 0 0 v.$color-primary;
     }
 
     // --- Boarding row (first bus) ---

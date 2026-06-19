@@ -185,7 +185,181 @@
   }
 }
 
-// --- Live Tracking Map Panel (REMOVED) -----------------------
+// --- Live Tracking Map Panel -----------------------
+.map-section {
+  position: relative;
+  height: 480px;
+  border-radius: v.$radius-lg;
+  overflow: hidden;
+  box-shadow: v.$shadow-md;
+  border: 1px solid v.$color-border-light;
+  background-color: v.$color-bg-surface;
+  transition: all v.$transition-base;
+
+  &.is-active {
+    box-shadow: v.$shadow-lg;
+    border-color: v.$color-primary;
+  }
+}
+
+.map-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  text-align: center;
+}
+
+.overlay-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 3.2rem;
+  background: v.$color-bg-surface;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-lg;
+  border: 1px solid v.$color-border-light;
+
+  .overlay-icon {
+    font-size: 4.8rem;
+    height: 4.8rem;
+    width: 4.8rem;
+    color: v.$color-primary;
+  }
+
+  h3 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: v.$color-text-heading;
+    margin: 0;
+  }
+
+  p {
+    font-size: 1.5rem;
+    color: v.$color-text-muted;
+    margin: 0;
+    max-width: 320px;
+    line-height: 1.5;
+  }
+}
+
+.map-custom-controls {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  z-index: 1000;
+}
+
+.map-control-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: v.$radius-md;
+  border: 1px solid v.$color-border-light;
+  background-color: v.$color-bg-surface;
+  color: v.$color-text-heading;
+  box-shadow: v.$shadow-md;
+  cursor: pointer;
+  transition: all v.$transition-fast;
+
+  mat-icon {
+    font-size: 2rem;
+    height: 2rem;
+    width: 2rem;
+  }
+
+  &:hover {
+    background-color: v.$color-primary-bg;
+    color: v.$color-primary;
+    border-color: v.$color-primary;
+    transform: translateY(-2px);
+    box-shadow: v.$shadow-lg;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+::ng-deep .custom-bus-marker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .marker-pulse {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    background: rgba(0, 194, 168, 0.4);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .marker-core {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    background: #00c2a8;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 3px solid white;
+    z-index: 2;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+::ng-deep .custom-destination-marker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .marker-core {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    background: #f44336; // Red for destination
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 3px solid white;
+    z-index: 2;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
 
 // --- Queues Layout Grid -------------------------------------
 .queues-container {
