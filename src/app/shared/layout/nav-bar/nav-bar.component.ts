@@ -12,9 +12,16 @@ import { AuthService } from '../../../core/services/auth.service';
 export class NavBarComponent {
   private router = inject(Router);
   private readonly authService = inject(AuthService);
-  
-  onLogout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+
+  onLogout() {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.authService.clearSession();
+        this.router.navigate(['/login']);
+      }
+    });
   }
 }
