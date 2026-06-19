@@ -29,8 +29,9 @@ export class HeaderComponent {
         map(event => event.urlAfterRedirects || event.url)
       )
       .subscribe(url => {
-        const segments = url.split('/').filter(Boolean);
-        const key = segments[0] || 'Overview';
+        const urlWithoutQueryParams = url.split('?')[0];
+        const segments = urlWithoutQueryParams.split('/').filter(Boolean);
+        const key = segments[0] || 'overview';
         this.pageTitle = this.titleMap[key] || key;
       });
   }
