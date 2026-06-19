@@ -11,5 +11,5 @@ import { NavBarComponent } from "./shared/layout/nav-bar/nav-bar.component";
   styleUrl: './app.component.scss',
 })
 export class App {
-  protected readonly title = signal('smart-bus-web');
+  protected readonly title = signal('Wasla');
 }

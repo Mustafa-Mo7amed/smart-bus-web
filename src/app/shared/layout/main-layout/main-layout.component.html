@@ -1,7 +1,9 @@
-<main class="app-layout grid--2-col">
+<div class="app-layout">
   <app-nav-bar />
-  <main>
+  <div class="content-area">
     <app-header />
-    <router-outlet />
-  </main>
-</main>
+    <main class="page-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>
