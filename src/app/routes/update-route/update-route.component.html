@@ -170,26 +170,12 @@
   </div>
 </div>
 
-<!-- Premium confirmation modal overlay -->
-@if (confirmDialog().show) {
-  <div class="confirm-overlay" (click)="closeConfirm()">
-    <div class="confirm-card" [class.confirm-card--danger]="confirmDialog().type === 'danger'" (click)="$event.stopPropagation()">
-      <div class="confirm-card__icon-wrap">
-        <mat-icon>{{ confirmDialog().icon }}</mat-icon>
-      </div>
-      <h3 class="confirm-card__title">{{ confirmDialog().title }}</h3>
-      <p class="confirm-card__message">{{ confirmDialog().message }}</p>
-      <div class="confirm-card__actions">
-        <button class="confirm-btn confirm-btn--cancel" (click)="closeConfirm()">Cancel</button>
-        <button
-          class="confirm-btn"
-          [class.confirm-btn--primary]="confirmDialog().type !== 'danger'"
-          [class.confirm-btn--danger]="confirmDialog().type === 'danger'"
-          (click)="executeConfirm()"
-        >
-          {{ confirmDialog().confirmText }}
-        </button>
-      </div>
-    </div>
-  </div>
-}
+<app-confirm-dialog
+  [show]="confirmDialog().show"
+  [title]="confirmDialog().title"
+  [message]="confirmDialog().message"
+  [confirmText]="confirmDialog().confirmText"
+  [icon]="confirmDialog().icon"
+  [type]="confirmDialog().type || 'primary'"
+  (confirm)="executeConfirm()"
+  (cancel)="closeConfirm()" />

@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { MatMenuModule } from '@angular/material/menu';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
 export interface RouteListItem {
   details: RouteDetailed;
@@ -19,7 +20,7 @@ export interface RouteListItem {
 
 @Component({
   selector: 'app-routes-list',
-  imports: [MatIcon, RouterLink, PaginatorComponent, FormsModule, CommonModule, MatMenuModule],
+  imports: [MatIcon, RouterLink, PaginatorComponent, FormsModule, CommonModule, MatMenuModule, ConfirmDialogComponent],
   templateUrl: './routes-list.component.html',
   styleUrl: './routes-list.component.scss',
 })

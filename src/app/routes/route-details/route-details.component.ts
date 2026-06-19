@@ -13,11 +13,12 @@ import { RouteTrackingSignalRService } from '../../core/services/signalr/route-t
 import { LocationSignalRService } from '../../core/services/signalr/location-signalr.service';
 import { DriverService } from '../../core/services/driver.service';
 import { RouteLiveUpdate, DriverLocationUpdate } from '../../shared/models/signalr.model';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import * as L from 'leaflet';
 
 @Component({
   selector: 'app-route-details',
-  imports: [RouterOutlet, RoadQueueComponent, MatIconModule, RouterLink],
+  imports: [RouterOutlet, RoadQueueComponent, MatIconModule, RouterLink, ConfirmDialogComponent],
   templateUrl: './route-details.component.html',
   styleUrl: './route-details.component.scss',
 })

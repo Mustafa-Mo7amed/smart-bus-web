@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, Router } from '@angular/router';
 import { RouteService } from '../../core/services/route.service';
 import { RouteDetailed } from '../../shared/models/route.model';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
 interface ConfirmDialogState {
   show: boolean;
@@ -19,7 +20,7 @@ interface ConfirmDialogState {
 @Component({
   selector: 'app-update-route',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MatIconModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, MatIconModule, RouterLink, ConfirmDialogComponent],
   templateUrl: './update-route.component.html',
   styleUrl: './update-route.component.scss',
 })
