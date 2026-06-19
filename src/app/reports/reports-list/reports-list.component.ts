@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { ReportService } from '../../core/services/report.service';
 import { ReportListItem } from '../../shared/models/report.model';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
+import { Subject, debounceTime } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-reports-list',
@@ -63,6 +65,20 @@ export class ReportsListComponent implements OnInit {
   // Pagination (Converted to Signals)
   pageNumber = signal(1);
   pageSize = signal(5);
+
+  private debounceSubject = new Subject<void>();
+
+  constructor() {
+    this.debounceSubject
+      .pipe(
+        debounceTime(300),
+        takeUntilDestroyed()
+      )
+      .subscribe(() => {
+        this.pageNumber.set(1);
+        this.fetchReports();
+      });
+  }
 
   onInput(event: Event, field: 'num1'|'num2'|'num3'|'num4'|'let1'|'let2'|'let3', current: HTMLInputElement, next: HTMLInputElement | null) {
     const input = event.target as HTMLInputElement;
@@ -148,8 +164,7 @@ export class ReportsListComponent implements OnInit {
   }
 
   onFilterChange() {
-    this.pageNumber.set(1);
-    this.fetchReports();
+    this.debounceSubject.next();
   }
 
   handlePageChange(event: { pageIndex: number; pageSize: number }) {
