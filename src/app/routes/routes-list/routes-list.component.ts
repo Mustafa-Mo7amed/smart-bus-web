@@ -2,12 +2,13 @@ import { Component, effect, inject, signal, untracked, computed } from '@angular
 import { RouteService } from '../../core/services/route.service';
 import { RouteDetailed } from '../../shared/models/route.model';
 import { MatIcon } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { MatMenuModule } from '@angular/material/menu';
 
 export interface RouteListItem {
   details: RouteDetailed;
@@ -18,12 +19,13 @@ export interface RouteListItem {
 
 @Component({
   selector: 'app-routes-list',
-  imports: [MatIcon, RouterLink, PaginatorComponent, FormsModule, CommonModule],
+  imports: [MatIcon, RouterLink, PaginatorComponent, FormsModule, CommonModule, MatMenuModule],
   templateUrl: './routes-list.component.html',
   styleUrl: './routes-list.component.scss',
 })
 export class RoutesListComponent {
   routeService = inject(RouteService);
+  private readonly router = inject(Router);
   isLoading = signal(false);
   routes = signal<RouteListItem[]>([]);
   totalCount = signal(0);
@@ -149,5 +151,63 @@ export class RoutesListComponent {
     this.sortBy.set(null);
     this.sortOrder.set('DESC');
     this.onFilterChange();
+  }
+
+  // Confirmation dialog state
+  confirmDialog = signal<{
+    show: boolean;
+    title: string;
+    message: string;
+    confirmText: string;
+    icon: string;
+    type?: 'danger' | 'primary';
+    action: () => void;
+  }>({
+    show: false,
+    title: '',
+    message: '',
+    confirmText: 'Confirm',
+    icon: 'help_outline',
+    action: () => {},
+  });
+
+  viewRoute(routeId: string) {
+    this.router.navigate(['/routes', 'details', routeId]);
+  }
+
+  navigateToUpdate(routeId: string) {
+    this.router.navigate(['/routes', 'update-route', routeId]);
+  }
+
+  deleteRoute(routeId: string) {
+    this.confirmDialog.set({
+      show: true,
+      title: 'Delete Route',
+      message: 'Are you sure you want to permanently delete this route? All associated buses and queues will be updated.',
+      confirmText: 'Delete',
+      icon: 'delete_forever',
+      type: 'danger',
+      action: () => {
+        this.closeConfirm();
+        this.isLoading.set(true);
+        this.routeService.deleteRoute(routeId).subscribe({
+          next: () => {
+            this.fetchRoutes();
+          },
+          error: (error) => {
+            console.error('Error deleting route:', error);
+            this.isLoading.set(false);
+          }
+        });
+      }
+    });
+  }
+
+  closeConfirm() {
+    this.confirmDialog.update((state) => ({ ...state, show: false }));
+  }
+
+  executeConfirm() {
+    this.confirmDialog().action();
   }
 }

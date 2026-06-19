@@ -37,6 +37,11 @@ export const routes: Routes = [
               import('../app/routes/add-route/add-route.component').then((m) => m.AddRouteComponent),
           },
           {
+            path: 'update-route/:routeId',
+            loadComponent: () =>
+              import('../app/routes/update-route/update-route.component').then((m) => m.UpdateRouteComponent),
+          },
+          {
             path: 'details/:routeId',
             loadComponent: () =>
               import('../app/routes/route-details/route-details.component').then(

@@ -10,6 +10,7 @@ import {
   RouteSummary,
 } from '../../shared/models/route.model';
 import { HttpParams } from '@angular/common/http';
+import { SuccessResponse } from './manager.api';
 
 export interface RoutesFilters {
   search?: string;
@@ -21,6 +22,17 @@ export interface RoutesFilters {
   maxDistance?: number;
   pageNumber?: number;
   pageSize?: number;
+}
+
+export interface AddRouteRequest {
+  toAr: string;
+  toEn: string;
+  price: number;
+  distanceKm: number;
+}
+
+export interface UpdateRouteRequest extends AddRouteRequest {
+  routeId: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -70,5 +82,18 @@ export class RouteApi extends BaseApi {
 
   getRouteById(routeId: string): Observable<RouteDetailed> {
     return this.get<RouteDetailed>(routeId);
+  }
+
+  addRoute(route: AddRouteRequest): Observable<SuccessResponse> {
+    return this.post('add-route', route);
+  }
+
+  updateRoute(route: UpdateRouteRequest): Observable<SuccessResponse> {
+    return this.patch('update-route', route);
+  }
+
+  deleteRoute(routeId: string): Observable<SuccessResponse> {
+    const params = new HttpParams().set('routeId', routeId);
+    return this.delete('delete-route', params);
   }
 }

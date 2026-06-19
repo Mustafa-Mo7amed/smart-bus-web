@@ -6,7 +6,7 @@ import {
   RouteSummary,
 } from '../../shared/models/route.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { RoadQueueComponent } from './road-queue/road-queue.component';
 import { MatIconModule } from '@angular/material/icon';
 import { RouteTrackingSignalRService } from '../../core/services/signalr/route-tracking-signalr.service';
@@ -27,11 +27,64 @@ export class RouteDetailsComponent implements OnInit, OnDestroy {
   private readonly routeTrackingService = inject(RouteTrackingSignalRService);
   private readonly locationSignalRService = inject(LocationSignalRService);
   private readonly driverService = inject(DriverService);
+  private readonly router = inject(Router);
   readonly routeId = input.required<string>();
 
   route = signal<RouteDetailed | null>(null);
   routeLiveUpdate = signal<RouteLiveUpdate | null>(null);
   selectedDriverId = signal<string | null>(null);
+
+  // Confirmation dialog state
+  confirmDialog = signal<{
+    show: boolean;
+    title: string;
+    message: string;
+    confirmText: string;
+    icon: string;
+    type?: 'danger' | 'primary';
+    action: () => void;
+  }>({
+    show: false,
+    title: '',
+    message: '',
+    confirmText: 'Confirm',
+    icon: 'help_outline',
+    action: () => {},
+  });
+
+  navigateToUpdate() {
+    this.router.navigate(['/routes', 'update-route', this.routeId()]);
+  }
+
+  deleteRoute() {
+    this.confirmDialog.set({
+      show: true,
+      title: 'Delete Route',
+      message: 'Are you sure you want to permanently delete this route? All associated buses and queues will be updated.',
+      confirmText: 'Delete',
+      icon: 'delete_forever',
+      type: 'danger',
+      action: () => {
+        this.closeConfirm();
+        this.routeService.deleteRoute(this.routeId()).subscribe({
+          next: () => {
+            this.router.navigate(['/routes']);
+          },
+          error: (error) => {
+            console.error('Error deleting route:', error);
+          }
+        });
+      }
+    });
+  }
+
+  closeConfirm() {
+    this.confirmDialog.update((state) => ({ ...state, show: false }));
+  }
+
+  executeConfirm() {
+    this.confirmDialog().action();
+  }
   
   private map: L.Map | undefined;
   private marker: L.Marker | undefined;

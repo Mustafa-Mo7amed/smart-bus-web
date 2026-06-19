@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { RouteApi, RoutesFilters } from '../api/route.api';
+import { RouteApi, RoutesFilters, AddRouteRequest, UpdateRouteRequest } from '../api/route.api';
 import {
   from,
   interval,
@@ -17,6 +17,7 @@ import {
   RouteSummary,
 } from '../../shared/models/route.model';
 import { RouteListItem } from '../../routes/routes-list/routes-list.component';
+import { SuccessResponse } from '../api/manager.api';
 
 @Injectable({ providedIn: 'root' })
 export class RouteService {
@@ -99,5 +100,17 @@ export class RouteService {
         );
       }),
     );
+  }
+
+  addRoute(route: AddRouteRequest): Observable<SuccessResponse> {
+    return this.routeApi.addRoute(route);
+  }
+
+  updateRoute(route: UpdateRouteRequest): Observable<SuccessResponse> {
+    return this.routeApi.updateRoute(route);
+  }
+
+  deleteRoute(routeId: string): Observable<SuccessResponse> {
+    return this.routeApi.deleteRoute(routeId);
   }
 }

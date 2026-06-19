@@ -119,12 +119,13 @@
           <th>distance</th>
           <th>active buses</th>
           <th>nearest arrival</th>
+          <th class="actions-header"></th>
         </tr>
       </thead>
       <tbody>
         @if (isLoading()) {
           <tr>
-            <td colspan="5" class="spinner-cell">
+            <td colspan="6" class="spinner-cell">
               <div class="spinner-container">
                 <span class="spinning-loader"></span>
                 <p class="loading-text">Fetching routes...</p>
@@ -133,7 +134,7 @@
           </tr>
         } @else {
           @for (route of routes(); track route.details.id) {
-            <tr [routerLink]="['details', route.details.id]">
+            <tr (click)="viewRoute(route.details.id)">
               <td class="table-route">
                 <div class="table-route-icon-wrapper">
                   <mat-icon>alt_route</mat-icon>
@@ -152,10 +153,33 @@
                 }}
               </td>
               <td>{{ route.nearestArrivalMinutes }}</td>
+              <td class="actions-cell">
+                <button
+                  class="btn-icon"
+                  [matMenuTriggerFor]="menu"
+                  (click)="$event.stopPropagation()"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="before">
+                  <button mat-menu-item (click)="viewRoute(route.details.id)">
+                    <mat-icon>visibility</mat-icon>
+                    <span>View Details</span>
+                  </button>
+                  <button mat-menu-item (click)="navigateToUpdate(route.details.id)">
+                    <mat-icon>edit</mat-icon>
+                    <span>Update Route</span>
+                  </button>
+                  <button mat-menu-item class="menu-item--danger" (click)="deleteRoute(route.details.id)">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete Route</span>
+                  </button>
+                </mat-menu>
+              </td>
             </tr>
           } @empty {
             <tr>
-              <td colspan="5" class="no-routes">
+              <td colspan="6" class="no-routes">
                 <p>No Routes</p>
               </td>
             </tr>
@@ -173,3 +197,27 @@
     [isLoading]="isLoading()"
     (pageChange)="onPageChange($event)" />
 </div>
+
+<!-- Premium confirmation modal overlay -->
+@if (confirmDialog().show) {
+  <div class="confirm-overlay" (click)="closeConfirm()">
+    <div class="confirm-card" [class.confirm-card--danger]="confirmDialog().type === 'danger'" (click)="$event.stopPropagation()">
+      <div class="confirm-card__icon-wrap">
+        <mat-icon>{{ confirmDialog().icon }}</mat-icon>
+      </div>
+      <h3 class="confirm-card__title">{{ confirmDialog().title }}</h3>
+      <p class="confirm-card__message">{{ confirmDialog().message }}</p>
+      <div class="confirm-card__actions">
+        <button class="confirm-btn confirm-btn--cancel" (click)="closeConfirm()">Cancel</button>
+        <button
+          class="confirm-btn"
+          [class.confirm-btn--primary]="confirmDialog().type !== 'danger'"
+          [class.confirm-btn--danger]="confirmDialog().type === 'danger'"
+          (click)="executeConfirm()"
+        >
+          {{ confirmDialog().confirmText }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -10,6 +10,16 @@
       <div class="title-with-badge">
         <h1>{{ route()?.from || 'Loading' }} &rarr; {{ route()?.to || 'Route' }}</h1>
       </div>
+      <div class="route-actions">
+        <button class="btn btn--edit" (click)="navigateToUpdate()">
+          <mat-icon>edit</mat-icon>
+          <span>Update Route</span>
+        </button>
+        <button class="btn btn--delete" (click)="deleteRoute()">
+          <mat-icon>delete</mat-icon>
+          <span>Delete Route</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -114,3 +124,27 @@
     }
   </div>
 </div>
+
+<!-- Premium confirmation modal overlay -->
+@if (confirmDialog().show) {
+  <div class="confirm-overlay" (click)="closeConfirm()">
+    <div class="confirm-card" [class.confirm-card--danger]="confirmDialog().type === 'danger'" (click)="$event.stopPropagation()">
+      <div class="confirm-card__icon-wrap">
+        <mat-icon>{{ confirmDialog().icon }}</mat-icon>
+      </div>
+      <h3 class="confirm-card__title">{{ confirmDialog().title }}</h3>
+      <p class="confirm-card__message">{{ confirmDialog().message }}</p>
+      <div class="confirm-card__actions">
+        <button class="confirm-btn confirm-btn--cancel" (click)="closeConfirm()">Cancel</button>
+        <button
+          class="confirm-btn"
+          [class.confirm-btn--primary]="confirmDialog().type !== 'danger'"
+          [class.confirm-btn--danger]="confirmDialog().type === 'danger'"
+          (click)="executeConfirm()"
+        >
+          {{ confirmDialog().confirmText }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
