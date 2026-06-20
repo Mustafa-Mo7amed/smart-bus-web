@@ -96,6 +96,13 @@ export const routes: Routes = [
             loadComponent: () =>
               import('../app/drivers/add-driver/add-driver.component').then((m) => m.AddDriverComponent),
           },
+          {
+            path: 'details/:driverId',
+            loadComponent: () =>
+              import('../app/drivers/driver-details/driver-details.component').then(
+                (m) => m.DriverDetailsComponent,
+              ),
+          },
         ],
       },
       {
