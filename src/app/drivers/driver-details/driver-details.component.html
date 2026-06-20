@@ -70,6 +70,75 @@
     </div>
   </div>
 
+  <!-- Trip History Section -->
+  <div class="trip-history-section">
+    <div class="section-header">
+      <div class="header-left">
+        <h2>Trip History</h2>
+        @if (tripHistory()) {
+          <span class="report-badge">{{ tripHistory()?.totalCount }} Trips ({{ tripHistory()?.totalAmount | number:'1.0-2' }} LE)</span>
+        }
+      </div>
+      <div class="header-actions">
+        <div class="filter-group">
+          <label for="fromDate">From</label>
+          <input 
+            type="datetime-local" 
+            id="fromDate" 
+            [ngModel]="fromDate()" 
+            (ngModelChange)="fromDate.set($event); onDateFilterChange()" 
+          />
+        </div>
+        <div class="filter-group">
+          <label for="toDate">To</label>
+          <input 
+            type="datetime-local" 
+            id="toDate" 
+            [ngModel]="toDate()" 
+            (ngModelChange)="toDate.set($event); onDateFilterChange()" 
+          />
+        </div>
+      </div>
+    </div>
+    
+    <div class="history-table-wrapper">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Route</th>
+            <th>Started</th>
+            <th>Ended</th>
+            <th>Passengers</th>
+            <th>Distance</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (trip of tripHistory()?.trips; track trip.startedAt) {
+            <tr>
+              <td>{{ trip.routeFrom }} &rarr; {{ trip.routeTo }}</td>
+              <td>{{ trip.startedAt | date:'short' }}</td>
+              <td>{{ trip.endedAt ? (trip.endedAt | date:'short') : '--' }}</td>
+              <td>{{ trip.passengerCount }}</td>
+              <td>{{ trip.distance | number:'1.0-2' }} km</td>
+              <td class="price-cell">{{ trip.amount | number:'1.0-2' }} LE</td>
+              <td>
+                <span class="status-badge" [class]="'status-' + getTripStatusString(trip.status).toLowerCase()">
+                  {{ getTripStatusString(trip.status) }}
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="no-data">No trips found for this driver.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- Live Tracking Map Section -->
   <div class="map-section is-active">
     <div id="tracking-map" class="map-container"></div>

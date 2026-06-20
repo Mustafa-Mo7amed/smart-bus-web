@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { BaseApi } from './base.api';
-import { AddDriverRequest, GetDriverResponse, GetDriversResponse, GetDriversRequest } from '../../shared/models/driver.model';
+import {
+  AddDriverRequest,
+  GetDriversResponse,
+  GetDriversRequest,
+  DriverHistoryResponse,
+  DriverHistoryRequest,
+} from '../../shared/models/driver.model';
 import { Observable } from 'rxjs';
 import { AddBusRequest } from '../../shared/models/bus.model';
 import { DashboardOverviewResponse } from '../../shared/models/overview.model';
@@ -50,5 +56,16 @@ export class ManagerApi extends BaseApi {
       if (filters.pageSize) params = params.set('PageSize', filters.pageSize);
     }
     return this.get<GetDriversResponse>('station-drivers', params);
+  }
+
+  getDriverTripHistor(driverId: string, request?: DriverHistoryRequest): Observable<DriverHistoryResponse> {
+    let params = new HttpParams();
+    if (request) {
+      if (request.fromDate) params = params.set('FromDate', request.fromDate);
+      if (request.toDate) params = params.set('ToDate', request.toDate);
+      if (request.pageNumber) params = params.set('PageNumber', request.pageNumber);
+      if (request.pageSize) params = params.set('PageSize', request.pageSize);
+    }
+    return this.get<DriverHistoryResponse>(`${driverId}/driver-history`, params);
   }
 }

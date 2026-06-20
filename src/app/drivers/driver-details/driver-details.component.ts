@@ -1,8 +1,10 @@
 import { Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { DriverService } from '../../core/services/driver.service';
-import { GetDriverModel } from '../../shared/models/driver.model';
+import { GetDriverModel, DriverHistoryResponse, TripStatus } from '../../shared/models/driver.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink, Router } from '@angular/router';
+import { DatePipe, DecimalPipe, CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { LocationSignalRService } from '../../core/services/signalr/location-signalr.service';
 import { DriverLocationUpdate } from '../../shared/models/signalr.model';
@@ -11,7 +13,7 @@ import * as L from 'leaflet';
 @Component({
   selector: 'app-driver-details',
   standalone: true,
-  imports: [MatIconModule, RouterLink],
+  imports: [MatIconModule, RouterLink, CommonModule, FormsModule],
   templateUrl: './driver-details.component.html',
   styleUrl: './driver-details.component.scss',
 })
@@ -23,6 +25,11 @@ export class DriverDetailsComponent implements OnInit {
   readonly driverId = input.required<string>();
 
   driver = signal<GetDriverModel | null>(null);
+  tripHistory = signal<DriverHistoryResponse | null>(null);
+  TripStatus = TripStatus;
+  
+  fromDate = signal<string>('');
+  toDate = signal<string>('');
   
   private map: L.Map | undefined;
   private marker: L.Marker | undefined;
@@ -41,6 +48,8 @@ export class DriverDetailsComponent implements OnInit {
         },
         error: (error) => console.log('Error fetching driver details:', error),
       });
+
+    this.fetchTripHistory();
 
     this.isInitialLoad = true;
     this.initMapIfNeeded();
@@ -139,10 +148,35 @@ export class DriverDetailsComponent implements OnInit {
     }
   }
 
+  fetchTripHistory() {
+    this.driverService
+      .getDriverTripHistory(this.driverId(), {
+        fromDate: this.fromDate() ? new Date(this.fromDate()).toISOString() : undefined,
+        toDate: this.toDate() ? new Date(this.toDate()).toISOString() : undefined
+      })
+      .subscribe({
+        next: (res) => this.tripHistory.set(res),
+        error: (error) => console.log('Error fetching driver history:', error),
+      });
+  }
+
+  onDateFilterChange() {
+    this.fetchTripHistory();
+  }
+
   async ngOnDestroy() {
     await this.locationSignalRService.leaveDriver();
     if (this.map) {
       this.map.remove();
+    }
+  }
+
+  getTripStatusString(status: TripStatus): string {
+    switch (status) {
+      case TripStatus.started: return 'Started';
+      case TripStatus.completed: return 'Completed';
+      case TripStatus.canceled: return 'Canceled';
+      default: return 'Unknown';
     }
   }
 }

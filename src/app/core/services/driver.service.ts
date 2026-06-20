@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ManagerApi, SuccessResponse } from '../api/manager.api';
-import { AddDriverRequest, GetDriverResponse, GetDriversResponse, GetDriversRequest } from '../../shared/models/driver.model';
+import { AddDriverRequest, GetDriverResponse, GetDriversResponse, GetDriversRequest, DriverHistoryResponse, DriverHistoryRequest } from '../../shared/models/driver.model';
 import { Observable } from 'rxjs';
 import { DriverApi } from '../api/driver.api';
 import { DriverLocationUpdate } from '../../shared/models/signalr.model';
@@ -23,5 +23,9 @@ export class DriverService {
   }
   getDriverLocation(driverId: string): Observable<DriverLocationUpdate> {
     return this.driverApi.getDriverLocation(driverId);
+  }
+
+  getDriverTripHistory(driverId: string, request?: DriverHistoryRequest): Observable<DriverHistoryResponse> {
+    return this.managerApi.getDriverTripHistor(driverId, request);
   }
 }

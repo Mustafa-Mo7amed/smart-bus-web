@@ -163,6 +163,179 @@
   }
 }
 
+// --- Trip History Section ------------------------------------
+.trip-history-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+
+      h2 {
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: v.$color-text-heading;
+        margin: 0;
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+
+        label {
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: v.$color-text-muted;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        input {
+          padding: 0.8rem 1.2rem;
+          border: 1px solid v.$color-border;
+          border-radius: v.$radius-md;
+          background-color: v.$color-bg-surface;
+          color: v.$color-text-body;
+          font-size: 1.4rem;
+          outline: none;
+          transition: border-color v.$transition-fast, box-shadow v.$transition-fast;
+
+          &:focus {
+            border-color: v.$color-primary;
+            box-shadow: 0 0 0 3px v.$color-primary-bg;
+          }
+        }
+      }
+    }
+  }
+}
+
+.history-table-wrapper {
+  width: 100%;
+  max-height: 40rem; // Approx 5-6 rows
+  overflow-y: auto;
+  border-radius: v.$radius-lg;
+  background-color: v.$color-bg-surface;
+  box-shadow: v.$shadow-sm;
+  border: 1px solid v.$color-border-light;
+
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: v.$color-border;
+    border-radius: 10px;
+  }
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  thead {
+    th {
+      position: sticky;
+      top: 0;
+      padding: 1.6rem 2.4rem;
+      text-align: left;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: v.$table-header-text;
+      background-color: v.$table-header-bg;
+      border-bottom: 1px solid v.$color-border;
+      z-index: 1;
+
+      &:first-child {
+        border-top-left-radius: v.$radius-md;
+      }
+      &:last-child {
+        border-top-right-radius: v.$radius-md;
+      }
+    }
+  }
+
+  tbody tr {
+    background-color: v.$color-bg-surface;
+    border-bottom: 1px solid v.$table-row-border;
+    transition: background-color v.$transition-fast;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: v.$table-row-hover;
+    }
+  }
+
+  td {
+    padding: 1.6rem 2.4rem;
+    font-size: 1.4rem;
+    height: 6rem;
+    color: v.$color-text-body;
+    white-space: nowrap;
+    
+    &.price-cell {
+      color: v.$table-price-color;
+      font-weight: 600;
+    }
+
+    &.no-data {
+      text-align: center;
+      padding: 4rem;
+      color: v.$color-text-muted;
+    }
+  }
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 1.2rem;
+  border-radius: v.$radius-full;
+  font-size: 1.2rem;
+  font-weight: 600;
+
+  &.status-started {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: v.$color-primary;
+  }
+
+  &.status-completed {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: v.$color-success;
+  }
+
+  &.status-canceled {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: v.$color-error;
+  }
+}
+
 // --- Live Tracking Map Panel -----------------------
 .map-section {
   position: relative;

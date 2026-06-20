@@ -32,7 +32,7 @@ export interface GetDriverResponse {
 export enum DriverSortBy {
   DriverName = 0,
   LicenseNumber = 1,
-  PlateNumber = 2
+  PlateNumber = 2,
 }
 
 export interface GetDriversRequest {
@@ -51,4 +51,34 @@ export interface GetDriversResponse {
   success: boolean;
   message: string;
   statusCode: number;
+}
+
+export interface DriverHistoryRequest {
+  fromDate?: string;
+  toDate?: string;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
+export interface DriverHistoryResponse {
+  totalAmount: number;
+  totalCount: number;
+  trips: TripHistory[];
+}
+
+export interface TripHistory {
+  amount: number;
+  routeFrom: string;
+  routeTo: string;
+  startedAt: string;
+  endedAt?: string;
+  passengerCount: number;
+  distance: number;
+  status: TripStatus;
+}
+
+export enum TripStatus {
+  started = 1,
+  completed = 2,
+  canceled = 3,
 }
