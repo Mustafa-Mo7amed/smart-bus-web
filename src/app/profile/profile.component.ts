@@ -1,4 +1,4 @@
-import { Component, inject, signal, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, signal, ElementRef, computed, ChangeDetectionStrategy, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../core/services/auth.service';
@@ -23,7 +23,15 @@ export class ProfileComponent {
   showCropper = signal(false);
   selectedFile = signal<File | null>(null);
 
-  @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
+  profileUrl = computed(() => {
+    const photoUrl = this.currentUser()?.photoUrl;
+    if (!photoUrl) return 'wasla-logo-rounded.png';
+    if (photoUrl.startsWith('http')) return photoUrl;
+    const baseDomain = environment.baseURL.replace(/\/api\/v.*/, '');
+    return `${baseDomain}/${photoUrl}`;
+  });
+
+  fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
 
   onPhotoSelected(event: any) {
     const file = event.target.files[0];
@@ -66,16 +74,10 @@ export class ProfileComponent {
   private closeCropper() {
     this.showCropper.set(false);
     this.selectedFile.set(null);
-    if (this.fileInput?.nativeElement) {
-      this.fileInput.nativeElement.value = '';
+    const fileInputEl = this.fileInput();
+    if (fileInputEl?.nativeElement) {
+      fileInputEl.nativeElement.value = '';
     }
-  }
-
-  getPhotoUrl(photoUrl: string | undefined): string {
-    if (!photoUrl) return 'wasla-logo-rounded.png';
-    if (photoUrl.startsWith('http')) return photoUrl;
-    const baseDomain = environment.baseURL.replace(/\/api\/v.*/, '');
-    return `${baseDomain}/${photoUrl}`;
   }
 
   onDeletePhoto() {

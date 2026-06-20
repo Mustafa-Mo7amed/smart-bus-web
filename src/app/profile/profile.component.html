@@ -3,7 +3,7 @@
   <div class="profile-header">
     <div class="avatar-container">
       <div class="avatar-wrapper" (click)="fileInput.click()">
-        <img [src]="getPhotoUrl(currentUser()?.photoUrl)" alt="User Avatar" class="avatar-image" />
+        <img [src]="profileUrl()" alt="User Avatar" class="avatar-image" />
         <div class="avatar-overlay">
           <mat-icon>photo_camera</mat-icon>
           <span>Change Photo</span>
