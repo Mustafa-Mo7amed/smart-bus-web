@@ -1,1 +1,10 @@
 <router-outlet />
+
+@if (isLoading()) {
+  <div class="global-loader-overlay">
+    <div class="spinner-container">
+      <span class="spinning-loader"></span>
+      <p class="loading-text">Loading...</p>
+    </div>
+  </div>
+}
