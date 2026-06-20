@@ -1,12 +1,17 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { AuthApi } from '../api/auth.api';
-import { AuthResponse, LoginRequest, RefreshTokenRequest, AuthUser } from '../../shared/models/auth.model';
+import {
+  AuthResponse,
+  LoginRequest,
+  RefreshTokenRequest,
+  AuthUser,
+} from '../../shared/models/auth.model';
 import { Observable, tap, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private authApi = inject(AuthApi);
-  
+
   private static readonly TOKEN_KEY = 'auth_token';
   private static readonly REFRESH_TOKEN_KEY = 'auth_refresh_token';
   private static readonly USER_KEY = 'auth_user';
@@ -42,7 +47,7 @@ export class AuthService {
   logout() {
     return this.authApi.logout().pipe(
       tap(() => {
-        this.clearSession();  
+        this.clearSession();
       }),
     );
   }
@@ -66,10 +71,38 @@ export class AuthService {
     if (response.refreshToken) {
       localStorage.setItem(AuthService.REFRESH_TOKEN_KEY, response.refreshToken);
     }
-    if (response.user) {
-      localStorage.setItem(AuthService.USER_KEY, JSON.stringify(response.user));
-      this.currentUserSignal.set(response.user);
+    if (response.statusCode == 200) {
+      this.refreshUser().subscribe();
     }
+  }
+
+  refreshUser() {
+    return this.authApi.getMe().pipe(
+      tap((user) => {
+        localStorage.setItem(AuthService.USER_KEY, JSON.stringify(user));
+        this.currentUserSignal.set(user);
+      })
+    );
+  }
+
+  uploadPhoto(formData: FormData) {
+    return this.authApi.uploadPhoto(formData).pipe(
+      tap(() => this.refreshUser().subscribe())
+    );
+  }
+
+  deletePhoto() {
+    return this.authApi.deletePhoto().pipe(
+      tap(() => this.refreshUser().subscribe())
+    );
+  }
+
+  deleteAccount() {
+    return this.authApi.deleteAccount().pipe(
+      tap(() => {
+        this.clearSession();
+      })
+    );
   }
 
   clearSession() {

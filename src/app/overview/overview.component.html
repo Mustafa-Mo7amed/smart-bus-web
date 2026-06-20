@@ -2,7 +2,7 @@
   <!-- Top Action Bar -->
   <header class="overview-header">
     <div class="user-greeting">
-      <h2>Welcome Back, {{ currentUser()?.name || 'Manager' }}</h2>
+      <h2>Welcome Back, {{ currentUser()?.displayName || 'Manager' }}</h2>
       <p>Here is your transit station performance overview for today.</p>
     </div>
     <!-- <div class="header-actions">

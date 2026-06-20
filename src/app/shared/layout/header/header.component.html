@@ -14,13 +14,13 @@
   <div class="header-divider"></div>
 
   <!-- Manager Profile -->
-  <div class="manager-profile" id="header-profile">
+  <div class="manager-profile" id="header-profile" (click)="onProfileClick()" style="cursor: pointer;">
     <div class="profile-info">
-      <p class="manager-name">Station Manager</p>
-      <p class="station-name">Minya Station</p>
+      <p class="manager-name">{{ currentUser()?.displayName || 'Station Manager' }}</p>
+      <p class="station-name">{{ currentUser()?.roles || 'Manager' }}</p>
     </div>
     <div class="profile-avatar">
-      <img src="wasla-logo-rounded.png" alt="Manager profile" />
+      <img [src]="getPhotoUrl(currentUser()?.photoUrl)" alt="Manager profile" />
     </div>
   </div>
 </div>

@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { BaseApi } from './base.api';
 import { Observable } from 'rxjs';
-import { AuthResponse, LoginRequest, RefreshTokenRequest } from '../../shared/models/auth.model';
+import { AuthResponse, AuthUser, LoginRequest, RefreshTokenRequest } from '../../shared/models/auth.model';
 import { HttpBackend, HttpClient } from '@angular/common/http';
+import { SuccessResponse } from './manager.api';
 
 @Injectable({ providedIn: 'root' })
 export class AuthApi extends BaseApi {
@@ -23,5 +24,21 @@ export class AuthApi extends BaseApi {
 
   refresh(request: RefreshTokenRequest): Observable<AuthResponse> {
     return this.cleanHttp.post<AuthResponse>(this.buildUrl('generate-new-jwt-token'), request);
+  }
+
+  getMe(): Observable<AuthUser> {
+    return this.get<AuthUser>('me');
+  }
+
+  uploadPhoto(formData: FormData): Observable<SuccessResponse> {
+    return this.patch<SuccessResponse>('upload-photo', formData);
+  }
+
+  deletePhoto(): Observable<SuccessResponse> {
+    return this.delete<SuccessResponse>('delete-photo');
+  }
+
+  deleteAccount(): Observable<SuccessResponse> {
+    return this.delete<SuccessResponse>('delete');
   }
 }

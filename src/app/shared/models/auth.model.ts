@@ -5,17 +5,26 @@ export interface LoginRequest {
 }
 
 export interface AuthResponse {
-  message: string;
+  userName: string;
+  phone: string;
   token: string;
+  expiration: string;
   refreshToken: string;
-  user: AuthUser;
+  refreshTokenExpirationDateTime: string;
+  success: boolean;
+  message: string;
+  statusCode: number;
 }
 
-export interface AuthUser {
-  id: number;
-  email: string;
-  role: 'system-admin' | 'district-manager' | 'station-manager';
-  name: string;
+export interface AuthUser{
+  id: string;
+  displayName: string;
+  isActive: string;
+  isConfirmed: string;
+  phoneNumber: string;
+  roles: 'Manager' | 'Admin';
+  photoUrl?: string;
+  stationId?: string;
 }
 
 export interface RefreshTokenRequest {
