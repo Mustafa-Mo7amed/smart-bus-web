@@ -1,106 +1,92 @@
 <div class="profile-dashboard">
-  <div class="profile-grid">
-    <!-- Left Column: User Summary & Actions -->
-    <div class="profile-card summary-card">
-      <div class="avatar-container">
-        <div class="avatar-wrapper" (click)="fileInput.click()">
-          <img [src]="getPhotoUrl(currentUser()?.photoUrl)" alt="User Avatar" class="avatar-image" />
-          <div class="avatar-overlay">
-            <mat-icon>photo_camera</mat-icon>
-            <span>Change Photo</span>
-          </div>
-        </div>
-        <input type="file" #fileInput (change)="onPhotoSelected($event)" accept="image/*" hidden />
-        
-        <div class="upload-progress-spinner" *ngIf="isUploading()">
-          <span class="spinner"></span>
-          <span class="upload-text">Updating photo...</span>
-        </div>
-
-        <div class="photo-controls" *ngIf="!isUploading()">
-          <button class="btn btn-outline" (click)="fileInput.click()">
-            <mat-icon>upload</mat-icon> Upload Photo
-          </button>
-          <button class="btn btn-danger-text" (click)="onDeletePhoto()" *ngIf="currentUser()?.photoUrl">
-            <mat-icon>delete_outline</mat-icon> Remove Photo
-          </button>
+  <!-- Top Header / Avatar / Name -->
+  <div class="profile-header">
+    <div class="avatar-container">
+      <div class="avatar-wrapper" (click)="fileInput.click()">
+        <img [src]="getPhotoUrl(currentUser()?.photoUrl)" alt="User Avatar" class="avatar-image" />
+        <div class="avatar-overlay">
+          <mat-icon>photo_camera</mat-icon>
+          <span>Change Photo</span>
         </div>
       </div>
-
-      <div class="summary-info">
-        <h2 class="display-name">{{ currentUser()?.displayName || 'Station Manager' }}</h2>
-        <span class="role-badge">{{ currentUser()?.roles || 'Manager' }}</span>
-      </div>
-
-      <div class="summary-actions">
-        <button class="btn btn-warning-flat" (click)="onLogout()">
-          <mat-icon>logout</mat-icon> Sign Out
-        </button>
-        <button class="btn btn-danger-flat" (click)="onDeleteAccount()">
-          <mat-icon>no_accounts</mat-icon> Delete Account
-        </button>
-      </div>
-    </div>
-
-    <!-- Right Column: Detailed Info -->
-    <div class="profile-card details-card">
-      <h3 class="card-title">Account Details</h3>
+      <input type="file" #fileInput (change)="onPhotoSelected($event)" accept="image/*" hidden />
       
-      <div class="details-list">
-        <div class="details-row">
-          <div class="detail-icon-box">
-            <mat-icon>phone</mat-icon>
-          </div>
-          <div class="detail-content">
-            <label>Phone Number</label>
-            <p>{{ currentUser()?.phoneNumber || 'Not provided' }}</p>
-          </div>
-        </div>
+      <div class="upload-progress-spinner" *ngIf="isUploading()">
+        <span class="spinner"></span>
+        <span class="upload-text">Updating photo...</span>
+      </div>
 
-        <div class="details-row">
-          <div class="detail-icon-box">
-            <mat-icon>domain</mat-icon>
-          </div>
-          <div class="detail-content">
-            <label>Station Assignment</label>
-            <p>{{ currentUser()?.stationId || 'Global Access (Admin)' }}</p>
-          </div>
-        </div>
+      <div class="photo-controls" *ngIf="!isUploading() && currentUser()?.photoUrl">
+        <button class="btn btn-danger-text" (click)="onDeletePhoto()">
+          <mat-icon>delete_outline</mat-icon> Remove Photo
+        </button>
+      </div>
+    </div>
 
-        <div class="details-row">
-          <div class="detail-icon-box">
-            <mat-icon>fingerprint</mat-icon>
-          </div>
-          <div class="detail-content">
-            <label>User ID</label>
-            <p class="monospace">{{ currentUser()?.id || 'N/A' }}</p>
-          </div>
-        </div>
+    <div class="summary-info">
+      <h2 class="display-name">{{ currentUser()?.displayName || 'Station Manager' }}</h2>
+      <span class="role-badge">{{ currentUser()?.roles || 'Manager' }}</span>
+    </div>
+  </div>
 
-        <div class="details-row">
-          <div class="detail-icon-box">
-            <mat-icon>verified_user</mat-icon>
-          </div>
-          <div class="detail-content">
-            <label>Verification Status</label>
-            <div class="status-tags">
-              <span class="status-tag active" *ngIf="currentUser()?.isActive === 'true' || currentUser()?.isActive === 'Active' || currentUser()?.isActive">
-                <span class="dot"></span> Active Account
-              </span>
-              <span class="status-tag inactive" *ngIf="!(currentUser()?.isActive === 'true' || currentUser()?.isActive === 'Active' || currentUser()?.isActive)">
-                <span class="dot"></span> Inactive Account
-              </span>
-              <span class="status-tag verified" *ngIf="currentUser()?.isConfirmed === 'true' || currentUser()?.isConfirmed === 'Confirmed' || currentUser()?.isConfirmed">
-                <mat-icon>check</mat-icon> Phone Verified
-              </span>
-              <span class="status-tag unverified" *ngIf="!(currentUser()?.isConfirmed === 'true' || currentUser()?.isConfirmed === 'Confirmed' || currentUser()?.isConfirmed)">
-                <mat-icon>close</mat-icon> Phone Unverified
-              </span>
-            </div>
+  <!-- Account Details -->
+  <div class="account-details-section">
+    <h3 class="section-title">Account Details</h3>
+    
+    <div class="details-grid">
+      <div class="detail-card">
+        <div class="detail-icon-box">
+          <mat-icon>phone</mat-icon>
+        </div>
+        <div class="detail-content">
+          <label>Phone Number</label>
+          <p>{{ currentUser()?.phoneNumber || 'Not provided' }}</p>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <div class="detail-icon-box">
+          <mat-icon>badge</mat-icon>
+        </div>
+        <div class="detail-content">
+          <label>Role</label>
+          <p>{{ currentUser()?.roles || 'Manager' }}</p>
+        </div>
+      </div>
+
+      <div class="detail-card verification-card">
+        <div class="detail-icon-box">
+          <mat-icon>verified_user</mat-icon>
+        </div>
+        <div class="detail-content">
+          <label>Verification Status</label>
+          <div class="status-tags">
+            <span class="status-tag active" *ngIf="currentUser()?.isActive === 'true' || currentUser()?.isActive === 'Active' || currentUser()?.isActive">
+              <span class="dot"></span> Active Account
+            </span>
+            <span class="status-tag inactive" *ngIf="!(currentUser()?.isActive === 'true' || currentUser()?.isActive === 'Active' || currentUser()?.isActive)">
+              <span class="dot"></span> Inactive Account
+            </span>
+            <span class="status-tag verified" *ngIf="currentUser()?.isConfirmed === 'true' || currentUser()?.isConfirmed === 'Confirmed' || currentUser()?.isConfirmed">
+              <mat-icon>check</mat-icon> Phone Verified
+            </span>
+            <span class="status-tag unverified" *ngIf="!(currentUser()?.isConfirmed === 'true' || currentUser()?.isConfirmed === 'Confirmed' || currentUser()?.isConfirmed)">
+              <mat-icon>close</mat-icon> Phone Unverified
+            </span>
           </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Actions (Side by side) -->
+  <div class="account-actions">
+    <button class="btn btn-warning-flat" (click)="onLogout()">
+      <mat-icon>logout</mat-icon> Log Out
+    </button>
+    <button class="btn btn-danger-flat" (click)="onDeleteAccount()">
+      <mat-icon>no_accounts</mat-icon> Delete Account
+    </button>
   </div>
 </div>
 
