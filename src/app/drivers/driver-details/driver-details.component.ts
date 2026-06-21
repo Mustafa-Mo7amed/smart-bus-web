@@ -6,6 +6,7 @@ import { RouterLink, Router } from '@angular/router';
 import { DatePipe, DecimalPipe, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
 import { LocationSignalRService } from '../../core/services/signalr/location-signalr.service';
 import { DriverLocationUpdate } from '../../shared/models/signalr.model';
 import * as L from 'leaflet';
@@ -13,7 +14,7 @@ import * as L from 'leaflet';
 @Component({
   selector: 'app-driver-details',
   standalone: true,
-  imports: [MatIconModule, RouterLink, CommonModule, FormsModule],
+  imports: [MatIconModule, RouterLink, CommonModule, FormsModule, PaginatorComponent],
   templateUrl: './driver-details.component.html',
   styleUrl: './driver-details.component.scss',
 })
@@ -21,16 +22,20 @@ export class DriverDetailsComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly driverService = inject(DriverService);
   private readonly locationSignalRService = inject(LocationSignalRService);
-  
+
   readonly driverId = input.required<string>();
 
   driver = signal<GetDriverModel | null>(null);
   tripHistory = signal<DriverHistoryResponse | null>(null);
   TripStatus = TripStatus;
-  
+
   fromDate = signal<string>('');
   toDate = signal<string>('');
-  
+
+  pageIndex = signal(0);
+  pageSize = signal(5);
+  pageSizeOptions = signal<number[]>([5, 10, 20, 50]);
+
   private map: L.Map | undefined;
   private marker: L.Marker | undefined;
   private polyline: L.Polyline | undefined;
@@ -149,10 +154,31 @@ export class DriverDetailsComponent implements OnInit {
   }
 
   fetchTripHistory() {
+    let fDate = this.fromDate();
+    let tDate = this.toDate();
+
+    if (!fDate) {
+      fDate = '0001-01-01T00:00:00+00:00';
+    } else {
+      // Create local date, then parse to ISO to send standard timezone offset
+      fDate = new Date(fDate).toISOString();
+    }
+
+    if (!tDate) {
+      tDate = '9999-12-31T23:59:59+00:00';
+    } else {
+      tDate = new Date(tDate).toISOString();
+    }
+
+    console.log('from: ', fDate);
+    console.log('to: ', tDate);
+
     this.driverService
       .getDriverTripHistory(this.driverId(), {
-        fromDate: this.fromDate() ? new Date(this.fromDate()).toISOString() : undefined,
-        toDate: this.toDate() ? new Date(this.toDate()).toISOString() : undefined
+        fromDate: fDate,
+        toDate: tDate,
+        pageNumber: this.pageIndex() + 1,
+        pageSize: this.pageSize()
       })
       .subscribe({
         next: (res) => this.tripHistory.set(res),
@@ -161,6 +187,13 @@ export class DriverDetailsComponent implements OnInit {
   }
 
   onDateFilterChange() {
+    this.pageIndex.set(0);
+    this.fetchTripHistory();
+  }
+
+  onPageChange(event: { pageIndex: number; pageSize: number }) {
+    this.pageSize.set(event.pageSize);
+    this.pageIndex.set(event.pageIndex);
     this.fetchTripHistory();
   }
 

@@ -61,9 +61,14 @@ export interface DriverHistoryRequest {
 }
 
 export interface DriverHistoryResponse {
-  totalAmount: number;
+  pageNumber: number;
+  pageSize: number;
   totalCount: number;
-  trips: TripHistory[];
+  data: {
+    totalAmount: number;
+    totalCount: number;
+    trips: TripHistory[];
+  };
 }
 
 export interface TripHistory {

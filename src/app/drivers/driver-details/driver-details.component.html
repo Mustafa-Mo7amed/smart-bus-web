@@ -76,7 +76,7 @@
       <div class="header-left">
         <h2>Trip History</h2>
         @if (tripHistory()) {
-          <span class="report-badge">{{ tripHistory()?.totalCount }} Trips ({{ tripHistory()?.totalAmount | number:'1.0-2' }} LE)</span>
+          <span class="report-badge">{{ tripHistory()?.data?.totalCount }} Trips ({{ tripHistory()?.data?.totalAmount | number:'1.0-2' }} LE)</span>
         }
       </div>
       <div class="header-actions">
@@ -115,7 +115,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (trip of tripHistory()?.trips; track trip.startedAt) {
+          @for (trip of tripHistory()?.data?.trips; track trip.startedAt) {
             <tr>
               <td>{{ trip.routeFrom }} &rarr; {{ trip.routeTo }}</td>
               <td>{{ trip.startedAt | date:'short' }}</td>
@@ -137,6 +137,16 @@
         </tbody>
       </table>
     </div>
+
+    @if (tripHistory() && tripHistory()!.data.totalCount > 0) {
+      <app-paginator
+        [totalCount]="tripHistory()?.data?.totalCount || 0"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="pageSizeOptions()"
+        [pageIndex]="pageIndex()"
+        (pageChange)="onPageChange($event)">
+      </app-paginator>
+    }
   </div>
 
   <!-- Live Tracking Map Section -->
