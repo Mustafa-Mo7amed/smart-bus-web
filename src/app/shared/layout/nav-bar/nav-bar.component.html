@@ -15,34 +15,50 @@
 
 <!-- Navigation Links -->
 <ul class="nav-links">
-  <li class="nav-link-item" routerLink="overview" routerLinkActive="active" id="nav-overview">
-    <mat-icon>widgets</mat-icon>
-    <span>Overview</span>
-  </li>
-  <li class="nav-link-item" routerLink="routes" routerLinkActive="active" id="nav-routes">
-    <mat-icon>route</mat-icon>
-    <span>Routes</span>
-  </li>
-  <li class="nav-link-item" routerLink="drivers" routerLinkActive="active" id="nav-drivers">
-    <mat-icon>group</mat-icon>
-    <span>Drivers</span>
-  </li>
-  <li class="nav-link-item" routerLink="staff" routerLinkActive="active" id="nav-staff">
-    <mat-icon>recent_actors</mat-icon>
-    <span>Staff</span>
-  </li>
-  <li class="nav-link-item" routerLink="buses" routerLinkActive="active" id="nav-buses">
-    <mat-icon>directions_bus</mat-icon>
-    <span>Buses</span>
-  </li>
-  <li class="nav-link-item" routerLink="assignments" routerLinkActive="active" id="nav-assignments">
-    <mat-icon>assignment</mat-icon>
-    <span>Assignments</span>
-  </li>
-  <li class="nav-link-item" routerLink="reports" routerLinkActive="active" id="nav-reports">
-    <mat-icon>report</mat-icon>
-    <span>Reports</span>
-  </li>
+  @if (authService.currentUser()?.roles !== 'Admin') {
+    <li class="nav-link-item" routerLink="overview" routerLinkActive="active" id="nav-overview">
+      <mat-icon>widgets</mat-icon>
+      <span>Overview</span>
+    </li>
+    <li class="nav-link-item" routerLink="routes" routerLinkActive="active" id="nav-routes">
+      <mat-icon>route</mat-icon>
+      <span>Routes</span>
+    </li>
+    <li class="nav-link-item" routerLink="drivers" routerLinkActive="active" id="nav-drivers">
+      <mat-icon>group</mat-icon>
+      <span>Drivers</span>
+    </li>
+    <li class="nav-link-item" routerLink="buses" routerLinkActive="active" id="nav-buses">
+      <mat-icon>directions_bus</mat-icon>
+      <span>Buses</span>
+    </li>
+    <li class="nav-link-item" routerLink="assignments" routerLinkActive="active" id="nav-assignments">
+      <mat-icon>assignment</mat-icon>
+      <span>Assignments</span>
+    </li>
+    <li class="nav-link-item" routerLink="reports" routerLinkActive="active" id="nav-reports">
+      <mat-icon>report</mat-icon>
+      <span>Reports</span>
+    </li>
+  }
+  @if (authService.currentUser()?.roles === 'Admin') {
+    <li class="nav-link-item" routerLink="users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" id="nav-users">
+      <mat-icon>people</mat-icon>
+      <span>Users</span>
+    </li>
+    <li class="nav-link-item" routerLink="users/managers" routerLinkActive="active" id="nav-managers">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span>Managers</span>
+    </li>
+    <li class="nav-link-item" routerLink="stations" routerLinkActive="active" id="nav-stations">
+      <mat-icon>location_on</mat-icon>
+      <span>Stations</span>
+    </li>
+    <li class="nav-link-item" (click)="onBackgroundJobs()" id="nav-background-jobs">
+      <mat-icon>dns</mat-icon>
+      <span>Background Jobs</span>
+    </li>
+  }
 </ul>
 
 <!-- Bottom Section -->

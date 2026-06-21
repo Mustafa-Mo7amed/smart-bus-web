@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { nonAuthGuard } from './core/guards/non-auth.guard';
 import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
 import { MainLayoutComponent } from './shared/layout/main-layout/main-layout.component';
 
 export const routes: Routes = [
@@ -27,7 +28,8 @@ export const routes: Routes = [
       },
       {
         path: 'routes',
-        loadComponent: () => import('../app/routes/routes.component').then((m) => m.RoutesComponent),
+        loadComponent: () =>
+          import('../app/routes/routes.component').then((m) => m.RoutesComponent),
         children: [
           {
             path: '',
@@ -39,12 +41,16 @@ export const routes: Routes = [
           {
             path: 'register-route',
             loadComponent: () =>
-              import('../app/routes/add-route/add-route.component').then((m) => m.AddRouteComponent),
+              import('../app/routes/add-route/add-route.component').then(
+                (m) => m.AddRouteComponent,
+              ),
           },
           {
             path: 'update-route/:routeId',
             loadComponent: () =>
-              import('../app/routes/update-route/update-route.component').then((m) => m.UpdateRouteComponent),
+              import('../app/routes/update-route/update-route.component').then(
+                (m) => m.UpdateRouteComponent,
+              ),
           },
           {
             path: 'details/:routeId',
@@ -71,7 +77,9 @@ export const routes: Routes = [
           {
             path: '',
             loadComponent: () =>
-              import('../app/buses/buses-list/buses-list.component').then((m) => m.BusesListComponent),
+              import('../app/buses/buses-list/buses-list.component').then(
+                (m) => m.BusesListComponent,
+              ),
           },
           {
             path: 'register-bus',
@@ -89,7 +97,8 @@ export const routes: Routes = [
       },
       {
         path: 'drivers',
-        loadComponent: () => import('../app/drivers/drivers.component').then((m) => m.DriversComponent),
+        loadComponent: () =>
+          import('../app/drivers/drivers.component').then((m) => m.DriversComponent),
         children: [
           {
             path: '',
@@ -101,7 +110,9 @@ export const routes: Routes = [
           {
             path: 'register-driver',
             loadComponent: () =>
-              import('../app/drivers/add-driver/add-driver.component').then((m) => m.AddDriverComponent),
+              import('../app/drivers/add-driver/add-driver.component').then(
+                (m) => m.AddDriverComponent,
+              ),
           },
           {
             path: 'details/:driverId',
@@ -131,13 +142,82 @@ export const routes: Routes = [
           {
             path: 'update-staff/:staffId',
             loadComponent: () =>
-              import('../app/staff/update-staff/update-staff.component').then((m) => m.UpdateStaffComponent),
+              import('../app/staff/update-staff/update-staff.component').then(
+                (m) => m.UpdateStaffComponent,
+              ),
+          },
+        ],
+      },
+      {
+        path: 'users',
+        canActivate: [adminGuard],
+        loadComponent: () => import('../app/users/users.component').then((m) => m.UsersComponent),
+        children: [
+          {
+            path: '',
+            data: { showOnlyManagers: false },
+            loadComponent: () =>
+              import('../app/users/users-list/users-list.component').then(
+                (m) => m.UsersListComponent,
+              ),
+          },
+          {
+            path: 'managers',
+            data: { showOnlyManagers: true },
+            loadComponent: () =>
+              import('../app/users/users-list/users-list.component').then(
+                (m) => m.UsersListComponent,
+              ),
+          },
+          {
+            path: 'register-manager',
+            loadComponent: () =>
+              import('../app/users/add-manager/add-manager.component').then(
+                (m) => m.AddManagerComponent,
+              ),
+          },
+          {
+            path: 'details/:userId',
+            loadComponent: () =>
+              import('../app/users/user-details/user-details.component').then(
+                (m) => m.UserDetailsComponent,
+              ),
+          },
+        ],
+      },
+      {
+        path: 'stations',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('../app/stations/stations.component').then((m) => m.StationsComponent),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('../app/stations/stations-list/stations-list.component').then(
+                (m) => m.StationsListComponent,
+              ),
+          },
+          {
+            path: 'add',
+            loadComponent: () =>
+              import('../app/stations/save-station/save-station.component').then(
+                (m) => m.SaveStationComponent,
+              ),
+          },
+          {
+            path: 'edit/:stationId',
+            loadComponent: () =>
+              import('../app/stations/save-station/save-station.component').then(
+                (m) => m.SaveStationComponent,
+              ),
           },
         ],
       },
       {
         path: 'assignments',
-        loadComponent: () => import('../app/assignments/assignments.component').then((m) => m.AssignmentsComponent),
+        loadComponent: () =>
+          import('../app/assignments/assignments.component').then((m) => m.AssignmentsComponent),
         children: [
           {
             path: '',
@@ -149,13 +229,16 @@ export const routes: Routes = [
           {
             path: 'assign-bus',
             loadComponent: () =>
-              import('../app/assignments/assign-bus/assign-bus.component').then((m) => m.AssignBusComponent),
+              import('../app/assignments/assign-bus/assign-bus.component').then(
+                (m) => m.AssignBusComponent,
+              ),
           },
         ],
       },
       {
         path: 'reports',
-        loadComponent: () => import('../app/reports/reports.component').then((m) => m.ReportsComponent),
+        loadComponent: () =>
+          import('../app/reports/reports.component').then((m) => m.ReportsComponent),
         children: [
           {
             path: '',
@@ -175,7 +258,8 @@ export const routes: Routes = [
       },
       {
         path: 'profile',
-        loadComponent: () => import('../app/profile/profile.component').then((m) => m.ProfileComponent),
+        loadComponent: () =>
+          import('../app/profile/profile.component').then((m) => m.ProfileComponent),
       },
     ],
   },
