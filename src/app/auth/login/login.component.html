@@ -32,14 +32,24 @@
 
     <div class="input-group">
       <label for="password">Password</label>
-      <input
-        type="password"
-        id="password"
-        placeholder="••••••••"
-        formControlName="password"
-        [class.invalid-input]="isPasswordInvalid"
-        [attr.disabled]="isLoading() ? true : null"
-      />
+      <div class="password-wrapper">
+        <input
+          [type]="showPassword() ? 'text' : 'password'"
+          id="password"
+          placeholder="••••••••"
+          formControlName="password"
+          [class.invalid-input]="isPasswordInvalid"
+          [attr.disabled]="isLoading() ? true : null"
+        />
+        <button
+          type="button"
+          class="toggle-password-btn"
+          (click)="showPassword.set(!showPassword())"
+          [attr.disabled]="isLoading() ? true : null"
+        >
+          <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </div>
       @if (isPasswordInvalid) {
         <p class="control-error">Password must be at least 8 characters long.</p>
       }

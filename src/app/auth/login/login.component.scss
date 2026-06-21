@@ -121,6 +121,63 @@
   }
 }
 
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  input {
+    width: 100%;
+    padding-right: 4.8rem !important;
+  }
+
+  .toggle-password-btn {
+    position: absolute;
+    right: 0.8rem;
+    height: 4rem;
+    width: 4rem;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: none !important;
+    border: none !important;
+    border-radius: v.$radius-full !important;
+    box-shadow: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: v.$color-text-muted !important;
+    cursor: pointer !important;
+    transform: none !important;
+    transition: all v.$transition-fast !important;
+
+    mat-icon {
+      font-size: 2.1rem;
+      width: 2.1rem;
+      height: 2.1rem;
+      color: inherit;
+    }
+
+    &:hover:not(:disabled) {
+      color: v.$color-text-body !important;
+      background-color: rgba(0, 0, 0, 0.05) !important;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    &:active:not(:disabled) {
+      transform: none !important;
+    }
+
+    &:disabled {
+      opacity: 0.5 !important;
+      cursor: not-allowed !important;
+      background: none !important;
+      box-shadow: none !important;
+    }
+  }
+}
+
 .control-error {
   font-size: 1.3rem;
   color: v.$color-error;
