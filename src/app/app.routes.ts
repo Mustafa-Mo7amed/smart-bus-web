@@ -149,6 +149,34 @@ export const routes: Routes = [
         ],
       },
       {
+        path: 'stations',
+        canActivate: [adminGuard],
+        loadComponent: () => import('../app/stations/stations.component').then((m) => m.StationsComponent),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('../app/stations/stations-list/stations-list.component').then(
+                (m) => m.StationsListComponent,
+              ),
+          },
+          {
+            path: 'add',
+            loadComponent: () =>
+              import('../app/stations/save-station/save-station.component').then(
+                (m) => m.SaveStationComponent,
+              ),
+          },
+          {
+            path: 'edit/:stationId',
+            loadComponent: () =>
+              import('../app/stations/save-station/save-station.component').then(
+                (m) => m.SaveStationComponent,
+              ),
+          },
+        ],
+      },
+      {
         path: 'assignments',
         loadComponent: () => import('../app/assignments/assignments.component').then((m) => m.AssignmentsComponent),
         children: [
