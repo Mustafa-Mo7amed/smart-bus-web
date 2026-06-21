@@ -1,67 +1,199 @@
-<header>
-  <h1 class="title">Buses</h1>
-  <button class="register-bus-btn" routerLink="register-bus">
-    + Register New Bus
-  </button>
-</header>
-
-<div class="buses-table-wrapper">
-  <table class="buses-table">
-    <thead>
-      <tr>
-        <th>Bus</th>
-        <th>Plate Number</th>
-        <th>Capacity</th>
-        <th>Status</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      @if (isLoading()) {
-        <tr>
-          <td colspan="5" class="spinner-cell">
-            <div class="spinner-container">
-              <span class="spinning-loader"></span>
-              <p class="loading-text">Fetching buses...</p>
-            </div>
-          </td>
-        </tr>
-      } @else {
-        @for (bus of buses(); track bus.busId) {
-          <tr>
-            <td class="table-bus">
-              <div class="table-bus-icon-wrapper">
-                <mat-icon>directions_bus</mat-icon>
-              </div>
-              <div>
-                <p class="bus-name">Microbus</p>
-                <p class="bus-id">ID: {{ bus.busId }}</p>
-              </div>
-            </td>
-            <td>{{ bus.plateNumber }}</td>
-            <td>{{ bus.capacity }} Seats</td>
-            <td>
-              <span class="status-badge" 
-                [class.status-badge--active]="bus.status === 'In Hub'"
-                [class.status-badge--route]="bus.status === 'On Route'"
-                [class.status-badge--unavailable]="bus.status === 'Unavailable'">
-                {{ bus.status }}
-              </span>
-            </td>
-            <td class="actions-cell">
-              <button class="btn-icon">
-                <mat-icon>more_vert</mat-icon>
-              </button>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="5" class="no-buses">
-              <p>No Buses Registered</p>
-            </td>
-          </tr>
-        }
+<div class="container">
+  <header>
+    <div class="title-section">
+      <h1 class="title">Buses</h1>
+      <span class="report-badge">{{ totalCount() }} Total</span>
+    </div>
+    <div class="header-actions">
+      @if (activeFiltersCount() > 0) {
+        <button class="btn-clear-filters" (click)="resetFilters()">
+          <mat-icon>clear_all</mat-icon>
+          <span>Clear Filters</span>
+        </button>
       }
-    </tbody>
-  </table>
+      <button
+        class="btn-toggle-filters"
+        [class.btn-toggle-filters--active]="showFilters()"
+        (click)="showFilters.set(!showFilters())"
+      >
+        <mat-icon>{{ showFilters() ? 'expand_less' : 'filter_list' }}</mat-icon>
+        <span>{{ showFilters() ? 'Hide Filters' : 'Filters' }}</span>
+        @if (activeFiltersCount() > 0) {
+          <span class="filters-badge">{{ activeFiltersCount() }}</span>
+        }
+      </button>
+      <button class="register-bus-btn" routerLink="register-bus">+ Register New Bus</button>
+    </div>
+  </header>
+
+  <!-- Filters Panel -->
+  <div class="filters-panel" [class.filters-panel--collapsed]="!showFilters()">
+    <div class="filter-group">
+      <label for="searchStringFilter">Search String</label>
+      <input
+        id="searchStringFilter"
+        type="text"
+        placeholder="Search"
+        [ngModel]="searchStringInput()"
+        (ngModelChange)="updateDebouncedField('searchString', $event)"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="searchByFilter">Search By</label>
+      <select
+        id="searchByFilter"
+        [ngModel]="searchBy()"
+        (ngModelChange)="searchBy.set($event); onFilterChange()"
+      >
+        <option [ngValue]="null">--</option>
+        <option [ngValue]="BusSearchBy.PlateNumber">Plate Number</option>
+        <option [ngValue]="BusSearchBy.DriverName">Driver Name</option>
+        <option [ngValue]="BusSearchBy.Model">Model</option>
+        <option [ngValue]="BusSearchBy.Color">Color</option>
+        <option [ngValue]="BusSearchBy.Route">Route</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="isActiveFilter">Is Active</label>
+      <select
+        id="isActiveFilter"
+        [ngModel]="isActive()"
+        (ngModelChange)="isActive.set($event); onFilterChange()"
+      >
+        <option [ngValue]="null">--</option>
+        <option [ngValue]="true">Active</option>
+        <option [ngValue]="false">Inactive</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="routeIdFilter">Route</label>
+      <select
+        id="routeIdFilter"
+        [ngModel]="routeId()"
+        (ngModelChange)="routeId.set($event); onFilterChange()"
+      >
+        <option [ngValue]="null">--</option>
+        @for (route of routesList(); track route.id) {
+          <option [value]="route.id">{{ route.from }} - {{ route.to }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="driverIdFilter">Driver</label>
+      <select
+        id="driverIdFilter"
+        [ngModel]="driverId()"
+        (ngModelChange)="driverId.set($event); onFilterChange()"
+      >
+        <option [ngValue]="null">--</option>
+        @for (driver of driversList(); track driver.driverId) {
+          <option [value]="driver.driverId">{{ driver.driverName }} {{ driver.plateNumber ? '(' + driver.plateNumber + ')' : '' }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="sortByFilter">Sort By</label>
+      <select
+        id="sortByFilter"
+        [ngModel]="sortBy()"
+        (ngModelChange)="sortBy.set($event); onFilterChange()"
+      >
+        <option [ngValue]="null">--</option>
+        <option [ngValue]="BusSortBy.PlateNumber">Plate Number</option>
+        <option [ngValue]="BusSortBy.DriverName">Driver Name</option>
+        <option [ngValue]="BusSortBy.PassengerCount">Passenger Count</option>
+        <option [ngValue]="BusSortBy.RouteName">Route Name</option>
+        <option [ngValue]="BusSortBy.Model">Model</option>
+        <option [ngValue]="BusSortBy.Color">Color</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="sortOrderFilter">Sort Order</label>
+      <select
+        id="sortOrderFilter"
+        [ngModel]="sortOrder()"
+        (ngModelChange)="sortOrder.set($event); onFilterChange()"
+      >
+        <option value="DESC">Descending</option>
+        <option value="ASC">Ascending</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="buses-table-wrapper">
+    <table class="buses-table">
+      <thead>
+        <tr>
+          <th>plate number</th>
+          <th>driver</th>
+          <th>route</th>
+          <th>passengers</th>
+          <th>status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (isLoading()) {
+          <tr>
+            <td colspan="5" class="spinner-cell">
+              <div class="spinner-container">
+                <span class="spinning-loader"></span>
+                <p class="loading-text">Fetching buses...</p>
+              </div>
+            </td>
+          </tr>
+        } @else {
+          @for (bus of buses(); track bus.id) {
+            <tr (click)="viewBus(bus.id)" class="clickable-row">
+              <td class="table-bus">
+                <div class="table-bus-icon-wrapper">
+                  <mat-icon>directions_bus</mat-icon>
+                </div>
+                <div>
+                  <p class="bus-name">{{ bus.plateNumber }}</p>
+                </div>
+              </td>
+              <td>{{ bus.driverName || 'N/A' }}</td>
+              <td>
+                @if (bus.routeName) {
+                  {{ bus.routeName }}
+                } @else {
+                  <span class="status-badge">Unassigned</span>
+                }
+              </td>
+              <td>
+                {{ bus.passengerCount || 0 }}
+              </td>
+              <td>
+                @if (bus.isActive) {
+                  <span class="status-badge status-badge--active">Active</span>
+                } @else {
+                  <span class="status-badge status-badge--inactive">Inactive</span>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="no-buses">
+                <p>No Buses</p>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <app-paginator
+    [totalCount]="totalCount()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="pageSize()"
+    [pageSizeOptions]="pageSizeOptions()"
+    [isLoading]="isLoading()"
+    (pageChange)="onPageChange($event)" />
 </div>
