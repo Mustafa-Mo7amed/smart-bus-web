@@ -15,7 +15,7 @@
 
   <!-- Realtime Stats Grid -->
   <div class="stats-grid">
-    <!-- Card 1: Bus Details -->
+    <!-- Card 1: Bus Model -->
     <div class="stat-card">
       <div class="stat-icon-wrapper queue-icon">
         <mat-icon>directions_bus</mat-icon>
@@ -27,7 +27,19 @@
       </div>
     </div>
 
-    <!-- Card 2: Plate Number -->
+    <!-- Card 2: License Number -->
+    <div class="stat-card">
+      <div class="stat-icon-wrapper license-icon">
+        <mat-icon>badge</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">License Number</span>
+        <h2 class="stat-val" style="font-size: 2rem;">{{ driver()?.licenseNumber || 'N/A' }}</h2>
+        <span class="stat-trend">Driver license</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Plate Number -->
     <div class="stat-card">
       <div class="stat-icon-wrapper road-icon">
         <mat-icon>pin</mat-icon>

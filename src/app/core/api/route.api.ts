@@ -25,8 +25,7 @@ export interface RoutesFilters {
 }
 
 export interface AddRouteRequest {
-  toAr: string;
-  toEn: string;
+  toStationId: string;
   price: number;
   distanceKm: number;
 }

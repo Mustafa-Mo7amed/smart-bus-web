@@ -24,6 +24,13 @@ export interface AssignDriverBusRequest {
   microbusId: string;
 }
 
+export interface AssignDriverBusResponse {
+  data: string;
+  success: boolean;
+  message: string;
+  statusCode: number;
+}
+
 export interface SuccessResponse {
   success: boolean;
   message?: string;
@@ -44,8 +51,7 @@ export class ManagerApi extends BaseApi {
     return this.post('add-microbus', bus);
   }
 
-  // TODO: should return a QR code not a SuccessResponse
-  assignDriverBus(assignment: AssignDriverBusRequest): Observable<SuccessResponse> {
+  assignDriverBus(assignment: AssignDriverBusRequest): Observable<AssignDriverBusResponse> {
     return this.post('assign-driver-microbus', assignment);
   }
 

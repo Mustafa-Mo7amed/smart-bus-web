@@ -1,9 +1,11 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, Router } from '@angular/router';
 import { RouteService } from '../../core/services/route.service';
+import { StationService } from '../../core/services/station.service';
+import { StationInfo } from '../../shared/models/station.model';
 
 @Component({
   selector: 'app-add-route',
@@ -12,24 +14,15 @@ import { RouteService } from '../../core/services/route.service';
   templateUrl: './add-route.component.html',
   styleUrl: './add-route.component.scss',
 })
-export class AddRouteComponent {
+export class AddRouteComponent implements OnInit {
   private readonly routeService = inject(RouteService);
+  private readonly stationService = inject(StationService);
   private readonly router = inject(Router);
 
+  public stations = signal<StationInfo[]>([]);
   public form = new FormGroup({
-    toAr: new FormControl('', {
-      validators: [
-        Validators.required,
-        Validators.maxLength(100),
-        Validators.pattern(/^[\u0600-\u06FF\s0-9\-\.\,]+$/)
-      ],
-    }),
-    toEn: new FormControl('', {
-      validators: [
-        Validators.required,
-        Validators.maxLength(100),
-        Validators.pattern(/^[a-zA-Z\s0-9\-\.\,]+$/)
-      ],
+    toStationId: new FormControl('', {
+      validators: [Validators.required],
     }),
     price: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(0)],
@@ -44,6 +37,17 @@ export class AddRouteComponent {
   public successMessage = signal('');
   public errorMessage = signal('');
 
+  ngOnInit() {
+    this.stationService.getStations().subscribe({
+      next: (stations) => {
+        this.stations.set(stations);
+      },
+      error: (error) => {
+        console.error('Error fetching stations:', error);
+      }
+    });
+  }
+
   onSubmit() {
     this.submitted.set(true);
     this.errorMessage.set('');
@@ -55,8 +59,7 @@ export class AddRouteComponent {
 
     const formValues = this.form.value;
     const request = {
-      toAr: formValues.toAr!,
-      toEn: formValues.toEn!,
+      toStationId: formValues.toStationId!,
       price: formValues.price!,
       distanceKm: formValues.distanceKm!,
     };
@@ -69,14 +72,24 @@ export class AddRouteComponent {
       },
       error: (error) => {
         this.isSubmitting.set(false);
-        console.error('Error adding route:', error);
-        this.errorMessage.set('Failed to create route. Please try again.');
+        // The backend may return a non-JSON success response (e.g. empty body or plain text),
+        // which causes Angular's HttpClient to throw a parse error despite a 2xx status.
+        if (error.status && error.status >= 200 && error.status < 300) {
+          this.successMessage.set('Route created successfully!');
+        } else {
+          console.error('Error adding route:', error);
+          this.errorMessage.set(error?.error?.message || 'Failed to create route. Please try again.');
+        }
       },
     });
   }
 
   onReset() {
-    this.form.reset();
+    this.form.reset({
+      toStationId: '',
+      price: null,
+      distanceKm: null
+    });
     this.submitted.set(false);
     this.successMessage.set('');
     this.errorMessage.set('');

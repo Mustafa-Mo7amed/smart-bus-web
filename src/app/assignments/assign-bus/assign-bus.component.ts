@@ -5,6 +5,11 @@ import { Router } from '@angular/router';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { plateNumberValidator } from '../../buses/add-bus/add-bus.component';
 import { licenseNumberValidator } from '../../drivers/add-driver/add-driver.component';
+import { DriverApi } from '../../core/api/driver.api';
+import { BusApi } from '../../core/api/bus.api';
+import { ManagerApi } from '../../core/api/manager.api';
+import { BusSearchBy } from '../../shared/models/bus.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-assign-bus',
@@ -15,6 +20,9 @@ import { licenseNumberValidator } from '../../drivers/add-driver/add-driver.comp
 })
 export class AssignBusComponent {
   private readonly router = inject(Router);
+  private readonly driverApi = inject(DriverApi);
+  private readonly busApi = inject(BusApi);
+  private readonly managerApi = inject(ManagerApi);
 
   form = new FormGroup({
     licenseNumber: new FormControl('', {
@@ -34,7 +42,10 @@ export class AssignBusComponent {
   public let3 = signal('');
 
   submitted = signal(false);
+  loading = signal(false);
   qrData = signal<string | null>(null);
+  errorMessage = signal<string | null>(null);
+  successMessage = signal<string | null>(null);
 
   onInput(event: Event, field: 'num1'|'num2'|'num3'|'num4'|'let1'|'let2'|'let3', current: HTMLInputElement, next: HTMLInputElement | null) {
     const input = event.target as HTMLInputElement;
@@ -103,24 +114,76 @@ export class AssignBusComponent {
 
   onSubmit() {
     this.submitted.set(true);
+    this.errorMessage.set(null);
+    this.successMessage.set(null);
+
     if (this.form.invalid) {
       return;
     }
 
-    const { licenseNumber, plateNumber } = this.form.value as any;
-    // Mock an API call and set QR data
-    const data = {
-      license: licenseNumber,
-      plate: plateNumber,
-      timestamp: new Date().toISOString()
-    };
-    this.qrData.set(JSON.stringify(data));
+    const { licenseNumber, plateNumber } = this.form.value as { licenseNumber: string; plateNumber: string };
+    this.loading.set(true);
+
+    // Step 1 & 2: Search for driver by license number AND bus by plate number in parallel
+    forkJoin({
+      driver: this.driverApi.getDriverByLicense(licenseNumber),
+      buses: this.busApi.getBuses({
+        searchBy: BusSearchBy.PlateNumber,
+        searchString: plateNumber,
+        pageNumber: 1,
+        pageSize: 1,
+      }),
+    }).subscribe({
+      next: ({ driver, buses }) => {
+        const driverId = driver?.data?.driverId;
+        const bus = buses?.items?.[0];
+        const microbusId = bus?.id;
+
+        if (!driverId) {
+          this.loading.set(false);
+          this.errorMessage.set('Driver not found with the provided license number.');
+          return;
+        }
+
+        if (!microbusId) {
+          this.loading.set(false);
+          this.errorMessage.set('Bus not found with the provided plate number.');
+          return;
+        }
+
+        // Step 3: Assign driver to microbus
+        this.managerApi.assignDriverBus({ driverId, microbusId }).subscribe({
+          next: (response) => {
+            this.loading.set(false);
+            if (response.success && response.data) {
+              this.qrData.set(response.data);
+              this.successMessage.set(response.message || 'Driver assigned to microbus successfully!');
+            } else {
+              this.errorMessage.set(response.message || 'Assignment failed. Please try again.');
+            }
+          },
+          error: (err) => {
+            this.loading.set(false);
+            const msg = err?.error?.message || err?.message || 'Failed to assign driver to bus. Please try again.';
+            this.errorMessage.set(msg);
+          },
+        });
+      },
+      error: (err) => {
+        this.loading.set(false);
+        const msg = err?.error?.message || err?.message || 'Failed to look up driver or bus. Please check the details and try again.';
+        this.errorMessage.set(msg);
+      },
+    });
   }
 
   onReset() {
     this.form.reset();
     this.submitted.set(false);
     this.qrData.set(null);
+    this.errorMessage.set(null);
+    this.successMessage.set(null);
+    this.loading.set(false);
     this.clearPlateSignals();
   }
 

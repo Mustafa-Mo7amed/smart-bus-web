@@ -4,7 +4,9 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, Router } from '@angular/router';
 import { RouteService } from '../../core/services/route.service';
+import { StationService } from '../../core/services/station.service';
 import { RouteDetailed } from '../../shared/models/route.model';
+import { StationInfo } from '../../shared/models/station.model';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
 interface ConfirmDialogState {
@@ -26,25 +28,16 @@ interface ConfirmDialogState {
 })
 export class UpdateRouteComponent implements OnInit {
   private readonly routeService = inject(RouteService);
+  private readonly stationService = inject(StationService);
   private readonly router = inject(Router);
 
   readonly routeId = input.required<string>();
 
   public route = signal<RouteDetailed | null>(null);
+  public stations = signal<StationInfo[]>([]);
   public form = new FormGroup({
-    toAr: new FormControl('', {
-      validators: [
-        Validators.required,
-        Validators.maxLength(100),
-        Validators.pattern(/^[\u0600-\u06FF\s0-9\-\.\,]+$/)
-      ],
-    }),
-    toEn: new FormControl('', {
-      validators: [
-        Validators.required,
-        Validators.maxLength(100),
-        Validators.pattern(/^[a-zA-Z\s0-9\-\.\,]+$/)
-      ],
+    toStationId: new FormControl('', {
+      validators: [Validators.required],
     }),
     price: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(0)],
@@ -71,12 +64,20 @@ export class UpdateRouteComponent implements OnInit {
   });
 
   ngOnInit() {
+    this.stationService.getStations().subscribe({
+      next: (stations) => {
+        this.stations.set(stations);
+      },
+      error: (error) => {
+        console.error('Error fetching stations:', error);
+      }
+    });
+
     this.routeService.getRouteById(this.routeId()).subscribe({
       next: (route) => {
         this.route.set(route);
         this.form.patchValue({
-          toAr: route.to,
-          toEn: route.to,
+          toStationId: route.toStationId,
           price: route.price,
           distanceKm: route.distanceKm,
         });
@@ -115,8 +116,7 @@ export class UpdateRouteComponent implements OnInit {
     const formValues = this.form.value;
     const request = {
       routeId: this.routeId(),
-      toAr: formValues.toAr!,
-      toEn: formValues.toEn!,
+      toStationId: formValues.toStationId!,
       price: formValues.price!,
       distanceKm: formValues.distanceKm!,
     };

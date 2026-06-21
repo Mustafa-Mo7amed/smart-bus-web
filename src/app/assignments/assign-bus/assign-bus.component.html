@@ -15,6 +15,20 @@
       </div>
     </div>
 
+    @if (errorMessage()) {
+      <div class="alert alert--error">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    @if (successMessage() && qrData()) {
+      <div class="alert alert--success">
+        <mat-icon>check_circle_outline</mat-icon>
+        <span>{{ successMessage() }}</span>
+      </div>
+    }
+
     <form class="driver-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
       <div class="form-row">
         <div class="form-group" [class.form-group--error]="submitted() && form.get('licenseNumber')?.invalid">
@@ -140,8 +154,15 @@
       </div>
 
       <div class="form-actions">
-        <button type="button" class="btn btn--secondary" (click)="onReset()">Reset</button>
-        <button type="submit" class="btn btn--primary">Assign Bus</button>
+        <button type="button" class="btn btn--secondary" (click)="onReset()" [disabled]="loading()">Reset</button>
+        <button type="submit" class="btn btn--primary" [disabled]="loading()">
+          @if (loading()) {
+            <span class="spinner"></span>
+            <span>Assigning...</span>
+          } @else {
+            Assign Bus
+          }
+        </button>
       </div>
     </form>
 
@@ -158,4 +179,5 @@
       </div>
     }
   </div>
+
 </div>

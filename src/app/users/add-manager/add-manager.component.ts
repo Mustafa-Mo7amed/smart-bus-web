@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { AddManagerRequest } from '../../shared/models/user.model';
 import { AdminService } from '../../core/services/admin.service';
 import { phoneValidator } from '../../drivers/add-driver/add-driver.component';
-import { RouteApi } from '../../core/api/route.api';
+import { StationService } from '../../core/services/station.service';
 
 @Component({
   selector: 'app-add-manager',
@@ -23,7 +23,7 @@ import { RouteApi } from '../../core/api/route.api';
 export class AddManagerComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly adminService = inject(AdminService);
-  private readonly routeApi = inject(RouteApi);
+  private readonly stationService = inject(StationService);
 
   stations = signal<{ stationId: string; cityName: string }[]>([]);
 
@@ -49,11 +49,11 @@ export class AddManagerComponent implements OnInit {
   showPassword = signal(false);
 
   ngOnInit() {
-    this.routeApi.getAllRouteSources().subscribe({
+    this.stationService.getStations().subscribe({
       next: (res) => {
         const list = res
-          .filter(x => x.stationId && x.cityName)
-          .map(x => ({ stationId: x.stationId!, cityName: x.cityName! }));
+          .filter(x => x.id && x.name)
+          .map(x => ({ stationId: x.id, cityName: x.name }));
         
         this.stations.set(list);
       },

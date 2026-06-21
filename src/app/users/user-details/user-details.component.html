@@ -51,12 +51,7 @@
             </span>
           </span>
         </div>
-        @if (user()?.roles === 'Manager' || user()?.stationName) {
-          <div class="detail-item">
-            <span class="detail-label">Assigned Station</span>
-            <span class="detail-value">{{ user()?.stationName || 'No Station Assigned' }}</span>
-          </div>
-        }
+
       </div>
 
       <div class="profile-actions-row">
@@ -107,7 +102,6 @@
       [show]="showUpdateManagerModal()"
       [managerId]="user()!.id"
       [currentDisplayName]="user()!.displayName"
-      [currentStationId]="user()!.stationId || null"
       (close)="showUpdateManagerModal.set(false)"
       (success)="onUpdateSuccess($event)"
     />

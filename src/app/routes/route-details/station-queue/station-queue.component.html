@@ -41,13 +41,9 @@
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu class="menu-dropdown" #menu="matMenu" xPosition="before">
-                  <button mat-menu-item>
+                  <button mat-menu-item (click)="viewDriver(bus.driverId)">
                     <mat-icon>visibility</mat-icon>
                     <span>View</span>
-                  </button>
-                  <button mat-menu-item>
-                    <mat-icon>delete</mat-icon>
-                    <span>Remove</span>
                   </button>
                 </mat-menu>
               </td>

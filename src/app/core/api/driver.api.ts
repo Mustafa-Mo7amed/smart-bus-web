@@ -15,7 +15,7 @@ export class DriverApi extends BaseApi {
   }
 
   getDriverByLicense(license: string): Observable<GetDriverResponse> {
-    return this.get<GetDriverResponse>(license);
+    return this.get<GetDriverResponse>(`license/${license}`);
   }
   
   getDriverLocation(driverId: string): Observable<DriverLocationUpdate> {
