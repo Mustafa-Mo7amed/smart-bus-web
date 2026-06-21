@@ -75,6 +75,7 @@
       <thead>
         <tr>
           <th>driver</th>
+          <th>license number</th>
           <th>plate number</th>
           <th>bus model</th>
           <th>route</th>
@@ -84,7 +85,7 @@
       <tbody>
         @if (isLoading()) {
           <tr>
-            <td colspan="5" class="spinner-cell">
+            <td colspan="6" class="spinner-cell">
               <div class="spinner-container">
                 <span class="spinning-loader"></span>
                 <p class="loading-text">Fetching drivers...</p>
@@ -102,6 +103,7 @@
                   <p class="driver-name">{{ driver.driverName }}</p>
                 </div>
               </td>
+              <td>{{ driver.licenseNumber || 'N/A' }}</td>
               <td>{{ driver.plateNumber || 'N/A' }}</td>
               <td>
                 @if (driver.model) {
@@ -123,7 +125,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="5" class="no-drivers">
+              <td colspan="6" class="no-drivers">
                 <p>No Drivers</p>
               </td>
             </tr>
