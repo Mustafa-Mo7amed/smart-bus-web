@@ -5,6 +5,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuTrigger, MatMenuItem } from '@angular/material/menu';
 import { RouteTrackingSignalRService } from '../../../core/services/signalr/route-tracking-signalr.service';
+import { Router } from '@angular/router';
 import { delay } from 'rxjs';
 
 @Component({
@@ -16,6 +17,7 @@ import { delay } from 'rxjs';
 export class StationQueueComponent implements OnInit {
   private readonly routeService = inject(RouteService);
   private readonly routeTrackingService = inject(RouteTrackingSignalRService);
+  private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   routeId = input.required<string>();
 
@@ -48,5 +50,9 @@ export class StationQueueComponent implements OnInit {
           this.isLoading = false;
         },
       });
+  }
+
+  viewDriver(driverId: string) {
+    this.router.navigate(['/drivers', 'details', driverId]);
   }
 }
