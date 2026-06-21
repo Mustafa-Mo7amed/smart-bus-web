@@ -1,0 +1,119 @@
+<div class="container">
+  <!-- Top Navigation & Title Bar -->
+  <div class="route-header-bar">
+    <a routerLink="/buses" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back to Buses</span>
+    </a>
+    
+    <div class="route-endpoints">
+      <div class="title-with-badge">
+        <h1>{{ bus()?.plateNumber || 'Loading Bus' }}</h1>
+        @if (bus()?.isActive !== undefined) {
+          <span class="status-badge" [class.status-badge--active]="bus()?.isActive" [class.status-badge--inactive]="!bus()?.isActive">
+            {{ bus()?.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Realtime Stats Grid -->
+  <div class="stats-grid">
+    <!-- Card 1: Bus Details -->
+    <div class="stat-card">
+      <div class="stat-icon-wrapper queue-icon">
+        <mat-icon>directions_bus</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Bus Model</span>
+        <h2 class="stat-val" style="font-size: 2rem;">{{ bus()?.model || 'N/A' }}</h2>
+        <span class="stat-trend">{{ bus()?.color || 'Unknown color' }}</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Driver -->
+    <div class="stat-card">
+      <div class="stat-icon-wrapper road-icon">
+        <mat-icon>person</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Driver</span>
+        <h2 class="stat-val" style="font-size: 2rem;">{{ bus()?.driverName || 'Unassigned' }}</h2>
+        <span class="stat-trend">Current Driver</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Route -->
+    <div class="stat-card">
+      <div class="stat-icon-wrapper specs-icon">
+        <mat-icon>alt_route</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Current Route</span>
+        <h2 class="stat-val" style="font-size: 2rem;">
+          {{ bus()?.routeName || 'Unassigned' }}
+        </h2>
+        <span class="stat-trend">Active assignment</span>
+      </div>
+    </div>
+
+    <!-- Card 4: Passengers -->
+    <div class="stat-card">
+      <div class="stat-icon-wrapper time-icon">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Passengers</span>
+        <h2 class="stat-val">{{ bus()?.passengerCount || 0 }}</h2>
+        <span class="stat-trend">Current onboard</span>
+      </div>
+    </div>
+  </div>
+
+  @if (bus()?.qrCode) {
+    <div class="qr-code-section">
+      <div class="section-header">
+        <h2>QR Code</h2>
+      </div>
+      <div class="qr-code-wrapper">
+        <qrcode 
+          [qrdata]="bus()!.qrCode" 
+          [width]="200" 
+          [errorCorrectionLevel]="'Q'"
+          [margin]="1"
+          [colorDark]="'#0f172a'">
+        </qrcode>
+      </div>
+    </div>
+  }
+
+  <!-- Live Tracking Map Section -->
+  <div class="map-section is-active">
+    @if (!bus()?.driverId) {
+      <div class="map-overlay">
+        <div class="overlay-content">
+          <mat-icon class="overlay-icon">location_off</mat-icon>
+          <h3>Location Unavailable</h3>
+          <p>This bus is currently not assigned to an active driver.</p>
+        </div>
+      </div>
+    }
+
+    <div id="tracking-map" class="map-container"></div>
+
+    @if (bus()?.driverId) {
+      <div class="map-custom-controls">
+        <button class="map-control-btn" (click)="zoomIn()" title="Zoom In">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button class="map-control-btn" (click)="zoomOut()" title="Zoom Out">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button class="map-control-btn" (click)="reCenter()" title="Focus on Bus">
+          <mat-icon>my_location</mat-icon>
+        </button>
+      </div>
+    }
+  </div>
+</div>
