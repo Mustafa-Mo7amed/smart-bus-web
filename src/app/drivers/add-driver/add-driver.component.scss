@@ -1,5 +1,43 @@
 @use 'variables' as v;
 
+.container {
+  padding: 2.4rem 3.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: v.$color-text-muted;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1.4rem;
+  font-weight: 500;
+  width: fit-content;
+  padding: 0;
+  transition: all v.$transition-fast;
+
+  mat-icon {
+    font-size: 1.8rem;
+    height: 1.8rem;
+    width: 1.8rem;
+    transition: transform v.$transition-fast;
+  }
+
+  &:hover {
+    color: v.$color-primary;
+
+    mat-icon {
+      transform: translateX(-4px);
+    }
+  }
+}
+
 // ─── Form Card ────────────────────────────────────────────────
 .form-card {
   background-color: v.$color-bg-surface;

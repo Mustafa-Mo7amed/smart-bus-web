@@ -1,0 +1,168 @@
+<div class="container">
+  <!-- Top Navigation & Title Bar -->
+  <div class="route-header-bar">
+    <a routerLink="/drivers" class="back-link">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back to Drivers</span>
+    </a>
+    
+    <div class="route-endpoints">
+      <div class="title-with-badge">
+        <h1>{{ driver()?.driverName || 'Loading Driver' }}</h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- Realtime Stats Grid -->
+  <div class="stats-grid">
+    <!-- Card 1: Bus Details -->
+    <div class="stat-card">
+      <div class="stat-icon-wrapper queue-icon">
+        <mat-icon>directions_bus</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Bus Model</span>
+        <h2 class="stat-val" style="font-size: 2rem;">{{ driver()?.model || 'N/A' }}</h2>
+        <span class="stat-trend">{{ driver()?.color || 'Unknown color' }}</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Plate Number -->
+    <div class="stat-card">
+      <div class="stat-icon-wrapper road-icon">
+        <mat-icon>pin</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Plate Number</span>
+        <h2 class="stat-val" style="font-size: 2rem;">{{ driver()?.plateNumber || 'N/A' }}</h2>
+        <span class="stat-trend">Vehicle identification</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Route -->
+    <div class="stat-card">
+      <div class="stat-icon-wrapper specs-icon">
+        <mat-icon>alt_route</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Current Route</span>
+        <h2 class="stat-val" style="font-size: 2rem;">
+          @if (driver()?.from && driver()?.to) {
+            {{ driver()?.from }} &rarr; {{ driver()?.to }}
+          } @else {
+            N/A
+          }
+        </h2>
+        <span class="stat-trend">Active assignment</span>
+      </div>
+    </div>
+
+    <!-- Card 4: Passengers -->
+    <div class="stat-card">
+      <div class="stat-icon-wrapper time-icon">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Passengers</span>
+        <h2 class="stat-val">{{ driver()?.passengerCount || 0 }}</h2>
+        <span class="stat-trend">Current onboard</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trip History Section -->
+  <div class="trip-history-section">
+    <div class="section-header">
+      <div class="header-left">
+        <h2>Trip History</h2>
+        @if (tripHistory()) {
+          <span class="report-badge">{{ tripHistory()?.data?.totalCount }} Trips ({{ tripHistory()?.data?.totalAmount | number:'1.0-2' }} LE)</span>
+        }
+      </div>
+      <div class="header-actions">
+        <div class="filter-group">
+          <label for="fromDate">From</label>
+          <input 
+            type="datetime-local" 
+            id="fromDate" 
+            [ngModel]="fromDate()" 
+            (ngModelChange)="fromDate.set($event); onDateFilterChange()" 
+          />
+        </div>
+        <div class="filter-group">
+          <label for="toDate">To</label>
+          <input 
+            type="datetime-local" 
+            id="toDate" 
+            [ngModel]="toDate()" 
+            (ngModelChange)="toDate.set($event); onDateFilterChange()" 
+          />
+        </div>
+      </div>
+    </div>
+    
+    <div class="history-table-wrapper">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Route</th>
+            <th>Started</th>
+            <th>Ended</th>
+            <th>Passengers</th>
+            <th>Distance</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (trip of tripHistory()?.data?.trips; track trip.startedAt) {
+            <tr>
+              <td>{{ trip.routeFrom }} &rarr; {{ trip.routeTo }}</td>
+              <td>{{ trip.startedAt | date:'short' }}</td>
+              <td>{{ trip.endedAt ? (trip.endedAt | date:'short') : '--' }}</td>
+              <td>{{ trip.passengerCount }}</td>
+              <td>{{ trip.distance | number:'1.0-2' }} km</td>
+              <td class="price-cell">{{ trip.amount | number:'1.0-2' }} LE</td>
+              <td>
+                <span class="status-badge" [class]="'status-' + getTripStatusString(trip.status).toLowerCase()">
+                  {{ getTripStatusString(trip.status) }}
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="no-data">No trips found for this driver.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (tripHistory() && tripHistory()!.data.totalCount > 0) {
+      <app-paginator
+        [totalCount]="tripHistory()?.data?.totalCount || 0"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="pageSizeOptions()"
+        [pageIndex]="pageIndex()"
+        (pageChange)="onPageChange($event)">
+      </app-paginator>
+    }
+  </div>
+
+  <!-- Live Tracking Map Section -->
+  <div class="map-section is-active">
+    <div id="tracking-map" class="map-container"></div>
+
+    <div class="map-custom-controls">
+      <button class="map-control-btn" (click)="zoomIn()" title="Zoom In">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button class="map-control-btn" (click)="zoomOut()" title="Zoom Out">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button class="map-control-btn" (click)="reCenter()" title="Focus on Driver">
+        <mat-icon>my_location</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

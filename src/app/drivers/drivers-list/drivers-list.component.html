@@ -1,65 +1,139 @@
-<header>
-  <h1 class="title">Drivers</h1>
-  <button class="register-driver-btn" routerLink="register-driver">
-    + Register New Driver
-  </button>
-</header>
-
-<div class="drivers-table-wrapper">
-  <table class="drivers-table">
-    <thead>
-      <tr>
-        <th>Driver</th>
-        <th>License Number</th>
-        <th>Phone</th>
-        <th>Status</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      @if (isLoading()) {
-        <tr>
-          <td colspan="5" class="spinner-cell">
-            <div class="spinner-container">
-              <span class="spinning-loader"></span>
-              <p class="loading-text">Fetching drivers...</p>
-            </div>
-          </td>
-        </tr>
-      } @else {
-        @for (driver of drivers(); track driver.driverId) {
-          <tr>
-            <td class="table-driver">
-              <div class="table-driver-icon-wrapper">
-                <mat-icon>person</mat-icon>
-              </div>
-              <!-- <div> -->
-                <p class="driver-name">{{ driver.name }}</p>
-                <!-- <p class="driver-id">ID: {{ driver.driverId }}</p> -->
-              <!-- </div> -->
-            </td>
-            <td>{{ driver.licenseNumber }}</td>
-            <td>{{ driver.phone }}</td>
-
-            <td>
-              <span class="status-badge" [class.status-badge--active]="true">
-                Active
-              </span>
-            </td>
-            <td class="actions-cell">
-              <button class="btn-icon">
-                <mat-icon>more_vert</mat-icon>
-              </button>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="5" class="no-drivers">
-              <p>No Drivers Registered</p>
-            </td>
-          </tr>
-        }
+<div class="container">
+  <header>
+    <div class="title-section">
+      <h1 class="title">Drivers</h1>
+      <span class="report-badge">{{ totalCount() }} Total</span>
+    </div>
+    <div class="header-actions">
+      @if (activeFiltersCount() > 0) {
+        <button class="btn-clear-filters" (click)="resetFilters()">
+          <mat-icon>clear_all</mat-icon>
+          <span>Clear Filters</span>
+        </button>
       }
-    </tbody>
-  </table>
+      <button
+        class="btn-toggle-filters"
+        [class.btn-toggle-filters--active]="showFilters()"
+        (click)="showFilters.set(!showFilters())"
+      >
+        <mat-icon>{{ showFilters() ? 'expand_less' : 'filter_list' }}</mat-icon>
+        <span>{{ showFilters() ? 'Hide Filters' : 'Filters' }}</span>
+        @if (activeFiltersCount() > 0) {
+          <span class="filters-badge">{{ activeFiltersCount() }}</span>
+        }
+      </button>
+      <button class="register-driver-btn" routerLink="register-driver">+ Register New Driver</button>
+    </div>
+  </header>
+
+  <!-- Filters Panel -->
+  <div class="filters-panel" [class.filters-panel--collapsed]="!showFilters()">
+    <div class="filter-group">
+      <label for="searchFilter">Search</label>
+      <input
+        id="searchFilter"
+        type="text"
+        placeholder="Search"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="updateDebouncedField('searchQuery', $event)"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="sortByFilter">Sort By</label>
+      <select
+        id="sortByFilter"
+        [ngModel]="sortBy()"
+        (ngModelChange)="sortBy.set($event); onFilterChange()"
+      >
+        <option [ngValue]="null">--</option>
+        <option [ngValue]="DriverSortBy.DriverName">Driver Name</option>
+        <option [ngValue]="DriverSortBy.LicenseNumber">License Number</option>
+        <option [ngValue]="DriverSortBy.PlateNumber">Plate Number</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="sortOrderFilter">Sort Order</label>
+      <select
+        id="sortOrderFilter"
+        [ngModel]="sortOrder()"
+        (ngModelChange)="sortOrder.set($event); onFilterChange()"
+      >
+        <option value="DESC">Descending</option>
+        <option value="ASC">Ascending</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="drivers-table-wrapper">
+    <table class="drivers-table">
+      <thead>
+        <tr>
+          <th>driver</th>
+          <th>plate number</th>
+          <th>bus model</th>
+          <th>route</th>
+          <th>passengers</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (isLoading()) {
+          <tr>
+            <td colspan="5" class="spinner-cell">
+              <div class="spinner-container">
+                <span class="spinning-loader"></span>
+                <p class="loading-text">Fetching drivers...</p>
+              </div>
+            </td>
+          </tr>
+        } @else {
+          @for (driver of drivers(); track driver.driverId) {
+            <tr (click)="viewDriver(driver.driverId)" class="clickable-row">
+              <td class="table-driver">
+                <div class="table-driver-icon-wrapper">
+                  <mat-icon>person</mat-icon>
+                </div>
+                <div>
+                  <p class="driver-name">{{ driver.driverName }}</p>
+                </div>
+              </td>
+              <td>{{ driver.plateNumber || 'N/A' }}</td>
+              <td>
+                @if (driver.model) {
+                  <span>{{ driver.color }} {{ driver.model }}</span>
+                } @else {
+                  <span class="status-badge">Unassigned</span>
+                }
+              </td>
+              <td>
+                @if (driver.from && driver.to) {
+                  {{ driver.from }} - {{ driver.to }}
+                } @else {
+                  <span class="status-badge">N/A</span>
+                }
+              </td>
+              <td>
+                {{ driver.passengerCount || 0 }}
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="no-drivers">
+                <p>No Drivers</p>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <app-paginator
+    [totalCount]="totalCount()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="pageSize()"
+    [pageSizeOptions]="pageSizeOptions()"
+    [isLoading]="isLoading()"
+    (pageChange)="onPageChange($event)" />
 </div>

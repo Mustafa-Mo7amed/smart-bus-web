@@ -1,0 +1,442 @@
+@use 'variables' as v;
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2.4rem 3.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3.2rem;
+  background-color: v.$color-bg-page;
+  min-height: 100vh;
+}
+
+// --- Route Header Bar & Navigation ---------------------------
+.route-header-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: v.$color-text-muted;
+  text-decoration: none;
+  font-size: 1.4rem;
+  font-weight: 500;
+  width: fit-content;
+  transition: all v.$transition-fast;
+
+  mat-icon {
+    font-size: 1.8rem;
+    height: 1.8rem;
+    width: 1.8rem;
+    transition: transform v.$transition-fast;
+  }
+
+  &:hover {
+    color: v.$color-primary;
+    
+    mat-icon {
+      transform: translateX(-4px);
+    }
+  }
+}
+
+.route-endpoints {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.6rem;
+
+  .title-with-badge {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: v.$color-text-heading;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+  }
+}
+
+.report-badge {
+  background-color: v.$color-primary-bg;
+  color: v.$color-primary;
+  padding: 0.6rem 1.4rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-radius: v.$radius-full;
+}
+
+// --- Stats Dashboard Grid ----------------
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+}
+
+.stat-card {
+  background-color: v.$color-bg-surface;
+  border-radius: v.$radius-lg;
+  border: 1px solid v.$color-border-light;
+  padding: 2.4rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  box-shadow: v.$shadow-md;
+  transition: all v.$transition-base;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: v.$shadow-lg;
+  }
+
+  .stat-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 5.6rem;
+    height: 5.6rem;
+    border-radius: v.$radius-md;
+    flex-shrink: 0;
+
+    mat-icon {
+      font-size: 2.8rem;
+      height: 2.8rem;
+      width: 2.8rem;
+    }
+
+    &.queue-icon {
+      background-color: v.$color-primary-bg;
+      color: v.$color-primary;
+    }
+
+    &.road-icon {
+      background-color: rgba(16, 185, 129, 0.12);
+      color: v.$color-success;
+    }
+
+    &.time-icon {
+      background-color: rgba(245, 158, 11, 0.12);
+      color: v.$color-warning;
+    }
+
+    &.specs-icon {
+      background-color: rgba(0, 194, 168, 0.12);
+      color: v.$color-secondary;
+    }
+  }
+
+  .stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .stat-label {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: v.$color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .stat-val {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: v.$color-text-heading;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .stat-trend {
+    font-size: 1.2rem;
+    color: v.$color-text-muted;
+  }
+}
+
+// --- Trip History Section ------------------------------------
+.trip-history-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+
+      h2 {
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: v.$color-text-heading;
+        margin: 0;
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+
+        label {
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: v.$color-text-muted;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        input {
+          padding: 0.8rem 1.2rem;
+          border: 1px solid v.$color-border;
+          border-radius: v.$radius-md;
+          background-color: v.$color-bg-surface;
+          color: v.$color-text-body;
+          font-size: 1.4rem;
+          outline: none;
+          transition: border-color v.$transition-fast, box-shadow v.$transition-fast;
+
+          &:focus {
+            border-color: v.$color-primary;
+            box-shadow: 0 0 0 3px v.$color-primary-bg;
+          }
+        }
+      }
+    }
+  }
+}
+
+.history-table-wrapper {
+  width: 100%;
+  max-height: 40rem; // Approx 5-6 rows
+  overflow-y: auto;
+  border-radius: v.$radius-lg;
+  background-color: v.$color-bg-surface;
+  box-shadow: v.$shadow-sm;
+  border: 1px solid v.$color-border-light;
+
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: v.$color-border;
+    border-radius: 10px;
+  }
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  thead {
+    th {
+      position: sticky;
+      top: 0;
+      padding: 1.6rem 2.4rem;
+      text-align: left;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: v.$table-header-text;
+      background-color: v.$table-header-bg;
+      border-bottom: 1px solid v.$color-border;
+      z-index: 1;
+
+      &:first-child {
+        border-top-left-radius: v.$radius-md;
+      }
+      &:last-child {
+        border-top-right-radius: v.$radius-md;
+      }
+    }
+  }
+
+  tbody tr {
+    background-color: v.$color-bg-surface;
+    border-bottom: 1px solid v.$table-row-border;
+    transition: background-color v.$transition-fast;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: v.$table-row-hover;
+    }
+  }
+
+  td {
+    padding: 1.6rem 2.4rem;
+    font-size: 1.4rem;
+    height: 6rem;
+    color: v.$color-text-body;
+    white-space: nowrap;
+    
+    &.price-cell {
+      color: v.$table-price-color;
+      font-weight: 600;
+    }
+
+    &.no-data {
+      text-align: center;
+      padding: 4rem;
+      color: v.$color-text-muted;
+    }
+  }
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 1.2rem;
+  border-radius: v.$radius-full;
+  font-size: 1.2rem;
+  font-weight: 600;
+
+  &.status-started {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: v.$color-primary;
+  }
+
+  &.status-completed {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: v.$color-success;
+  }
+
+  &.status-canceled {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: v.$color-error;
+  }
+}
+
+// --- Live Tracking Map Panel -----------------------
+.map-section {
+  position: relative;
+  height: 480px;
+  border-radius: v.$radius-lg;
+  overflow: hidden;
+  box-shadow: v.$shadow-md;
+  border: 1px solid v.$color-border-light;
+  background-color: v.$color-bg-surface;
+  transition: all v.$transition-base;
+
+  &.is-active {
+    box-shadow: v.$shadow-lg;
+    border-color: v.$color-primary;
+  }
+}
+
+.map-custom-controls {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  z-index: 1000;
+}
+
+.map-control-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: v.$radius-md;
+  border: 1px solid v.$color-border-light;
+  background-color: v.$color-bg-surface;
+  color: v.$color-text-heading;
+  box-shadow: v.$shadow-md;
+  cursor: pointer;
+  transition: all v.$transition-fast;
+
+  mat-icon {
+    font-size: 2rem;
+    height: 2rem;
+    width: 2rem;
+  }
+
+  &:hover {
+    background-color: v.$color-primary-bg;
+    color: v.$color-primary;
+    border-color: v.$color-primary;
+    transform: translateY(-2px);
+    box-shadow: v.$shadow-lg;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+::ng-deep .custom-bus-marker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .marker-pulse {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    background: rgba(0, 194, 168, 0.4);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .marker-core {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    background: #00c2a8;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 3px solid white;
+    z-index: 2;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
