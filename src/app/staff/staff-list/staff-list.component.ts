@@ -124,11 +124,12 @@ export class StaffListComponent {
   fetchStaff() {
     this.isLoading.set(true);
     this.updateQueryParams();
+    const apiSortOrder = this.sortOrder() === 'DESC' ? 'ASC' : 'DESC';
     this.staffService.getStationStaff({
       pageNumber: this.pageIndex() + 1,
       pageSize: this.pageSize(),
       search: this.search() || undefined,
-      sortOrder: this.sortOrder() || undefined,
+      sortOrder: apiSortOrder,
     }).subscribe({
       next: (response) => {
         this.staffList.set(response.data || []);
