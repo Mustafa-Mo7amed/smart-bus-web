@@ -6,7 +6,7 @@ import {
   RefreshTokenRequest,
   AuthUser,
 } from '../../shared/models/auth.model';
-import { Observable, tap, throwError } from 'rxjs';
+import { Observable, tap, throwError, switchMap, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -38,8 +38,14 @@ export class AuthService {
     return this.authApi.login(data).pipe(
       tap((response) => {
         if (response.token) {
-          this.setSession(response);
+          this.setSession(response, true);
         }
+      }),
+      switchMap((response) => {
+        if (response.statusCode === 200) {
+          return this.refreshUser().pipe(switchMap(() => of(response)));
+        }
+        return of(response);
       }),
     );
   }
@@ -66,12 +72,12 @@ export class AuthService {
     );
   }
 
-  setSession(response: AuthResponse) {
+  setSession(response: AuthResponse, skipRefreshUser = false) {
     localStorage.setItem(AuthService.TOKEN_KEY, response.token);
     if (response.refreshToken) {
       localStorage.setItem(AuthService.REFRESH_TOKEN_KEY, response.refreshToken);
     }
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 && !skipRefreshUser) {
       this.refreshUser().subscribe();
     }
   }
