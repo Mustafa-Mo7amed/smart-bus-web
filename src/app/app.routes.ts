@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { nonAuthGuard } from './core/guards/non-auth.guard';
 import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
 import { MainLayoutComponent } from './shared/layout/main-layout/main-layout.component';
 
 export const routes: Routes = [
@@ -108,6 +109,32 @@ export const routes: Routes = [
             loadComponent: () =>
               import('../app/drivers/driver-details/driver-details.component').then(
                 (m) => m.DriverDetailsComponent,
+              ),
+          },
+        ],
+      },
+      {
+        path: 'users',
+        canActivate: [adminGuard],
+        loadComponent: () => import('../app/users/users.component').then((m) => m.UsersComponent),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('../app/users/users-list/users-list.component').then(
+                (m) => m.UsersListComponent,
+              ),
+          },
+          {
+            path: 'register-manager',
+            loadComponent: () =>
+              import('../app/users/add-manager/add-manager.component').then((m) => m.AddManagerComponent),
+          },
+          {
+            path: 'details/:userId',
+            loadComponent: () =>
+              import('../app/users/user-details/user-details.component').then(
+                (m) => m.UserDetailsComponent,
               ),
           },
         ],

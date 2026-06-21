@@ -11,7 +11,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class NavBarComponent {
   private router = inject(Router);
-  private readonly authService = inject(AuthService);
+  public readonly authService = inject(AuthService);
 
   onLogout() {
     this.authService.logout().subscribe({

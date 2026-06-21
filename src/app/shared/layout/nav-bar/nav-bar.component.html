@@ -39,6 +39,12 @@
     <mat-icon>report</mat-icon>
     <span>Reports</span>
   </li>
+  @if (authService.currentUser()?.roles === 'Admin') {
+    <li class="nav-link-item" routerLink="users" routerLinkActive="active" id="nav-users">
+      <mat-icon>people</mat-icon>
+      <span>Users</span>
+    </li>
+  }
 </ul>
 
 <!-- Bottom Section -->
