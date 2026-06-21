@@ -42,9 +42,13 @@
     </li>
   }
   @if (authService.currentUser()?.roles === 'Admin') {
-    <li class="nav-link-item" routerLink="users" routerLinkActive="active" id="nav-users">
+    <li class="nav-link-item" routerLink="users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" id="nav-users">
       <mat-icon>people</mat-icon>
       <span>Users</span>
+    </li>
+    <li class="nav-link-item" routerLink="users/managers" routerLinkActive="active" id="nav-managers">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span>Managers</span>
     </li>
   }
 </ul>

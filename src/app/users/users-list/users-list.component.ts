@@ -1,4 +1,13 @@
-import { Component, effect, inject, signal, untracked, computed } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  signal,
+  untracked,
+  computed,
+  OnInit,
+  input,
+} from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator.component';
@@ -20,6 +29,8 @@ export class UsersListComponent {
   private readonly adminService = inject(AdminService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
+  baseURL = computed(() => 'https://smart-microbus.runasp.net/');
+  showOnlyManagers = input<boolean>(false);
 
   isLoading = signal(false);
   users = signal<UserInfo[]>([]);
@@ -46,48 +57,50 @@ export class UsersListComponent {
   activeFiltersCount = computed(() => {
     let count = 0;
     if (this.searchQuery().trim()) count++;
-    if (this.selectedRole()) count++;
+    if (!this.showOnlyManagers() && this.selectedRole()) count++;
     if (this.sortBy() !== null) count++;
     if (this.sortOrder() !== 'DESC') count++;
     return count;
   });
 
   constructor() {
-    const params = this.activatedRoute.snapshot.queryParamMap;
-    if (params.has('search')) {
-      const searchVal = params.get('search')!;
-      this.searchQuery.set(searchVal);
-      this.search.set(searchVal);
-    }
-    if (params.has('role')) {
-      const roleVal = params.get('role')!;
-      this.selectedRole.set(roleVal);
-      this.role.set(roleVal);
-    }
-    if (params.has('sortBy')) this.sortBy.set(params.get('sortBy') as any);
-    if (params.has('sortOrder')) this.sortOrder.set(params.get('sortOrder') as any);
-    if (params.has('pageIndex')) this.pageIndex.set(Number(params.get('pageIndex')));
-    if (params.has('pageSize')) this.pageSize.set(Number(params.get('pageSize')));
-    
-    if (this.activeFiltersCount() > 0) {
-      this.showFilters.set(true);
-    }
-
     effect(() => {
       const pageIndex = this.pageIndex();
       const pageSize = this.pageSize();
       untracked(() => this.fetchUsers());
     });
 
-    this.debounceSubject
-      .pipe(
-        debounceTime(300),
-        takeUntilDestroyed()
-      )
-      .subscribe(() => {
-        this.search.set(this.searchQuery());
-        this.onFilterChange();
-      });
+    this.debounceSubject.pipe(debounceTime(300), takeUntilDestroyed()).subscribe(() => {
+      this.search.set(this.searchQuery());
+      this.onFilterChange();
+    });
+  }
+
+  ngOnInit() {
+    const params = this.activatedRoute.snapshot.queryParamMap;
+    if (params.has('search')) {
+      const searchVal = params.get('search')!;
+      this.searchQuery.set(searchVal);
+      this.search.set(searchVal);
+    }
+
+    if (this.showOnlyManagers()) {
+      this.selectedRole.set('Manager');
+      this.role.set('Manager');
+    } else if (params.has('role')) {
+      const roleVal = params.get('role')!;
+      this.selectedRole.set(roleVal);
+      this.role.set(roleVal);
+    }
+
+    if (params.has('sortBy')) this.sortBy.set(params.get('sortBy') as any);
+    if (params.has('sortOrder')) this.sortOrder.set(params.get('sortOrder') as any);
+    if (params.has('pageIndex')) this.pageIndex.set(Number(params.get('pageIndex')));
+    if (params.has('pageSize')) this.pageSize.set(Number(params.get('pageSize')));
+
+    if (this.activeFiltersCount() > 0) {
+      this.showFilters.set(true);
+    }
   }
 
   updateQueryParams() {
@@ -95,7 +108,7 @@ export class UsersListComponent {
       relativeTo: this.activatedRoute,
       queryParams: {
         search: this.search() || null,
-        role: this.role() || null,
+        role: this.showOnlyManagers() ? null : this.role() || null,
         sortBy: this.sortBy() === null ? null : this.sortBy(),
         sortOrder: this.sortOrder() === 'DESC' ? null : this.sortOrder(),
         pageIndex: this.pageIndex() === 0 ? null : this.pageIndex(),
@@ -109,24 +122,26 @@ export class UsersListComponent {
   fetchUsers() {
     this.isLoading.set(true);
     this.updateQueryParams();
-    this.adminService.getUsers({
-      pageNumber: this.pageIndex() + 1,
-      pageSize: this.pageSize(),
-      search: this.search() || undefined,
-      role: this.role() || undefined,
-      sortBy: this.sortBy() !== null ? this.sortBy() : undefined,
-      sortOrder: this.sortOrder() || undefined,
-    }).subscribe({
-      next: (response) => {
-        this.users.set(response.data?.items || []);
-        this.totalCount.set(response.data?.totalCount || 0);
-        this.isLoading.set(false);
-      },
-      error: (error) => {
-        console.error('Error fetching users:', error);
-        this.isLoading.set(false);
-      },
-    });
+    this.adminService
+      .getUsers({
+        pageNumber: this.pageIndex() + 1,
+        pageSize: this.pageSize(),
+        search: this.search() || undefined,
+        role: this.role() || undefined,
+        sortBy: this.sortBy() !== null ? this.sortBy() : undefined,
+        sortOrder: this.sortOrder() || undefined,
+      })
+      .subscribe({
+        next: (response) => {
+          this.users.set(response.data?.items || []);
+          this.totalCount.set(response.data?.totalCount || 0);
+          this.isLoading.set(false);
+        },
+        error: (error) => {
+          console.error('Error fetching users:', error);
+          this.isLoading.set(false);
+        },
+      });
   }
 
   onPageChange(event: { pageIndex: number; pageSize: number }) {
@@ -153,8 +168,13 @@ export class UsersListComponent {
   resetFilters() {
     this.searchQuery.set('');
     this.search.set('');
-    this.selectedRole.set('');
-    this.role.set('');
+    if (this.showOnlyManagers()) {
+      this.selectedRole.set('Manager');
+      this.role.set('Manager');
+    } else {
+      this.selectedRole.set('');
+      this.role.set('');
+    }
     this.sortBy.set(null);
     this.sortOrder.set('DESC');
     this.onFilterChange();
@@ -166,18 +186,20 @@ export class UsersListComponent {
 
   toggleUserLock(event: Event, user: UserInfo) {
     event.stopPropagation();
-    const action = user.isActive ? this.adminService.lockUser(user.id) : this.adminService.unlockUser(user.id);
+    const action = user.isActive
+      ? this.adminService.lockUser(user.id)
+      : this.adminService.unlockUser(user.id);
     action.subscribe({
       next: (response) => {
         if (response.success) {
-          this.users.update(current => 
-            current.map(u => u.id === user.id ? { ...u, isActive: !u.isActive } : u)
+          this.users.update((current) =>
+            current.map((u) => (u.id === user.id ? { ...u, isActive: !u.isActive } : u)),
           );
         }
       },
       error: (err) => {
         console.error('Error toggling user lock:', err);
-      }
+      },
     });
   }
 }

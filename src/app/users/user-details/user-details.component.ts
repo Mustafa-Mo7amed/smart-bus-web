@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { AdminService } from '../../core/services/admin.service';
 import { UserInfo } from '../../shared/models/user.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -17,7 +17,7 @@ export class UserDetailsComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly adminService = inject(AdminService);
   private readonly router = inject(Router);
-
+  baseURL = computed(() => 'https://smart-microbus.runasp.net/');
   readonly userId = input.required<string>();
 
   user = signal<UserInfo | null>(null);
@@ -35,6 +35,7 @@ export class UserDetailsComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.user.set(res.data);
+
           this.isLoading.set(false);
         },
         error: (error) => {

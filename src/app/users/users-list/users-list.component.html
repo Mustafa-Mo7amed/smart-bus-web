@@ -1,7 +1,7 @@
 <div class="container">
   <header>
     <div class="title-section">
-      <h1 class="title">Users</h1>
+      <h1 class="title">{{ showOnlyManagers() ? 'Managers' : 'Users' }}</h1>
       <span class="report-badge">{{ totalCount() }} Total</span>
     </div>
     <div class="header-actions">
@@ -22,7 +22,9 @@
           <span class="filters-badge">{{ activeFiltersCount() }}</span>
         }
       </button>
-      <button class="register-user-btn" routerLink="register-manager">+ Add Manager</button>
+      @if (showOnlyManagers()) {
+        <button class="register-user-btn" routerLink="/users/register-manager">+ Add Manager</button>
+      }
     </div>
   </header>
 
@@ -39,22 +41,24 @@
       />
     </div>
 
-    <div class="filter-group">
-      <label for="roleFilter">Role</label>
-      <select
-        id="roleFilter"
-        [ngModel]="selectedRole()"
-        (ngModelChange)="onRoleChange($event)"
-      >
-        <option value="">-- All Roles --</option>
-        <option value="Admin">Admin</option>
-        <option value="Manager">Manager</option>
-        <option value="Staff">Staff</option>
-        <option value="Driver">Driver</option>
-        <option value="Passenger">Passenger</option>
-        <option value="Owner">Owner</option>
-      </select>
-    </div>
+    @if (!showOnlyManagers()) {
+      <div class="filter-group">
+        <label for="roleFilter">Role</label>
+        <select
+          id="roleFilter"
+          [ngModel]="selectedRole()"
+          (ngModelChange)="onRoleChange($event)"
+        >
+          <option value="">-- All Roles --</option>
+          <option value="Admin">Admin</option>
+          <option value="Manager">Manager</option>
+          <option value="Staff">Staff</option>
+          <option value="Driver">Driver</option>
+          <option value="Passenger">Passenger</option>
+          <option value="Owner">Owner</option>
+        </select>
+      </div>
+    }
 
     <div class="filter-group">
       <label for="sortByFilter">Sort By</label>
@@ -109,7 +113,7 @@
               <td class="table-user">
                 <div class="table-user-icon-wrapper">
                   @if (user.photoUrl) {
-                    <img [src]="user.photoUrl" alt="Avatar" class="user-avatar-img" />
+                    <img [src]="baseURL() + user.photoUrl" alt="Avatar" class="user-avatar-img" />
                   } @else {
                     <mat-icon>person</mat-icon>
                   }

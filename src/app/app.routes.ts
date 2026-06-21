@@ -120,6 +120,15 @@ export const routes: Routes = [
         children: [
           {
             path: '',
+            data: { showOnlyManagers: false },
+            loadComponent: () =>
+              import('../app/users/users-list/users-list.component').then(
+                (m) => m.UsersListComponent,
+              ),
+          },
+          {
+            path: 'managers',
+            data: { showOnlyManagers: true },
             loadComponent: () =>
               import('../app/users/users-list/users-list.component').then(
                 (m) => m.UsersListComponent,

@@ -14,7 +14,7 @@
       <div class="profile-card__header">
         <div class="profile-avatar-wrapper">
           @if (user()?.photoUrl) {
-            <img [src]="user()?.photoUrl" alt="User Avatar" class="profile-avatar-img" />
+            <img [src]="baseURL() + user()?.photoUrl" alt="User Avatar" class="profile-avatar-img" />
           } @else {
             <mat-icon class="profile-avatar-placeholder">person</mat-icon>
           }
