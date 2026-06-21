@@ -72,8 +72,14 @@ export class AddRouteComponent implements OnInit {
       },
       error: (error) => {
         this.isSubmitting.set(false);
-        console.error('Error adding route:', error);
-        this.errorMessage.set('Failed to create route. Please try again.');
+        // The backend may return a non-JSON success response (e.g. empty body or plain text),
+        // which causes Angular's HttpClient to throw a parse error despite a 2xx status.
+        if (error.status && error.status >= 200 && error.status < 300) {
+          this.successMessage.set('Route created successfully!');
+        } else {
+          console.error('Error adding route:', error);
+          this.errorMessage.set(error?.error?.message || 'Failed to create route. Please try again.');
+        }
       },
     });
   }
