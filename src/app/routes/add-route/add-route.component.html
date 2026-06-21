@@ -127,7 +127,7 @@
             >
               <option value="">Select a destination station</option>
               @for (station of stations(); track station.id) {
-                <option [value]="station.id">{{ station.name }} - {{ station.city }}</option>
+                <option [value]="station.id">{{ station.name }}</option>
               }
             </select>
           </div>
