@@ -28,4 +28,8 @@ export class DriverService {
   getDriverTripHistory(driverId: string, request?: DriverHistoryRequest): Observable<DriverHistoryResponse> {
     return this.managerApi.getDriverTripHistor(driverId, request);
   }
+
+  exportStationDrivers(): Observable<Blob> {
+    return this.managerApi.exportStationDrivers();
+  }
 }

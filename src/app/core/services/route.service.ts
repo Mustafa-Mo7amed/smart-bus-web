@@ -17,11 +17,12 @@ import {
   RouteSummary,
 } from '../../shared/models/route.model';
 import { RouteListItem } from '../../routes/routes-list/routes-list.component';
-import { SuccessResponse } from '../api/manager.api';
+import { SuccessResponse, ManagerApi } from '../api/manager.api';
 
 @Injectable({ providedIn: 'root' })
 export class RouteService {
   routeApi = inject(RouteApi);
+  managerApi = inject(ManagerApi);
 
   getAllRoutes(): Observable<RouteDetailed[]> {
     return this.routeApi.getRoutesPaginated({ pageNumber: 1, pageSize: 10000 }).pipe(map((response) => response.data));
@@ -112,5 +113,9 @@ export class RouteService {
 
   deleteRoute(routeId: string): Observable<SuccessResponse> {
     return this.routeApi.deleteRoute(routeId);
+  }
+
+  exportStationRoutes(): Observable<Blob> {
+    return this.managerApi.exportStationRoutes();
   }
 }

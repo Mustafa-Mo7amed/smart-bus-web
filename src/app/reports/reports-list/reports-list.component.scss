@@ -25,7 +25,7 @@ header {
     gap: 1.2rem;
   }
 
-  .btn-toggle-filters, .btn-clear-filters {
+  .btn-toggle-filters, .btn-clear-filters, .btn-export {
     display: inline-flex;
     align-items: center;
     gap: 0.8rem;
@@ -46,7 +46,7 @@ header {
     }
   }
 
-  .btn-toggle-filters {
+  .btn-toggle-filters, .btn-export {
     background-color: v.$color-bg-surface;
     color: v.$color-text-body;
     border-color: v.$color-border;
@@ -58,6 +58,13 @@ header {
       color: v.$color-text-heading;
     }
 
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .btn-toggle-filters {
     &--active {
       background-color: v.$color-primary-bg;
       color: v.$color-primary;
