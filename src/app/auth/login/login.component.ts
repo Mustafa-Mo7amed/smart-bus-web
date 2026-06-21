@@ -73,9 +73,13 @@ export class LoginComponent implements OnInit {
     this.authService.login(loginData)
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
-        next: (response) => {
-          console.log('Login successful, navigating to:', this.returnUrl);
-          this.router.navigateByUrl(this.returnUrl);
+        next: () => {
+          let targetUrl = this.returnUrl;
+          const user = this.authService.currentUser();
+          if ((targetUrl === '/' || targetUrl === '/overview') && user?.roles === 'Admin') {
+            targetUrl = '/users';
+          }
+          this.router.navigateByUrl(targetUrl);
         },
         error: (err) => {
           console.error('Login failed:', err);

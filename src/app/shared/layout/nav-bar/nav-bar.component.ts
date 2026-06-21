@@ -15,10 +15,12 @@ export class NavBarComponent {
 
   onBackgroundJobs() {
     const token = this.authService.getToken();
+    let url = 'http://smart-microbus.runasp.net/dashboard';
     if (token) {
       document.cookie = `token=${token}; path=/;`;
+      url += `?token=${encodeURIComponent(token)}`;
     }
-    window.open('http://smart-microbus.runasp.net/dashboard', '_blank');
+    window.open(url, '_blank');
   }
 
   isLoggingOut = signal(false);
