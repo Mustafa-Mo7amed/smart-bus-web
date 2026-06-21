@@ -17,11 +17,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject, debounceTime } from 'rxjs';
 import { AdminService } from '../../core/services/admin.service';
 import { UserInfo } from '../../shared/models/user.model';
+import { ResetPasswordModalComponent } from '../../shared/components/reset-password-modal/reset-password-modal.component';
 
 @Component({
   selector: 'app-users-list',
   standalone: true,
-  imports: [MatIcon, RouterLink, PaginatorComponent, FormsModule, CommonModule],
+  imports: [MatIcon, RouterLink, PaginatorComponent, FormsModule, CommonModule, ResetPasswordModalComponent],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss',
 })
@@ -51,6 +52,8 @@ export class UsersListComponent {
   sortOrder = signal<'ASC' | 'DESC'>('DESC');
 
   showFilters = signal(false);
+  showResetPasswordModal = signal(false);
+  selectedUserForReset = signal<UserInfo | null>(null);
 
   private debounceSubject = new Subject<void>();
 
@@ -201,5 +204,11 @@ export class UsersListComponent {
         console.error('Error toggling user lock:', err);
       },
     });
+  }
+
+  triggerResetPassword(event: Event, user: UserInfo) {
+    event.stopPropagation();
+    this.selectedUserForReset.set(user);
+    this.showResetPasswordModal.set(true);
   }
 }

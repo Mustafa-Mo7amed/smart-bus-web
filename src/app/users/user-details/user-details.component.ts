@@ -5,11 +5,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { ResetPasswordModalComponent } from '../../shared/components/reset-password-modal/reset-password-modal.component';
 
 @Component({
   selector: 'app-user-details',
   standalone: true,
-  imports: [MatIconModule, CommonModule],
+  imports: [MatIconModule, CommonModule, ResetPasswordModalComponent],
   templateUrl: './user-details.component.html',
   styleUrl: './user-details.component.scss',
 })
@@ -22,6 +23,7 @@ export class UserDetailsComponent implements OnInit {
 
   user = signal<UserInfo | null>(null);
   isLoading = signal(false);
+  showResetPasswordModal = signal(false);
 
   ngOnInit() {
     this.fetchUserDetails();

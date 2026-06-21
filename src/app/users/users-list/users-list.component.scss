@@ -432,3 +432,40 @@ header {
     }
   }
 }
+
+.actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.btn-action-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 3.2rem;
+  padding: 0 1.2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: v.$radius-md;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all v.$transition-fast;
+  background-color: v.$color-bg-surface;
+  box-shadow: v.$shadow-sm;
+  color: v.$color-text-body;
+  border-color: v.$color-border;
+  font-family: inherit;
+
+  mat-icon {
+    font-size: 1.6rem;
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  &:hover {
+    background-color: rgba(37, 99, 235, 0.05);
+    border-color: rgba(37, 99, 235, 0.3);
+    color: v.$color-primary;
+  }
+}

@@ -156,6 +156,36 @@
   margin-top: 1.2rem;
   display: flex;
   justify-content: flex-end;
+  gap: 1.2rem;
+}
+
+.btn-reset-password {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  height: 4.6rem;
+  padding: 0 2.4rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-radius: v.$radius-md;
+  border: 1px solid v.$color-primary;
+  color: v.$color-primary;
+  cursor: pointer;
+  transition: all v.$transition-fast;
+  background-color: transparent;
+  box-shadow: v.$shadow-sm;
+  font-family: inherit;
+
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  &:hover {
+    background-color: rgba(37, 99, 235, 0.08);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
 }
 
 .btn-toggle-lock {

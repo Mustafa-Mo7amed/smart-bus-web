@@ -133,7 +133,7 @@
                   {{ user.isActive ? 'Active' : 'Locked' }}
                 </span>
               </td>
-              <td>
+              <td class="actions-cell">
                 <button 
                   class="btn-action-lock" 
                   [class.btn-action-lock--active]="user.isActive"
@@ -142,6 +142,14 @@
                 >
                   <mat-icon>{{ user.isActive ? 'lock' : 'lock_open' }}</mat-icon>
                   <span>{{ user.isActive ? 'Lock' : 'Unlock' }}</span>
+                </button>
+                <button 
+                  class="btn-action-reset" 
+                  (click)="triggerResetPassword($event, user)"
+                  title="Reset Password"
+                >
+                  <mat-icon>lock_reset</mat-icon>
+                  <span>Reset</span>
                 </button>
               </td>
             </tr>
@@ -164,4 +172,15 @@
     [pageSizeOptions]="pageSizeOptions()"
     [isLoading]="isLoading()"
     (pageChange)="onPageChange($event)" />
+
+  @if (selectedUserForReset()) {
+    <app-reset-password-modal
+      [show]="showResetPasswordModal()"
+      [userId]="selectedUserForReset()!.id"
+      [displayName]="selectedUserForReset()!.displayName"
+      [phoneNumber]="selectedUserForReset()!.phoneNumber"
+      (close)="showResetPasswordModal.set(false)"
+      (success)="showResetPasswordModal.set(false)"
+    />
+  }
 </div>

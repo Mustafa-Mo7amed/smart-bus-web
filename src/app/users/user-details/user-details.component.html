@@ -62,8 +62,24 @@
           <mat-icon>{{ user()?.isActive ? 'lock' : 'lock_open' }}</mat-icon>
           <span>{{ user()?.isActive ? 'Lock User Account' : 'Unlock User Account' }}</span>
         </button>
+        <button 
+          class="btn-reset-password" 
+          (click)="showResetPasswordModal.set(true)"
+        >
+          <mat-icon>lock_reset</mat-icon>
+          <span>Reset Password</span>
+        </button>
       </div>
     </div>
+
+    <app-reset-password-modal
+      [show]="showResetPasswordModal()"
+      [userId]="user()!.id"
+      [displayName]="user()!.displayName"
+      [phoneNumber]="user()!.phoneNumber"
+      (close)="showResetPasswordModal.set(false)"
+      (success)="showResetPasswordModal.set(false)"
+    />
   } @else {
     <div class="error-container">
       <mat-icon class="error-icon">error_outline</mat-icon>
