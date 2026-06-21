@@ -14,6 +14,7 @@ import { RouteService } from '../../core/services/route.service';
 import { RouteDetailed } from '../../shared/models/route.model';
 import { AddBusRequest } from '../../shared/models/bus.model';
 import { BusService } from '../../core/services/bus.service';
+import { Router } from '@angular/router';
 
 export function plateNumberValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
@@ -50,6 +51,7 @@ export function plateNumberValidator(control: AbstractControl): ValidationErrors
 export class AddBusComponent implements OnInit {
   private readonly routeService = inject(RouteService);
   private readonly busService = inject(BusService);
+  private readonly router = inject(Router);
 
   private _routes = signal<RouteDetailed[] | null>(null);
   public routes = this._routes.asReadonly();
@@ -172,7 +174,10 @@ export class AddBusComponent implements OnInit {
         this.form.reset();
         this.submitted.set(false);
         this.clearPlateSignals();
-        setTimeout(() => this.successMessage.set(''), 3000);
+        setTimeout(() => {
+          this.successMessage.set('');
+          this.goBack();
+        }, 2000);
         console.log(this.successMessage());
         console.log(response);
       },
@@ -200,5 +205,9 @@ export class AddBusComponent implements OnInit {
     this.successMessage.set('');
     this.errorMessage.set('');
     this.clearPlateSignals();
+  }
+
+  goBack() {
+    this.router.navigate(['/buses']);
   }
 }

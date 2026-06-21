@@ -78,6 +78,13 @@ export const routes: Routes = [
             loadComponent: () =>
               import('../app/buses/add-bus/add-bus.component').then((m) => m.AddBusComponent),
           },
+          {
+            path: 'details/:busId',
+            loadComponent: () =>
+              import('../app/buses/bus-details/bus-details.component').then(
+                (m) => m.BusDetailsComponent,
+              ),
+          },
         ],
       },
       {
