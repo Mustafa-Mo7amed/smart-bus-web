@@ -442,7 +442,7 @@
     border-color: rgba(239, 68, 68, 0.15);
   }
 
-  &--resolved {
+  &--reviewed {
     background-color: #fafbfc;
     border-color: v.$color-border-light;
     opacity: 0.8;
@@ -489,10 +489,10 @@
   justify-content: flex-end;
   margin-top: 0.4rem;
 
-  .resolve-btn {
+  .review-btn {
     border: none;
-    background-color: #fef2f2;
-    color: v.$color-error;
+    background-color: rgba(0, 194, 168, 0.08);
+    color: v.$color-secondary;
     border-radius: v.$radius-sm;
     padding: 0.6rem 1.2rem;
     font-size: 1.2rem;
@@ -510,13 +510,13 @@
     }
 
     &:hover {
-      background-color: v.$color-error;
+      background-color: v.$color-secondary;
       color: #fff;
     }
   }
 }
 
-.report-resolved-banner {
+.report-reviewed-banner {
   display: flex;
   align-items: center;
   gap: 0.6rem;

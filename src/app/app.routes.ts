@@ -173,6 +173,25 @@ export const routes: Routes = [
               import('../app/stations/save-station/save-station.component').then(
                 (m) => m.SaveStationComponent,
               ),
+        path: 'staff',
+        loadComponent: () => import('../app/staff/staff.component').then((m) => m.StaffComponent),
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('../app/staff/staff-list/staff-list.component').then(
+                (m) => m.StaffListComponent,
+              ),
+          },
+          {
+            path: 'add-staff',
+            loadComponent: () =>
+              import('../app/staff/add-staff/add-staff.component').then((m) => m.AddStaffComponent),
+          },
+          {
+            path: 'update-staff/:staffId',
+            loadComponent: () =>
+              import('../app/staff/update-staff/update-staff.component').then((m) => m.UpdateStaffComponent),
           },
         ],
       },

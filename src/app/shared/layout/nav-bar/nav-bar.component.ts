@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { AuthService } from '../../../core/services/auth.service';
@@ -21,14 +21,23 @@ export class NavBarComponent {
     window.open('http://smart-microbus.runasp.net/dashboard', '_blank');
   }
 
+  isLoggingOut = signal(false);
+
   onLogout() {
+    if (this.isLoggingOut()) return;
+    this.isLoggingOut.set(true);
+
     this.authService.logout().subscribe({
       next: () => {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/login']).then(() => {
+          this.isLoggingOut.set(false);
+        });
       },
       error: () => {
         this.authService.clearSession();
-        this.router.navigate(['/login']);
+        this.router.navigate(['/login']).then(() => {
+          this.isLoggingOut.set(false);
+        });
       }
     });
   }

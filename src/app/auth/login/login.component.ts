@@ -4,6 +4,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { LoginRequest } from '../../shared/models/auth.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
 
 function phoneValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
@@ -18,7 +19,7 @@ function phoneValidator(control: AbstractControl): ValidationErrors | null {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatIconModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -30,6 +31,7 @@ export class LoginComponent implements OnInit {
   returnUrl: string = '/';
   isLoading = signal(false);
   errorMessage = signal('');
+  showPassword = signal(false);
 
   form = new FormGroup({
     phoneNumber: new FormControl('', {
