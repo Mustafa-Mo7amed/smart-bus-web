@@ -133,9 +133,7 @@ export class UserDetailsComponent implements OnInit {
     this.showUpdateManagerModal.set(false);
     this.user.update(current => current ? {
       ...current,
-      displayName: event.displayName,
-      stationId: event.stationId,
-      stationName: event.stationName || current.stationName
+      displayName: event.displayName
     } : null);
     this.fetchUserDetails();
   }
