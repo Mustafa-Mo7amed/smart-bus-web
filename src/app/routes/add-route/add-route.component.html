@@ -32,80 +32,6 @@
     <form class="route-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
       
       <div class="form-row">
-        <!-- To (Arabic) -->
-        <div class="form-group" [class.form-group--error]="submitted() && form.get('toAr')?.invalid">
-          <label class="form-label" for="toAr">To (Arabic)</label>
-          <div class="input-wrapper" dir="rtl">
-            <svg
-              class="input-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              width="18"
-              height="18"
-            >
-              <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6h-5.6z" />
-            </svg>
-            <input
-              id="toAr"
-              class="form-input"
-              type="text"
-              placeholder="مثال: التجمع الخامس"
-              formControlName="toAr"
-              [readonly]="isSubmitting()"
-            />
-          </div>
-          @if (submitted() && form.get('toAr')?.invalid) {
-            @if (form.get('toAr')?.hasError('required')) {
-              <span class="form-error">Destination in Arabic is required</span>
-            } @else if (form.get('toAr')?.hasError('maxlength')) {
-              <span class="form-error">Destination in Arabic must be at most 100 characters long</span>
-            } @else if (form.get('toAr')?.hasError('pattern')) {
-              <span class="form-error">Destination in Arabic must contain only Arabic characters</span>
-            } @else if (form.get('toAr')?.hasError('serverError')) {
-              <span class="form-error">{{ form.get('toAr')?.getError('serverError') }}</span>
-            }
-          }
-        </div>
-
-        <!-- To (English) -->
-        <div class="form-group" [class.form-group--error]="submitted() && form.get('toEn')?.invalid">
-          <label class="form-label" for="toEn">To (English)</label>
-          <div class="input-wrapper">
-            <svg
-              class="input-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              width="18"
-              height="18"
-            >
-              <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6h-5.6z" />
-            </svg>
-            <input
-              id="toEn"
-              class="form-input"
-              type="text"
-              placeholder="Example: New Cairo"
-              formControlName="toEn"
-              [readonly]="isSubmitting()"
-            />
-          </div>
-          @if (submitted() && form.get('toEn')?.invalid) {
-            @if (form.get('toEn')?.hasError('required')) {
-              <span class="form-error">Destination in English is required</span>
-            } @else if (form.get('toEn')?.hasError('maxlength')) {
-              <span class="form-error">Destination in English must be at most 100 characters long</span>
-            } @else if (form.get('toEn')?.hasError('pattern')) {
-              <span class="form-error">Destination in English must contain only English characters</span>
-            } @else if (form.get('toEn')?.hasError('serverError')) {
-              <span class="form-error">{{ form.get('toEn')?.getError('serverError') }}</span>
-            }
-          }
-        </div>
-      </div>
-
-      <div class="form-row">
         <!-- Price (EGP) -->
         <div class="form-group" [class.form-group--error]="submitted() && form.get('price')?.invalid">
           <label class="form-label" for="price">Price (EGP)</label>
@@ -173,6 +99,41 @@
               <span class="form-error">Distance must be a positive number</span>
             } @else if (form.get('distanceKm')?.hasError('serverError')) {
               <span class="form-error">{{ form.get('distanceKm')?.getError('serverError') }}</span>
+            }
+          }
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Destination Station -->
+        <div class="form-group" [class.form-group--error]="submitted() && form.get('toStationId')?.invalid">
+          <label class="form-label" for="toStationId">Destination Station</label>
+          <div class="input-wrapper">
+            <svg
+              class="input-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              width="18"
+              height="18"
+            >
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            </svg>
+            <select
+              id="toStationId"
+              class="form-input"
+              formControlName="toStationId"
+              [disabled]="isSubmitting()"
+            >
+              <option value="">Select a destination station</option>
+              @for (station of stations(); track station.id) {
+                <option [value]="station.id">{{ station.name }} - {{ station.city }}</option>
+              }
+            </select>
+          </div>
+          @if (submitted() && form.get('toStationId')?.invalid) {
+            @if (form.get('toStationId')?.hasError('required')) {
+              <span class="form-error">Destination station is required</span>
             }
           }
         </div>
