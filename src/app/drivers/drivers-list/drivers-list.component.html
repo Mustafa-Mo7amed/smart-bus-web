@@ -29,7 +29,7 @@
   <!-- Filters Panel -->
   <div class="filters-panel" [class.filters-panel--collapsed]="!showFilters()">
     <div class="filter-group">
-      <label for="searchFilter">Search string (query)</label>
+      <label for="searchFilter">Search</label>
       <input
         id="searchFilter"
         type="text"
@@ -40,7 +40,7 @@
     </div>
 
     <div class="filter-group">
-      <label for="sortByFilter">SortBy (query)</label>
+      <label for="sortByFilter">Sort By</label>
       <select
         id="sortByFilter"
         [ngModel]="sortBy()"
@@ -54,14 +54,14 @@
     </div>
 
     <div class="filter-group">
-      <label for="sortOrderFilter">SortOrder (query)</label>
+      <label for="sortOrderFilter">Sort Order</label>
       <select
         id="sortOrderFilter"
         [ngModel]="sortOrder()"
         (ngModelChange)="sortOrder.set($event); onFilterChange()"
       >
-        <option value="DESC">DESC</option>
-        <option value="ASC">ASC</option>
+        <option value="DESC">Descending</option>
+        <option value="ASC">Ascending</option>
       </select>
     </div>
   </div>

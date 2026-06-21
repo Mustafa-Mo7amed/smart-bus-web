@@ -29,7 +29,7 @@
   <!-- Filters Panel -->
   <div class="filters-panel" [class.filters-panel--collapsed]="!showFilters()">
     <div class="filter-group">
-      <label for="searchFilter">Search string (query)</label>
+      <label for="searchFilter">Search</label>
       <input
         id="searchFilter"
         type="text"
@@ -40,7 +40,7 @@
     </div>
 
     <div class="filter-group">
-      <label for="sortByFilter">SortBy string (query)</label>
+      <label for="sortByFilter">Sort By</label>
       <select
         id="sortByFilter"
         [ngModel]="sortBy()"
@@ -54,19 +54,19 @@
     </div>
 
     <div class="filter-group">
-      <label for="sortOrderFilter">SortOrder string (query)</label>
+      <label for="sortOrderFilter">Sort Order</label>
       <select
         id="sortOrderFilter"
         [ngModel]="sortOrder()"
         (ngModelChange)="sortOrder.set($event); onFilterChange()"
       >
-        <option value="DESC">DESC</option>
-        <option value="ASC">ASC</option>
+        <option value="DESC">Descending</option>
+        <option value="ASC">Ascending</option>
       </select>
     </div>
 
     <div class="filter-group">
-      <label for="minPriceFilter">MinPrice number (query)</label>
+      <label for="minPriceFilter">Min Price</label>
       <input
         id="minPriceFilter"
         type="number"
@@ -77,7 +77,7 @@
     </div>
 
     <div class="filter-group">
-      <label for="maxPriceFilter">MaxPrice number (query)</label>
+      <label for="maxPriceFilter">Max Price</label>
       <input
         id="maxPriceFilter"
         type="number"
@@ -88,7 +88,7 @@
     </div>
 
     <div class="filter-group">
-      <label for="minDistanceFilter">MinDistance number (query)</label>
+      <label for="minDistanceFilter">Min Distance</label>
       <input
         id="minDistanceFilter"
         type="number"
@@ -99,7 +99,7 @@
     </div>
 
     <div class="filter-group">
-      <label for="maxDistanceFilter">MaxDistance number (query)</label>
+      <label for="maxDistanceFilter">Max Distance</label>
       <input
         id="maxDistanceFilter"
         type="number"
