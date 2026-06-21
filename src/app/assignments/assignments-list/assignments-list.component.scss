@@ -5,7 +5,84 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 3.2rem;
+  margin-bottom: 2.4rem;
+
+  .title-section {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .btn-toggle-filters, .btn-clear-filters {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    height: 4rem;
+    padding: 0 1.6rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-radius: v.$radius-md;
+    cursor: pointer;
+    transition: all v.$transition-fast;
+    font-family: inherit;
+    border: 1px solid transparent;
+
+    mat-icon {
+      font-size: 2rem;
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  .btn-toggle-filters {
+    background-color: v.$color-bg-surface;
+    color: v.$color-text-body;
+    border-color: v.$color-border;
+    box-shadow: v.$shadow-sm;
+
+    &:hover {
+      background-color: v.$color-bg-input;
+      border-color: v.$color-text-placeholder;
+      color: v.$color-text-heading;
+    }
+
+    &--active {
+      background-color: v.$color-primary-bg;
+      color: v.$color-primary;
+      border-color: v.$color-primary-light;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .filters-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: v.$color-primary;
+      color: white;
+      min-width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 0 0.4rem;
+    }
+  }
+
+  .btn-clear-filters {
+    background: none;
+    color: v.$color-text-muted;
+
+    &:hover {
+      color: v.$color-error;
+      background-color: rgba(239, 68, 68, 0.05);
+    }
+  }
 }
 
 .title {
@@ -14,13 +91,22 @@ header {
   color: v.$color-text-heading;
 }
 
+.report-badge {
+  background-color: v.$color-primary-bg;
+  color: v.$color-primary;
+  padding: 0.6rem 1.4rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-radius: v.$radius-full;
+}
+
 .register-driver-btn {
   border: none;
   border-radius: v.$radius-md;
   background-color: v.$color-primary;
   color: v.$color-bg-surface;
-  padding: 1.4rem 2.8rem;
-  font-size: 1.6rem;
+  padding: 1.2rem 2.4rem;
+  font-size: 1.4rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color v.$transition-fast;
@@ -30,31 +116,68 @@ header {
   }
 }
 
-.search-container {
-  display: flex;
-  align-items: center;
+// --- Filters Panel -------------------------------------------
+.filters-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+  gap: 1.6rem;
   background-color: v.$color-bg-surface;
-  border: 1px solid v.$color-border-light;
-  border-radius: v.$radius-md;
-  padding: 1rem 1.6rem;
-  margin-bottom: 2.4rem;
+  padding: 2rem;
+  border-radius: v.$radius-lg;
   box-shadow: v.$shadow-sm;
+  border: 1px solid v.$color-border-light;
+  margin-bottom: 2.4rem;
 
-  .search-icon {
-    color: v.$color-text-muted;
-    margin-right: 1.2rem;
+  // Animation properties
+  max-height: 500px;
+  opacity: 1;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s ease-in-out,
+              padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              margin 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.2s ease-in-out;
+
+  &.filters-panel--collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: -2.4rem;
+    margin-bottom: 2.4rem;
+    border-color: transparent;
+    pointer-events: none;
   }
 
-  .search-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    font-size: 1.6rem;
-    color: v.$color-text-body;
-    background: transparent;
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
 
-    &::placeholder {
+    label {
+      font-size: 1.2rem;
+      font-weight: 600;
       color: v.$color-text-muted;
+    }
+
+    input, select {
+      height: 4.2rem;
+      padding: 0 1.2rem;
+      font-size: 1.4rem;
+      font-family: inherit;
+      color: v.$color-text-body;
+      background-color: v.$color-bg-input;
+      border: 1px solid transparent;
+      border-radius: v.$radius-md;
+      transition: all v.$transition-fast;
+      outline: none;
+      width: 100%;
+
+      &:focus {
+        background-color: v.$color-bg-surface;
+        border-color: v.$color-primary-light;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
     }
   }
 }
@@ -62,18 +185,12 @@ header {
 // --- Table wrapper ------------------------------------------
 .drivers-table-wrapper {
   width: 100%;
-  max-height: 70vh;
-  overflow-y: auto;
-  border-radius: v.$radius-md;
+  border-radius: v.$radius-md v.$radius-md 0 0;
   background-color: v.$color-bg-surface;
-  box-shadow: v.$shadow-md;
+  box-shadow: v.$shadow-sm;
   border: 1px solid v.$color-border-light;
-
-  // Hide scrollbar
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  border-bottom: none;
+  overflow: hidden;
 }
 
 // --- Table --------------------------------------------------
@@ -115,10 +232,6 @@ header {
     &:last-child {
       border-bottom: none;
     }
-
-    &:hover {
-      background-color: v.$table-row-hover;
-    }
   }
 
   td {
@@ -126,11 +239,6 @@ header {
     font-size: 1.6rem;
     height: 7.5rem;
     color: v.$color-text-body;
-    vertical-align: middle;
-  }
-
-  .actions-cell {
-    text-align: right;
   }
 }
 
@@ -167,22 +275,20 @@ header {
   }
 }
 
-// --- Icons / Buttons ----------------------------------------
-.btn-icon {
-  background: none;
-  border: none;
-  padding: 0.8rem;
-  border-radius: 50%;
-  color: v.$color-text-muted;
-  cursor: pointer;
-  transition: all v.$transition-fast;
-  display: flex;
+// --- Status Badge -------------------------------------------
+.status-badge {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  padding: 0.4rem 1.2rem;
+  border-radius: v.$radius-full;
+  font-size: 1.2rem;
+  font-weight: 600;
+  background-color: v.$color-border-light;
+  color: v.$color-text-muted;
 
-  &:hover {
-    background-color: v.$color-bg-input;
-    color: v.$color-text-heading;
+  &.unassigned {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: v.$color-error;
   }
 }
 

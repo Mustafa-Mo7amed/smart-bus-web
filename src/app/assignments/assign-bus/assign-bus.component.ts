@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
+import { Router } from '@angular/router';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { plateNumberValidator } from '../../buses/add-bus/add-bus.component';
 import { licenseNumberValidator } from '../../drivers/add-driver/add-driver.component';
@@ -13,6 +14,8 @@ import { licenseNumberValidator } from '../../drivers/add-driver/add-driver.comp
   styleUrl: './assign-bus.component.scss'
 })
 export class AssignBusComponent {
+  private readonly router = inject(Router);
+
   form = new FormGroup({
     licenseNumber: new FormControl('', {
       validators: [Validators.required, Validators.maxLength(14), licenseNumberValidator],
@@ -123,5 +126,9 @@ export class AssignBusComponent {
 
   printQR() {
     window.print();
+  }
+
+  goBack() {
+    this.router.navigate(['/assignments']);
   }
 }
