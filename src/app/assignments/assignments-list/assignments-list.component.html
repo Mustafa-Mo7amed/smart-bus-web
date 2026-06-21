@@ -1,68 +1,126 @@
-<header>
-  <h1 class="title">Bus Assignments</h1>
-  <button class="register-driver-btn" routerLink="assign-bus">
-    Assign bus to driver
-  </button>
-</header>
-
-<div class="search-container">
-  <mat-icon class="search-icon">search</mat-icon>
-  <input 
-    type="text" 
-    class="search-input" 
-    placeholder="Search by name, license, or plate number..." 
-    [(ngModel)]="searchQuery" 
-    (ngModelChange)="searchQuery.set($event)">
-</div>
-
-<div class="drivers-table-wrapper">
-  <table class="drivers-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>License Number</th>
-        <th>Plate Number</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      @if (isLoading()) {
-        <tr>
-          <td colspan="4" class="spinner-cell">
-            <div class="spinner-container">
-              <span class="spinning-loader"></span>
-              <p class="loading-text">Fetching assignments...</p>
-            </div>
-          </td>
-        </tr>
-      } @else {
-        @for (assignment of assignments(); track assignment.id) {
-          <tr>
-            <td class="table-driver">
-              <div class="table-driver-icon-wrapper">
-                <mat-icon>person</mat-icon>
-              </div>
-              <div>
-                <p class="driver-name">{{ assignment.name }}</p>
-                <p class="driver-id">ID: {{ assignment.id }}</p>
-              </div>
-            </td>
-            <td>{{ assignment.licenseNumber }}</td>
-            <td>{{ assignment.plateNumber }}</td>
-            <td class="actions-cell">
-              <button class="btn-icon">
-                <mat-icon>more_vert</mat-icon>
-              </button>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="4" class="no-drivers">
-              <p>No Assignments Found</p>
-            </td>
-          </tr>
-        }
+<div class="container">
+  <header>
+    <div class="title-section">
+      <h1 class="title">Bus Assignments</h1>
+      <span class="report-badge">{{ totalCount() }} Total</span>
+    </div>
+    <div class="header-actions">
+      @if (activeFiltersCount() > 0) {
+        <button class="btn-clear-filters" (click)="resetFilters()">
+          <mat-icon>clear_all</mat-icon>
+          <span>Clear Filters</span>
+        </button>
       }
-    </tbody>
-  </table>
+      <button
+        class="btn-toggle-filters"
+        [class.btn-toggle-filters--active]="showFilters()"
+        (click)="showFilters.set(!showFilters())"
+      >
+        <mat-icon>{{ showFilters() ? 'expand_less' : 'filter_list' }}</mat-icon>
+        <span>{{ showFilters() ? 'Hide Filters' : 'Filters' }}</span>
+        @if (activeFiltersCount() > 0) {
+          <span class="filters-badge">{{ activeFiltersCount() }}</span>
+        }
+      </button>
+      <button class="register-driver-btn" routerLink="assign-bus">Assign bus to driver</button>
+    </div>
+  </header>
+
+  <!-- Filters Panel -->
+  <div class="filters-panel" [class.filters-panel--collapsed]="!showFilters()">
+    <div class="filter-group">
+      <label for="searchQueryFilter">Search Query</label>
+      <input
+        id="searchQueryFilter"
+        type="text"
+        placeholder="Search by name or plate number..."
+        [ngModel]="searchQuery()"
+        (ngModelChange)="updateDebouncedField($event)"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="sortByFilter">Sort By</label>
+      <select
+        id="sortByFilter"
+        [ngModel]="sortBy()"
+        (ngModelChange)="sortBy.set($event); onFilterChange()"
+      >
+        <option [ngValue]="null">--</option>
+        <option [ngValue]="DriverSortBy.DriverName">Driver Name</option>
+        <option [ngValue]="DriverSortBy.PlateNumber">Plate Number</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="sortOrderFilter">Sort Order</label>
+      <select
+        id="sortOrderFilter"
+        [ngModel]="sortOrder()"
+        (ngModelChange)="sortOrder.set($event); onFilterChange()"
+      >
+        <option value="DESC">Descending</option>
+        <option value="ASC">Ascending</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="drivers-table-wrapper">
+    <table class="drivers-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>License Number</th>
+          <th>Plate Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (isLoading()) {
+          <tr>
+            <td colspan="3" class="spinner-cell">
+              <div class="spinner-container">
+                <span class="spinning-loader"></span>
+                <p class="loading-text">Fetching assignments...</p>
+              </div>
+            </td>
+          </tr>
+        } @else {
+          @for (assignment of assignments(); track assignment.id) {
+            <tr>
+              <td class="table-driver">
+                <div class="table-driver-icon-wrapper">
+                  <mat-icon>person</mat-icon>
+                </div>
+                <div>
+                  <p class="driver-name">{{ assignment.name }}</p>
+                </div>
+              </td>
+              <td>{{ assignment.licenseNumber }}</td>
+              <td>
+                @if (assignment.plateNumber) {
+                  <span class="plate-number-value">{{ assignment.plateNumber }}</span>
+                } @else {
+                  <span class="status-badge unassigned">Unassigned</span>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="3" class="no-drivers">
+                <p>No Assignments Found</p>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <app-paginator
+    [totalCount]="totalCount()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="pageSize()"
+    [pageSizeOptions]="pageSizeOptions()"
+    [isLoading]="isLoading()"
+    (pageChange)="onPageChange($event)" />
 </div>

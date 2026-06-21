@@ -1,154 +1,161 @@
-<div class="form-card">
-  <div class="form-card__header">
-    <div class="form-card__icon-wrap">
-      <mat-icon>assignment</mat-icon>
+<div class="container">
+  <button class="back-link" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+    <span>Back to Assignments</span>
+  </button>
+
+  <div class="form-card">
+    <div class="form-card__header">
+      <div class="form-card__icon-wrap">
+        <mat-icon>assignment</mat-icon>
+      </div>
+      <div>
+        <h2 class="form-card__title">Assign Bus to Driver</h2>
+        <p class="form-card__subtitle">Fill in the details to generate a bus assignment QR code</p>
+      </div>
     </div>
-    <div>
-      <h2 class="form-card__title">Assign Bus to Driver</h2>
-      <p class="form-card__subtitle">Fill in the details to generate a bus assignment QR code</p>
-    </div>
+
+    <form class="driver-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-row">
+        <div class="form-group" [class.form-group--error]="submitted() && form.get('licenseNumber')?.invalid">
+          <label class="form-label" for="license-number">License Number</label>
+          <div class="input-wrapper">
+            <input id="license-number" class="form-input form-input--license" type="text" placeholder="e.g. DL-12345" formControlName="licenseNumber" />
+          </div>
+          @if (submitted() && form.get('licenseNumber')?.invalid) {
+            @if (form.get('licenseNumber')?.hasError('required')) {
+              <span class="form-error">License number is required</span>
+            } @else if (form.get('licenseNumber')?.hasError('maxlength')) {
+              <span class="form-error">License number must not exceed 14 characters</span>
+            } @else if (
+              form.get('licenseNumber')?.hasError('invalidLicenseNumber') ||
+              form.get('licenseNumber')?.hasError('invalidBirthDate')
+            ) {
+              <span class="form-error">License number is not valid</span>
+            }
+          }
+        </div>
+
+        <div
+          class="form-group form-group--plate"
+          [class.form-group--error]="submitted() && form.get('plateNumber')?.invalid"
+        >
+          <label class="form-label">Plate Number</label>
+          
+          <!-- Hidden input to keep Angular form control bound -->
+          <input type="hidden" formControlName="plateNumber" />
+
+          <div class="plate-inputs-container">
+            <!-- Numbers Group (Left side of the plate) -->
+            <div class="plate-inputs-group plate-inputs-group--numbers">
+              <input
+                #n1
+                type="text"
+                maxlength="1"
+                placeholder="•"
+                [value]="num1()"
+                class="plate-input plate-input--digit"
+                (input)="onInput($event, 'num1', n1, n2)"
+                (keydown)="onKeydown($event, n1, null, n2)"
+              />
+              <input
+                #n2
+                type="text"
+                maxlength="1"
+                placeholder="•"
+                [value]="num2()"
+                class="plate-input plate-input--digit"
+                (input)="onInput($event, 'num2', n2, n3)"
+                (keydown)="onKeydown($event, n2, n1, n3)"
+              />
+              <input
+                #n3
+                type="text"
+                maxlength="1"
+                placeholder="•"
+                [value]="num3()"
+                class="plate-input plate-input--digit"
+                (input)="onInput($event, 'num3', n3, n4)"
+                (keydown)="onKeydown($event, n3, n2, n4)"
+              />
+              <input
+                #n4
+                type="text"
+                maxlength="1"
+                placeholder="•"
+                [value]="num4()"
+                class="plate-input plate-input--digit"
+                (input)="onInput($event, 'num4', n4, l1)"
+                (keydown)="onKeydown($event, n4, n3, l1)"
+              />
+            </div>
+
+            <!-- Decorative Divider in the middle -->
+            <div class="plate-divider"></div>
+
+            <!-- Arabic Letters Group (Right side of the plate) -->
+            <div class="plate-inputs-group plate-inputs-group--letters">
+              <!-- Visual RTL display: l3 is leftmost letter, l2 is middle, l1 is rightmost letter -->
+              <input
+                #l3
+                type="text"
+                maxlength="1"
+                placeholder="•"
+                [value]="let3()"
+                class="plate-input plate-input--letter"
+                (input)="onInput($event, 'let3', l3, null)"
+                (keydown)="onKeydown($event, l3, l2, null)"
+              />
+              <input
+                #l2
+                type="text"
+                maxlength="1"
+                placeholder="•"
+                [value]="let2()"
+                class="plate-input plate-input--letter"
+                (input)="onInput($event, 'let2', l2, l3)"
+                (keydown)="onKeydown($event, l2, l1, l3)"
+              />
+              <input
+                #l1
+                type="text"
+                maxlength="1"
+                placeholder="•"
+                [value]="let1()"
+                class="plate-input plate-input--letter"
+                (input)="onInput($event, 'let1', l1, l2)"
+                (keydown)="onKeydown($event, l1, n4, l2)"
+              />
+            </div>
+          </div>
+
+          @if (submitted() && form.get('plateNumber')?.invalid) {
+            @if (form.get('plateNumber')?.hasError('required')) {
+              <span class="form-error">Plate Number is required</span>
+            } @else if (form.get('plateNumber')?.hasError('invalidEgyptianPlate')) {
+              <span class="form-error">Invalid Egyptian license plate format (e.g., أ ب ج 123 or أ ب 1234)</span>
+            }
+          }
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn--secondary" (click)="onReset()">Reset</button>
+        <button type="submit" class="btn btn--primary">Assign Bus</button>
+      </div>
+    </form>
+
+    @if (qrData()) {
+      <div class="qr-container">
+        <div class="qr-divider"></div>
+        <h3 class="qr-title">Assignment QR Code</h3>
+        <div class="qr-code-wrapper">
+          <qrcode [qrdata]="qrData()!" [width]="256" [errorCorrectionLevel]="'Q'"></qrcode>
+        </div>
+        <button class="btn btn--primary print-btn" (click)="printQR()">
+          <mat-icon>print</mat-icon> Print QR Code
+        </button>
+      </div>
+    }
   </div>
-
-  <form class="driver-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-    <div class="form-row">
-      <div class="form-group" [class.form-group--error]="submitted() && form.get('licenseNumber')?.invalid">
-        <label class="form-label" for="license-number">License Number</label>
-        <div class="input-wrapper">
-          <input id="license-number" class="form-input form-input--license" type="text" placeholder="e.g. DL-12345" formControlName="licenseNumber" />
-        </div>
-        @if (submitted() && form.get('licenseNumber')?.invalid) {
-          @if (form.get('licenseNumber')?.hasError('required')) {
-            <span class="form-error">License number is required</span>
-          } @else if (form.get('licenseNumber')?.hasError('maxlength')) {
-            <span class="form-error">License number must not exceed 14 characters</span>
-          } @else if (
-            form.get('licenseNumber')?.hasError('invalidLicenseNumber') ||
-            form.get('licenseNumber')?.hasError('invalidBirthDate')
-          ) {
-            <span class="form-error">License number is not valid</span>
-          }
-        }
-      </div>
-
-      <div
-        class="form-group form-group--plate"
-        [class.form-group--error]="submitted() && form.get('plateNumber')?.invalid"
-      >
-        <label class="form-label">Plate Number</label>
-        
-        <!-- Hidden input to keep Angular form control bound -->
-        <input type="hidden" formControlName="plateNumber" />
-
-        <div class="plate-inputs-container">
-          <!-- Numbers Group (Left side of the plate) -->
-          <div class="plate-inputs-group plate-inputs-group--numbers">
-            <input
-              #n1
-              type="text"
-              maxlength="1"
-              placeholder="•"
-              [value]="num1()"
-              class="plate-input plate-input--digit"
-              (input)="onInput($event, 'num1', n1, n2)"
-              (keydown)="onKeydown($event, n1, null, n2)"
-            />
-            <input
-              #n2
-              type="text"
-              maxlength="1"
-              placeholder="•"
-              [value]="num2()"
-              class="plate-input plate-input--digit"
-              (input)="onInput($event, 'num2', n2, n3)"
-              (keydown)="onKeydown($event, n2, n1, n3)"
-            />
-            <input
-              #n3
-              type="text"
-              maxlength="1"
-              placeholder="•"
-              [value]="num3()"
-              class="plate-input plate-input--digit"
-              (input)="onInput($event, 'num3', n3, n4)"
-              (keydown)="onKeydown($event, n3, n2, n4)"
-            />
-            <input
-              #n4
-              type="text"
-              maxlength="1"
-              placeholder="•"
-              [value]="num4()"
-              class="plate-input plate-input--digit"
-              (input)="onInput($event, 'num4', n4, l1)"
-              (keydown)="onKeydown($event, n4, n3, l1)"
-            />
-          </div>
-
-          <!-- Decorative Divider in the middle -->
-          <div class="plate-divider"></div>
-
-          <!-- Arabic Letters Group (Right side of the plate) -->
-          <div class="plate-inputs-group plate-inputs-group--letters">
-            <!-- Visual RTL display: l3 is leftmost letter, l2 is middle, l1 is rightmost letter -->
-            <input
-              #l3
-              type="text"
-              maxlength="1"
-              placeholder="•"
-              [value]="let3()"
-              class="plate-input plate-input--letter"
-              (input)="onInput($event, 'let3', l3, null)"
-              (keydown)="onKeydown($event, l3, l2, null)"
-            />
-            <input
-              #l2
-              type="text"
-              maxlength="1"
-              placeholder="•"
-              [value]="let2()"
-              class="plate-input plate-input--letter"
-              (input)="onInput($event, 'let2', l2, l3)"
-              (keydown)="onKeydown($event, l2, l1, l3)"
-            />
-            <input
-              #l1
-              type="text"
-              maxlength="1"
-              placeholder="•"
-              [value]="let1()"
-              class="plate-input plate-input--letter"
-              (input)="onInput($event, 'let1', l1, l2)"
-              (keydown)="onKeydown($event, l1, n4, l2)"
-            />
-          </div>
-        </div>
-
-        @if (submitted() && form.get('plateNumber')?.invalid) {
-          @if (form.get('plateNumber')?.hasError('required')) {
-            <span class="form-error">Plate Number is required</span>
-          } @else if (form.get('plateNumber')?.hasError('invalidEgyptianPlate')) {
-            <span class="form-error">Invalid Egyptian license plate format (e.g., أ ب ج 123 or أ ب 1234)</span>
-          }
-        }
-      </div>
-    </div>
-
-    <div class="form-actions">
-      <button type="button" class="btn btn--secondary" (click)="onReset()">Reset</button>
-      <button type="submit" class="btn btn--primary">Assign Bus</button>
-    </div>
-  </form>
-
-  @if (qrData()) {
-    <div class="qr-container">
-      <div class="qr-divider"></div>
-      <h3 class="qr-title">Assignment QR Code</h3>
-      <div class="qr-code-wrapper">
-        <qrcode [qrdata]="qrData()!" [width]="256" [errorCorrectionLevel]="'Q'"></qrcode>
-      </div>
-      <button class="btn btn--primary print-btn" (click)="printQR()">
-        <mat-icon>print</mat-icon> Print QR Code
-      </button>
-    </div>
-  }
 </div>

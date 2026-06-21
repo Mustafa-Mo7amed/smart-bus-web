@@ -20,6 +20,7 @@ export interface GetDriverModel {
   driverId: string;
   driverName: string;
   plateNumber: string;
+  licenseNumber?: string;
 }
 
 export interface GetDriverResponse {
