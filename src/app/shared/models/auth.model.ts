@@ -16,7 +16,7 @@ export interface AuthResponse {
   statusCode: number;
 }
 
-export interface AuthUser{
+export interface AuthUser {
   id: string;
   displayName: string;
   isActive: string;
@@ -30,4 +30,21 @@ export interface AuthUser{
 export interface RefreshTokenRequest {
   token: string;
   refreshToken: string;
+}
+
+export interface VerifyOtpResponse {
+  data: {
+    token: string;
+    userId: string;
+  };
+  success: boolean;
+  message: string;
+  statusCode: number;
+}
+
+export interface ResetPasswordRequest {
+  userId: string;
+  token: string;
+  newPassword: string;
+  confirmPassword: string;
 }
