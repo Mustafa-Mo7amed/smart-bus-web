@@ -47,8 +47,18 @@
 
 <!-- Bottom Section -->
 <div class="nav-bottom">
-  <div class="nav-link-item nav-logout" (click)="onLogout()" id="nav-logout">
-    <mat-icon>logout</mat-icon>
-    <span>Logout</span>
+  <div
+    class="nav-link-item nav-logout"
+    [class.nav-logout--disabled]="isLoggingOut()"
+    (click)="onLogout()"
+    id="nav-logout"
+  >
+    @if (isLoggingOut()) {
+      <span class="spinner nav-logout-spinner"></span>
+      <span>Logging out...</span>
+    } @else {
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    }
   </div>
 </div>

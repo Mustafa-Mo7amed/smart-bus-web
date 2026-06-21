@@ -69,13 +69,6 @@ export class OverviewComponent implements OnInit {
       { hour: '14:00', tripCount: 14 }
     ]);
 
-    this.passengerReports.set([
-      { id: 'rep-uuid-1', plateNumber: 'أ ب ج 123', createdAt: new Date().toISOString(), resolvedAt: null, status: 'Pending' },
-      { id: 'rep-uuid-2', plateNumber: 'د هـ و 456', createdAt: new Date(Date.now() - 300000).toISOString(), resolvedAt: null, status: 'Pending' },
-      { id: 'rep-uuid-3', plateNumber: 'س ص ع 789', createdAt: new Date(Date.now() - 600000).toISOString(), resolvedAt: null, status: 'Reviewed' }
-    ]);
-    this.pendingReportsCount.set(2);
-
     /* Commented out real API calls for now
     this.overviewService.getDashboardOverview()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -91,6 +84,7 @@ export class OverviewComponent implements OnInit {
         },
         error: (err) => console.error('Error fetching overview', err)
       });
+    */
 
     this.reportService.getReports()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -102,10 +96,9 @@ export class OverviewComponent implements OnInit {
         },
         error: (err) => console.error('Error fetching reports', err)
       });
-    */
   }
 
-  resolveReport(reportId: string) {
+  setAsReviewed(reportId: string) {
     this.reportService.reviewReport(reportId).subscribe(() => {
       this.passengerReports.update((reports) =>
         reports.map((r) => (r.id === reportId ? { ...r, status: 'Reviewed' } : r))
