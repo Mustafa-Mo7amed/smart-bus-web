@@ -32,4 +32,12 @@ export class AdminService {
   unlockUser(id: string): Observable<SuccessResponse> {
     return this.adminApi.unlockUser(id);
   }
+
+  deleteManager(managerId: string): Observable<SuccessResponse> {
+    return this.adminApi.deleteManager(managerId);
+  }
+
+  updateManagerStation(managerId: string, name: string, stationId: string): Observable<SuccessResponse> {
+    return this.adminApi.updateManagerStation(managerId, { name, stationId });
+  }
 }

@@ -348,3 +348,62 @@
     color: v.$color-text-muted;
   }
 }
+
+.btn-update-manager {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  height: 4.6rem;
+  padding: 0 2.4rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-radius: v.$radius-md;
+  border: 1px solid v.$color-primary;
+  color: #fff;
+  cursor: pointer;
+  transition: all v.$transition-fast;
+  background-color: v.$color-primary;
+  box-shadow: v.$shadow-sm;
+  font-family: inherit;
+
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  &:hover {
+    background-color: v.$color-primary-dark;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+  }
+}
+
+.btn-delete-manager {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  height: 4.6rem;
+  padding: 0 2.4rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-radius: v.$radius-md;
+  border: 1px solid v.$color-error;
+  color: v.$color-error;
+  cursor: pointer;
+  transition: all v.$transition-fast;
+  background-color: transparent;
+  box-shadow: v.$shadow-sm;
+  font-family: inherit;
+
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  &:hover {
+    background-color: rgba(239, 68, 68, 0.08);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  }
+}
+

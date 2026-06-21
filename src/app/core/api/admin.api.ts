@@ -44,4 +44,12 @@ export class AdminApi extends BaseApi {
   unlockUser(id: string): Observable<SuccessResponse> {
     return this.post<SuccessResponse>(`users/${id}/unlock`, {});
   }
+
+  deleteManager(managerId: string): Observable<SuccessResponse> {
+    return this.delete<SuccessResponse>(`managers/${managerId}`);
+  }
+
+  updateManagerStation(managerId: string, body: { name: string; stationId: string }): Observable<SuccessResponse> {
+    return this.put<SuccessResponse>(`managers/${managerId}/station`, body);
+  }
 }

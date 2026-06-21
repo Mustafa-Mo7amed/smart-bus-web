@@ -15,6 +15,8 @@ export interface UserInfo {
   phoneNumber: string;
   roles: string;
   photoUrl?: string | null;
+  stationId?: string | null;
+  stationName?: string | null;
 }
 
 export interface AddManagerRequest {
