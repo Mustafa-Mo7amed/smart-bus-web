@@ -13,6 +13,11 @@ import { AddBusRequest, GetBusesRequest } from '../../shared/models/bus.model';
 import { DashboardOverviewResponse } from '../../shared/models/overview.model';
 import { RoutesFilters } from './route.api';
 import { ReportsFilters } from './report.api';
+import {
+  AddStaffRequest,
+  UpdateStaffRequest,
+  StaffListPaginated,
+} from '../../shared/models/staff.model';
 
 export interface AssignDriverBusRequest {
   driverId: string;
@@ -97,5 +102,28 @@ export class ManagerApi extends BaseApi {
       }
     }
     return this.http.get(this.buildUrl('export-reports'), { params, responseType: 'blob' });
+  }
+
+  getStationStaff(filters?: { search?: string; sortOrder?: string; pageNumber?: number; pageSize?: number }): Observable<StaffListPaginated> {
+    let params = new HttpParams();
+    if (filters) {
+      if (filters.search) params = params.set('Search', filters.search);
+      if (filters.sortOrder) params = params.set('SortOrder', filters.sortOrder);
+      if (filters.pageNumber) params = params.set('PageNumber', filters.pageNumber);
+      if (filters.pageSize) params = params.set('PageSize', filters.pageSize);
+    }
+    return this.get<StaffListPaginated>('station-staff', params);
+  }
+
+  addStaff(staff: AddStaffRequest): Observable<SuccessResponse> {
+    return this.post('station-staff', staff);
+  }
+
+  updateStaff(id: string, staff: UpdateStaffRequest): Observable<SuccessResponse> {
+    return this.put(`station-staff/${id}`, staff);
+  }
+
+  deleteStaff(id: string): Observable<SuccessResponse> {
+    return this.delete(`station-staff/${id}`);
   }
 }

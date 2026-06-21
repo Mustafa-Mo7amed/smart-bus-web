@@ -1,0 +1,148 @@
+<div class="container">
+  <header>
+    <div class="title-section">
+      <h1 class="title">Station Staff</h1>
+      <span class="report-badge">{{ totalCount() }} Total</span>
+    </div>
+    <div class="header-actions">
+      @if (activeFiltersCount() > 0) {
+        <button class="btn-clear-filters" (click)="resetFilters()">
+          <mat-icon>clear_all</mat-icon>
+          <span>Clear Filters</span>
+        </button>
+      }
+      <button
+        class="btn-toggle-filters"
+        [class.btn-toggle-filters--active]="showFilters()"
+        (click)="showFilters.set(!showFilters())"
+      >
+        <mat-icon>{{ showFilters() ? 'expand_less' : 'filter_list' }}</mat-icon>
+        <span>{{ showFilters() ? 'Hide Filters' : 'Filters' }}</span>
+        @if (activeFiltersCount() > 0) {
+          <span class="filters-badge">{{ activeFiltersCount() }}</span>
+        }
+      </button>
+      <button class="register-staff-btn" routerLink="add-staff">+ Add Staff</button>
+    </div>
+  </header>
+
+  <!-- Filters Panel -->
+  <div class="filters-panel" [class.filters-panel--collapsed]="!showFilters()">
+    <div class="filter-group">
+      <label for="searchFilter">Search</label>
+      <input
+        id="searchFilter"
+        type="text"
+        placeholder="Search by name or phone"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="updateDebouncedField('searchQuery', $event)"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="sortOrderFilter">Sort Order</label>
+      <select
+        id="sortOrderFilter"
+        [ngModel]="sortOrder()"
+        (ngModelChange)="sortOrder.set($event); onFilterChange()"
+      >
+        <option value="DESC">Newest First</option>
+        <option value="ASC">Oldest First</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="staff-table-wrapper">
+    <table class="staff-table">
+      <thead>
+        <tr>
+          <th>staff member</th>
+          <th>phone number</th>
+          <th>status</th>
+          <th>password set</th>
+          <th class="actions-header"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (isLoading()) {
+          <tr>
+            <td colspan="5" class="spinner-cell">
+              <div class="spinner-container">
+                <span class="spinning-loader"></span>
+                <p class="loading-text">Fetching staff...</p>
+              </div>
+            </td>
+          </tr>
+        } @else {
+          @for (member of staffList(); track member.id) {
+            <tr>
+              <td class="table-staff">
+                <div class="table-staff-icon-wrapper">
+                  <mat-icon>support_agent</mat-icon>
+                </div>
+                <div>
+                  <p class="staff-name">{{ member.name }}</p>
+                </div>
+              </td>
+              <td>{{ member.phoneNumber }}</td>
+              <td>
+                <span class="status-badge" [class.status-badge--active]="member.isActive" [class.status-badge--inactive]="!member.isActive">
+                  {{ member.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>
+                <span class="password-badge" [class.password-badge--has]="member.hasPassword" [class.password-badge--missing]="!member.hasPassword">
+                  <mat-icon class="badge-icon">{{ member.hasPassword ? 'vpn_key' : 'lock_open' }}</mat-icon>
+                  <span>{{ member.hasPassword ? 'Yes' : 'No' }}</span>
+                </span>
+              </td>
+              <td class="actions-cell">
+                <button
+                  class="btn-icon"
+                  [matMenuTriggerFor]="menu"
+                  (click)="$event.stopPropagation()"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="before">
+                  <button mat-menu-item (click)="navigateToUpdate(member.id)">
+                    <mat-icon>edit</mat-icon>
+                    <span>Update Staff</span>
+                  </button>
+                  <button mat-menu-item class="menu-item--danger" (click)="deleteStaff(member.id, member.name)">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete Staff</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="no-staff">
+                <p>No Staff Members Found</p>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <app-paginator
+    [totalCount]="totalCount()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="pageSize()"
+    [pageSizeOptions]="pageSizeOptions()"
+    [isLoading]="isLoading()"
+    (pageChange)="onPageChange($event)" />
+</div>
+
+<app-confirm-dialog
+  [show]="confirmDialog().show"
+  [title]="confirmDialog().title"
+  [message]="confirmDialog().message"
+  [confirmText]="confirmDialog().confirmText"
+  [icon]="confirmDialog().icon"
+  [type]="confirmDialog().type || 'primary'"
+  (confirm)="executeConfirm()"
+  (cancel)="closeConfirm()" />

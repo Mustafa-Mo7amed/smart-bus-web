@@ -22,6 +22,7 @@ export class HeaderComponent {
     'overview': 'Overview',
     'routes': 'Routes',
     'drivers': 'Drivers',
+    'staff': 'Staff',
     'buses': 'Buses',
     'assignments': 'Assignments',
     'reports': 'Reports',
