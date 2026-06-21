@@ -38,6 +38,7 @@ export class DriversListComponent {
   sortOrder = signal<'ASC' | 'DESC'>('DESC');
 
   showFilters = signal(false);
+  isExporting = signal(false);
 
   private debounceSubject = new Subject<void>();
 
@@ -146,5 +147,26 @@ export class DriversListComponent {
 
   viewDriver(driverId: string) {
     this.router.navigate(['/drivers', 'details', driverId]);
+  }
+
+  exportDrivers() {
+    this.isExporting.set(true);
+    this.driverService.exportStationDrivers().subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `drivers-${new Date().toISOString().slice(0, 10)}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.isExporting.set(false);
+      },
+      error: (err) => {
+        console.error('Export failed', err);
+        this.isExporting.set(false);
+      }
+    });
   }
 }

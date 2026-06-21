@@ -42,6 +42,7 @@ export class ReportsListComponent implements OnInit {
   orderBy = signal<'createdAt' | 'resolvedAt'>('createdAt');
 
   showFilters = signal(false);
+  isExporting = signal(false);
 
   activeFiltersCount = computed(() => {
     let count = 0;
@@ -253,5 +254,33 @@ export class ReportsListComponent implements OnInit {
     this.orderBy.set('createdAt');
     this.order.set('DESC');
     this.onFilterChange();
+  }
+
+  exportReports() {
+    this.isExporting.set(true);
+    this.reportService.exportReports({
+      plateNumber: this.plateNumber() || undefined,
+      status: this.status() || undefined,
+      fromDate: this.fromDate() || undefined,
+      toDate: this.toDate() || undefined,
+      order: this.order(),
+      orderBy: this.orderBy(),
+    }).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reports-${new Date().toISOString().slice(0, 10)}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.isExporting.set(false);
+      },
+      error: (err) => {
+        console.error('Export failed', err);
+        this.isExporting.set(false);
+      }
+    });
   }
 }

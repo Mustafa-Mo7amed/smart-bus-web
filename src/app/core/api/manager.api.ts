@@ -9,8 +9,10 @@ import {
   DriverHistoryRequest,
 } from '../../shared/models/driver.model';
 import { Observable } from 'rxjs';
-import { AddBusRequest } from '../../shared/models/bus.model';
+import { AddBusRequest, GetBusesRequest } from '../../shared/models/bus.model';
 import { DashboardOverviewResponse } from '../../shared/models/overview.model';
+import { RoutesFilters } from './route.api';
+import { ReportsFilters } from './report.api';
 
 export interface AssignDriverBusRequest {
   driverId: string;
@@ -67,5 +69,33 @@ export class ManagerApi extends BaseApi {
       if (request.pageSize) params = params.set('PageSize', request.pageSize);
     }
     return this.get<DriverHistoryResponse>(`${driverId}/driver-history`, params);
+  }
+
+  exportStationDrivers(): Observable<Blob> {
+    return this.http.get(this.buildUrl('export-station-drivers'), { responseType: 'blob' });
+  }
+
+  exportStationRoutes(): Observable<Blob> {
+    return this.http.get(this.buildUrl('export-station-routes'), { responseType: 'blob' });
+  }
+
+  exportStationMicrobuses(): Observable<Blob> {
+    return this.http.get(this.buildUrl('export-station-microbuses'), { responseType: 'blob' });
+  }
+
+  exportReports(filters?: Omit<ReportsFilters, 'pageNumber' | 'pageSize'>): Observable<Blob> {
+    let params = new HttpParams();
+    if (filters) {
+      if (filters.plateNumber) params = params.set('plateNumber', filters.plateNumber);
+      if (filters.status) params = params.set('status', filters.status);
+      if (filters.fromDate) params = params.set('fromDate', filters.fromDate);
+      if (filters.toDate) params = params.set('toDate', filters.toDate);
+      if (filters.order) params = params.set('order', filters.order);
+      if (filters.orderBy) {
+        const backendOrderBy = filters.orderBy === 'resolvedAt' ? 'ResolvedAt' : filters.orderBy;
+        params = params.set('orderBy', backendOrderBy);
+      }
+    }
+    return this.http.get(this.buildUrl('export-reports'), { params, responseType: 'blob' });
   }
 }

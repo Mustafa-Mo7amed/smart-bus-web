@@ -55,6 +55,7 @@ export class RoutesListComponent {
   sortOrder = signal<'ASC' | 'DESC'>('DESC');
 
   showFilters = signal(false);
+  isExporting = signal(false);
 
   private debounceSubject = new Subject<void>();
 
@@ -266,5 +267,26 @@ export class RoutesListComponent {
 
   executeConfirm() {
     this.confirmDialog().action();
+  }
+
+  exportRoutes() {
+    this.isExporting.set(true);
+    this.routeService.exportStationRoutes().subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `routes-${new Date().toISOString().slice(0, 10)}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.isExporting.set(false);
+      },
+      error: (err) => {
+        console.error('Export failed', err);
+        this.isExporting.set(false);
+      }
+    });
   }
 }

@@ -20,4 +20,8 @@ export class BusService {
   getBusById(id: string): Observable<BusDetailed> {
     return this.busApi.getBusById(id);
   }
+
+  exportStationMicrobuses(): Observable<Blob> {
+    return this.managerApi.exportStationMicrobuses();
+  }
 }

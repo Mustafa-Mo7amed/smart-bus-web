@@ -22,6 +22,10 @@
           <span class="filters-badge">{{ activeFiltersCount() }}</span>
         }
       </button>
+      <button class="btn-export" [disabled]="isExporting()" (click)="exportBuses()">
+        <mat-icon>{{ isExporting() ? 'hourglass_empty' : 'download' }}</mat-icon>
+        <span>{{ isExporting() ? 'Exporting...' : 'Export' }}</span>
+      </button>
       <button class="register-bus-btn" routerLink="register-bus">+ Register New Bus</button>
     </div>
   </header>
