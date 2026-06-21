@@ -1,14 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { BaseApi } from './base.api';
 import { Observable } from 'rxjs';
-import {
-  AuthResponse,
-  AuthUser,
-  LoginRequest,
-  RefreshTokenRequest,
-  ResetPasswordRequest,
-  VerifyOtpResponse,
-} from '../../shared/models/auth.model';
+import { AuthResponse, AuthUser, LoginRequest, RefreshTokenRequest } from '../../shared/models/auth.model';
 import { HttpBackend, HttpClient } from '@angular/common/http';
 import { SuccessResponse } from './manager.api';
 
@@ -47,17 +40,5 @@ export class AuthApi extends BaseApi {
 
   deleteAccount(): Observable<SuccessResponse> {
     return this.delete<SuccessResponse>('delete');
-  }
-
-  forgetPassword(phone: string): Observable<{ phoneNumber: string }> {
-    return this.post<{ phoneNumber: string }>('forgot-password', { phoneNumber: phone });
-  }
-
-  verifyOtp(phone: string, otp: string): Observable<VerifyOtpResponse> {
-    return this.post<VerifyOtpResponse>('verify-otp', { phoneNumber: phone, otp });
-  }
-
-  resetPassword(request: ResetPasswordRequest): Observable<SuccessResponse> {
-    return this.post<SuccessResponse>('reset-password', request);
   }
 }

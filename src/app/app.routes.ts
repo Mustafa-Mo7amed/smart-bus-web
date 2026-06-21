@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { nonAuthGuard } from './core/guards/non-auth.guard';
 import { authGuard } from './core/guards/auth.guard';
-import { adminGuard } from './core/guards/admin.guard';
 import { MainLayoutComponent } from './shared/layout/main-layout/main-layout.component';
 
 export const routes: Routes = [
@@ -114,65 +113,6 @@ export const routes: Routes = [
         ],
       },
       {
-        path: 'users',
-        canActivate: [adminGuard],
-        loadComponent: () => import('../app/users/users.component').then((m) => m.UsersComponent),
-        children: [
-          {
-            path: '',
-            data: { showOnlyManagers: false },
-            loadComponent: () =>
-              import('../app/users/users-list/users-list.component').then(
-                (m) => m.UsersListComponent,
-              ),
-          },
-          {
-            path: 'managers',
-            data: { showOnlyManagers: true },
-            loadComponent: () =>
-              import('../app/users/users-list/users-list.component').then(
-                (m) => m.UsersListComponent,
-              ),
-          },
-          {
-            path: 'register-manager',
-            loadComponent: () =>
-              import('../app/users/add-manager/add-manager.component').then((m) => m.AddManagerComponent),
-          },
-          {
-            path: 'details/:userId',
-            loadComponent: () =>
-              import('../app/users/user-details/user-details.component').then(
-                (m) => m.UserDetailsComponent,
-              ),
-          },
-        ],
-      },
-      {
-        path: 'stations',
-        canActivate: [adminGuard],
-        loadComponent: () => import('../app/stations/stations.component').then((m) => m.StationsComponent),
-        children: [
-          {
-            path: '',
-            loadComponent: () =>
-              import('../app/stations/stations-list/stations-list.component').then(
-                (m) => m.StationsListComponent,
-              ),
-          },
-          {
-            path: 'add',
-            loadComponent: () =>
-              import('../app/stations/save-station/save-station.component').then(
-                (m) => m.SaveStationComponent,
-              ),
-          },
-          {
-            path: 'edit/:stationId',
-            loadComponent: () =>
-              import('../app/stations/save-station/save-station.component').then(
-                (m) => m.SaveStationComponent,
-              ),
         path: 'staff',
         loadComponent: () => import('../app/staff/staff.component').then((m) => m.StaffComponent),
         children: [

@@ -11,15 +11,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class NavBarComponent {
   private router = inject(Router);
-  public readonly authService = inject(AuthService);
-
-  onBackgroundJobs() {
-    const token = this.authService.getToken();
-    if (token) {
-      document.cookie = `token=${token}; path=/;`;
-    }
-    window.open('http://smart-microbus.runasp.net/dashboard', '_blank');
-  }
+  private readonly authService = inject(AuthService);
 
   isLoggingOut = signal(false);
 
